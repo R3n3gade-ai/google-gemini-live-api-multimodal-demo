@@ -256,13 +256,7 @@ The application uses a local server architecture, where the backend runs on the 
 
 ### Why a Local Server?
 
-1. **API Key Protection**: Running a local server allows the Gemini API key to be stored on the server side, preventing exposure in client-side code.
-
-2. **WebSocket Proxy**: The server acts as a WebSocket proxy between the frontend and the Gemini API, handling the complexities of the API protocol.
-
-3. **Single Integration Point**: Having a backend provides a single point for integrating with Gemini and potentially other services in the future.
-
-4. **Simplified Development**: The separation of frontend and backend concerns facilitates development and testing.
+**Simplified Development**: The separation of frontend and backend concerns facilitates development and testing.
 
 ### Server Implementation
 
