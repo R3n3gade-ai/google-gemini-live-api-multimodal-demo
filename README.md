@@ -4,6 +4,9 @@ This Demo is an advanced web application that provides a seamless interface to i
 
 This document serves as the comprehensive source of truth for the project, detailing the technical implementation, system architecture, and operational workflows. It's designed to provide a thorough understanding of how the application functions, from the high-level architecture down to specific implementation details such as audio sample rate handling and WebSocket message protocols.
 
+![image](https://github.com/user-attachments/assets/d5de66af-b3f8-405b-9fe6-9215938aa8fc)
+
+
 ## System Architecture Overview
 
 This project follows a client-server architecture with a clear separation between the frontend and backend components. This separation of concerns allows for modular development, easier maintenance, and potential future scalability. The system consists of two primary components:
