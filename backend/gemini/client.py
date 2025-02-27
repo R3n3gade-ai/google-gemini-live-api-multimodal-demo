@@ -31,7 +31,7 @@ class GeminiConnection:
         Args:
             config_data: Dict containing configuration like:
                 {
-                  'systemPrompt': 'You are a friendly Gemini...',
+                  'systemPrompt': 'You are a friendly AI Assistant...',
                   'voice': 'Puck',
                   'googleSearch': True,
                   'allowInterruptions': False
@@ -77,7 +77,7 @@ class GeminiConnection:
                             {
                                 "text": self.config.get(
                                     "systemPrompt",
-                                    "You are a friendly Gemini 2.0 model..."
+                                    "You are a friendly AI Assistant..."
                                 )
                             }
                         ]
