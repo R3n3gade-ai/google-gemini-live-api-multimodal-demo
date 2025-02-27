@@ -1,0 +1,146 @@
+/**
+ * Main application entry point
+ * Initializes all components and sets up event listeners
+ */
+
+import { AudioManager } from './audio-manager.js';
+import { VideoManager } from './video-manager.js';
+import { WebSocketClient } from './websocket-client.js';
+import { UIController } from './ui-controller.js';
+
+class GeminiApp {
+  constructor() {
+    // Initialize managers
+    this.audioManager = new AudioManager();
+    this.videoManager = new VideoManager();
+    this.webSocketClient = new WebSocketClient();
+    this.uiController = new UIController();
+    
+    // App state
+    this.isStreaming = false;
+    this.currentMode = null; // 'audio', 'camera', or 'screen'
+    
+    // Initialize
+    this.initEventListeners();
+  }
+  
+  /**
+   * Set up event listeners for UI buttons
+   */
+  initEventListeners() {
+    // Button references
+    this.startAudioBtn = document.getElementById('startAudioBtn');
+    this.startCameraBtn = document.getElementById('startCameraBtn');
+    this.startScreenBtn = document.getElementById('startScreenBtn');
+    this.stopButton = document.getElementById('stopButton');
+    
+    // Add click handlers
+    this.startAudioBtn.addEventListener('click', () => this.startStream('audio'));
+    this.startCameraBtn.addEventListener('click', () => this.startStream('camera'));
+    this.startScreenBtn.addEventListener('click', () => this.startStream('screen'));
+    this.stopButton.addEventListener('click', () => this.stopStream());
+  }
+  
+  /**
+   * Start streaming with the selected mode (audio, camera, screen)
+   */
+  async startStream(mode) {
+    if (this.isStreaming) return;
+    
+    this.currentMode = mode;
+    
+    try {
+      // Get configuration from UI
+      const config = this.uiController.getConfig();
+      
+      // Initialize WebSocket connection
+      await this.webSocketClient.connect(config, {
+        onMessage: this.handleWebSocketMessage.bind(this),
+        onClose: this.handleWebSocketClose.bind(this),
+        onError: this.handleWebSocketError.bind(this)
+      });
+      
+      // Initialize audio capture
+      await this.audioManager.startCapture((audioData) => {
+        this.webSocketClient.sendAudio(audioData);
+      });
+      
+      // Initialize video if needed
+      if (mode !== 'audio') {
+        await this.videoManager.startCapture(mode, (imageData) => {
+          this.webSocketClient.sendImage(imageData);
+        });
+        this.uiController.showVideoPreview();
+      }
+      
+      // Update UI state
+      this.isStreaming = true;
+      this.uiController.updateUIForStreaming(true);
+      
+    } catch (error) {
+      this.uiController.showError(`Failed to start: ${error.message}`);
+    }
+  }
+  
+  /**
+   * Stop all streaming and clean up resources
+   */
+  stopStream() {
+    if (!this.isStreaming) return;
+    
+    // Clean up resources
+    this.webSocketClient.disconnect();
+    this.audioManager.stopCapture();
+    this.videoManager.stopCapture();
+    
+    // Reset state
+    this.isStreaming = false;
+    this.currentMode = null;
+    
+    // Update UI
+    this.uiController.updateUIForStreaming(false);
+    this.uiController.hideVideoPreview();
+  }
+  
+  /**
+   * Handle incoming WebSocket messages
+   */
+  handleWebSocketMessage(response) {
+    switch (response.type) {
+      case 'audio':
+        this.audioManager.playAudio(response.data);
+        break;
+        
+      case 'text':
+        this.uiController.appendMessage(`[Gemini Text] ${response.text}`);
+        break;
+        
+      case 'turn_complete':
+        this.uiController.appendMessage('[Gemini Turn Complete]');
+        break;
+        
+      default:
+        this.uiController.appendMessage(`[Unknown] ${JSON.stringify(response)}`);
+    }
+  }
+  
+  /**
+   * Handle WebSocket connection close
+   */
+  handleWebSocketClose() {
+    this.uiController.appendMessage('WebSocket closed');
+    this.stopStream();
+  }
+  
+  /**
+   * Handle WebSocket errors
+   */
+  handleWebSocketError(error) {
+    this.uiController.showError(`WebSocket error: ${error.message}`);
+  }
+}
+
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  window.app = new GeminiApp();
+});

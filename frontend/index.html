@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gemini Multimodal Playground ✨</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="main-card">
+      <div class="card-gradient-border"></div>
+      
+      <div class="card-header">
+        <div class="header-title">
+          <div class="logo pulse">✨</div>
+          <h1 class="title">Gemini Multimodal Playground</h1>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="settings-grid">
+          <!-- System Prompt -->
+          <div class="form-group">
+            <label for="systemPrompt" class="form-label">System Prompt</label>
+            <textarea 
+              id="systemPrompt" 
+              class="form-control"
+              placeholder="Enter system instructions for Gemini..."
+            >You are a friendly Gemini 2.0 model. Respond verbally in a casual, helpful tone.</textarea>
+          </div>
+
+          <!-- Voice Selection -->
+          <div>
+            <div class="form-group">
+              <label for="voice" class="form-label">Voice</label>
+              <select id="voice" class="form-control">
+                <option value="Puck">Puck</option>
+                <option value="Charon">Charon</option>
+                <option value="Kore">Kore</option>
+                <option value="Fenrir">Fenrir</option>
+                <option value="Aoede">Aoede</option>
+              </select>
+            </div>
+
+            <!-- Options -->
+            <div class="checkbox-container">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox-input" id="enableGoogleSearch" checked>
+                <span class="checkbox-display"></span>
+                <span class="checkbox-label">Enable Google Search</span>
+              </label>
+              
+              <label class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox-input" id="allowInterruptions">
+                <span class="checkbox-display"></span>
+                <span class="checkbox-label">Allow Interruptions</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="btn-row">
+          <button id="startAudioBtn" class="btn btn-primary">
+            Start Chatting
+          </button>
+          <button id="startCameraBtn" class="btn btn-primary">
+            Start Chatting with Video
+          </button>
+          <button id="startScreenBtn" class="btn btn-primary">
+            Start Chatting with Screen
+          </button>
+          <button id="stopButton" class="btn btn-danger" disabled>
+            Stop Chat
+          </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-container">
+          <div class="messages-heading">Conversation</div>
+          <div id="messages" class="messages"></div>
+        </div>
+
+        <!-- Video Preview / Canvas (for camera/screen) -->
+        <div id="videoContainer" class="video-container hidden">
+          <div class="form-label">Video Input</div>
+          <div class="video-wrapper">
+            <div class="video-overlay">Live Feed</div>
+            <video
+              id="videoElem"
+              autoplay
+              playsinline
+              muted
+              width="640"
+              height="480"
+            ></video>
+            <canvas
+              id="canvasElem"
+              class="hidden"
+              width="640"
+              height="480"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load modules using ES6 module syntax -->
+  <script type="module" src="/static/js/main.js"></script>
+</body>
+</html>
