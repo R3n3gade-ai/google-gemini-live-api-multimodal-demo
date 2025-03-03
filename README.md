@@ -9,7 +9,7 @@ This document serves as the comprehensive source of truth for the project, detai
 
 ## System Architecture Overview
 
-This project follows a client-server architecture with a clear separation between the frontend and backend components. This separation of concerns allows for modular development, easier maintenance, and potential future scalability. The system consists of two primary components:
+This project follows a client-server architecture with a clear separation between the frontend and backend components. This separation of concerns allows for modular development, easier maintenance. The system consists of two primary components:
 
 1. The frontend application, built with modern vanilla JavaScript using an object-oriented and modular approach, which handles the user interface, media capture, and real-time audio/video processing.
 
@@ -279,7 +279,7 @@ The server runs locally on port 8000 by default, serving both the static fronten
 
 ## Project Structure Rationale
 
-The project's structure follows a clear separation between frontend and backend, with modular organization within each. This structure was chosen to balance simplicity, maintainability, and scalability.
+The project's structure follows a clear separation between frontend and backend, with modular organization within each. This structure was chosen to balance simplicity and maintainability.
 
 ### Top-Level Separation
 
