@@ -27,8 +27,10 @@ export class WebSocketClient {
         // Store callbacks
         this.callbacks = callbacks;
         
-        // Create WebSocket connection
-        this.websocket = new WebSocket(`ws://localhost:8000/ws/${this.clientId}`);
+        // Create WebSocket connection using current host
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.host;
+        this.websocket = new WebSocket(`${protocol}//${host}/ws/${this.clientId}`);
         
         this.websocket.onopen = () => {
           console.log("WebSocket connection established");
