@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Gemini Live API Demo</title>
+  <title>AI Workstation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/styles.css">
@@ -12,14 +12,35 @@
     <div class="main-card">
       <div class="card-gradient-border"></div>
       
-      <div class="card-header">
-        <div class="header-title">
-          <div class="logo pulse">G</div>
-          <h1 class="title">Gemini Live API Demo</h1>
-        </div>
-      </div>
-      
       <div class="card-body">
+        <!-- Messages Area - Moved to the top -->
+        <div class="messages-container">
+          <div class="messages-heading">Conversation</div>
+          <div id="messages" class="messages"></div>
+        </div>
+
+        <!-- Video Preview / Canvas (for camera/screen) -->
+        <div id="videoContainer" class="video-container hidden">
+          <div class="form-label">Video Input</div>
+          <div class="video-wrapper">
+            <div class="video-overlay">Live Feed</div>
+            <video
+              id="videoElem"
+              autoplay
+              playsinline
+              muted
+              width="640"
+              height="480"
+            ></video>
+            <canvas
+              id="canvasElem"
+              class="hidden"
+              width="640"
+              height="480"
+            ></canvas>
+          </div>
+        </div>
+        
         <div class="settings-grid">
           <!-- System Prompt -->
           <div class="form-group">
@@ -75,34 +96,6 @@
           <button id="stopButton" class="btn btn-danger" disabled>
             Stop Chat
           </button>
-        </div>
-
-        <!-- Messages Area -->
-        <div class="messages-container">
-          <div class="messages-heading">Conversation</div>
-          <div id="messages" class="messages"></div>
-        </div>
-
-        <!-- Video Preview / Canvas (for camera/screen) -->
-        <div id="videoContainer" class="video-container hidden">
-          <div class="form-label">Video Input</div>
-          <div class="video-wrapper">
-            <div class="video-overlay">Live Feed</div>
-            <video
-              id="videoElem"
-              autoplay
-              playsinline
-              muted
-              width="640"
-              height="480"
-            ></video>
-            <canvas
-              id="canvasElem"
-              class="hidden"
-              width="640"
-              height="480"
-            ></canvas>
-          </div>
         </div>
       </div>
     </div>
