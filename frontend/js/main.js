@@ -19,9 +19,11 @@ class GeminiApp {
     // App state
     this.isStreaming = false;
     this.currentMode = null; // 'audio', 'camera', or 'screen'
+    this.webSocketConnected = false;
     
     // Initialize
     this.initEventListeners();
+    this.initWebSocket();
   }
   
   /**
@@ -42,13 +44,9 @@ class GeminiApp {
   }
   
   /**
-   * Start streaming with the selected mode (audio, camera, screen)
+   * Initialize WebSocket connection on page load
    */
-  async startStream(mode) {
-    if (this.isStreaming) return;
-    
-    this.currentMode = mode;
-    
+  async initWebSocket() {
     try {
       // Get configuration from UI
       const config = this.uiController.getConfig();
@@ -59,6 +57,27 @@ class GeminiApp {
         onClose: this.handleWebSocketClose.bind(this),
         onError: this.handleWebSocketError.bind(this)
       });
+      
+      this.webSocketConnected = true;
+      this.uiController.appendMessage('WebSocket connected and ready');
+    } catch (error) {
+      this.uiController.showError(`WebSocket connection failed: ${error.message}`);
+      setTimeout(() => this.initWebSocket(), 3000);
+    }
+  }
+  
+  /**
+   * Start streaming with the selected mode (audio, camera, screen)
+   */
+  async startStream(mode) {
+    if (this.isStreaming) return;
+    
+    this.currentMode = mode;
+    
+    try {
+      if (!this.webSocketConnected) {
+        await this.initWebSocket();
+      }
       
       // Initialize audio capture
       await this.audioManager.startCapture((audioData) => {
@@ -88,8 +107,7 @@ class GeminiApp {
   stopStream() {
     if (!this.isStreaming) return;
     
-    // Clean up resources
-    this.webSocketClient.disconnect();
+    // Clean up resources (but keep WebSocket connected)
     this.audioManager.stopCapture();
     this.videoManager.stopCapture();
     
@@ -128,8 +146,15 @@ class GeminiApp {
    * Handle WebSocket connection close
    */
   handleWebSocketClose() {
-    this.uiController.appendMessage('WebSocket closed');
+    this.uiController.appendMessage('WebSocket disconnected - attempting to reconnect...');
+    this.webSocketConnected = false;
     this.stopStream();
+    
+    setTimeout(() => {
+      if (!this.webSocketConnected) {
+        this.initWebSocket();
+      }
+    }, 2000);
   }
   
   /**
