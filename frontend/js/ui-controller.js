@@ -81,10 +81,6 @@ export class UIController {
      * @param {string} message - Message text to display
      */
     appendMessage(message) {
-      if (message.includes("WebSocket")) {
-        return;
-      }
-      
       const messageDiv = document.createElement('div');
       messageDiv.className = 'message';
       messageDiv.textContent = message;
