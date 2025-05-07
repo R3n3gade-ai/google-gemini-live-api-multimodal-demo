@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/static/css/styles.css">
   <link rel="stylesheet" href="/static/css/tools-footer.css">
+  <link rel="stylesheet" href="/static/css/feature-panels.css">
 </head>
 <body>
   <div class="app-container">
@@ -280,5 +281,32 @@
   <script type="module" src="/static/js/main.js"></script>
   <script src="/static/js/navigation.js"></script>
   <script src="/static/js/content-manager.js"></script>
+  
+  <!-- Video Editor Integration -->
+  <script>
+    // Initialize video editor integration when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      // Listen for video editor iframe messages
+      window.addEventListener('message', (event) => {
+        // Handle messages from the video editor iframe
+        if (event.data && event.data.type === 'video-editor') {
+          console.log('Received message from video editor:', event.data);
+          
+          // Handle different message types
+          switch (event.data.action) {
+            case 'ready':
+              console.log('Video editor is ready');
+              break;
+            case 'export':
+              console.log('Video exported:', event.data.url);
+              break;
+            case 'error':
+              console.error('Video editor error:', event.data.message);
+              break;
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>

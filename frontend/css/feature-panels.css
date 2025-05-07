@@ -1,0 +1,167 @@
+/* Feature Panels Styles */
+.creation-studio-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 300px);
+  overflow: hidden;
+  background-color: var(--bg-darker);
+  border-radius: var(--rounded-lg);
+  margin-bottom: 1rem;
+}
+
+/* Feature Navigation */
+.feature-nav {
+  display: flex;
+  background-color: var(--bg-darkest);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.5rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.feature-nav-button {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border-radius: var(--rounded-md);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feature-nav-button i {
+  font-size: 1rem;
+}
+
+.feature-nav-button:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--text-primary);
+}
+
+.feature-nav-button.active {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+/* Feature Content */
+.feature-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  position: relative;
+}
+
+.feature-panel {
+  display: none;
+  height: 100%;
+}
+
+.feature-panel.active {
+  display: block;
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.feature-description {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Video Editor Container */
+.video-editor-container {
+  width: 100%;
+  height: calc(100% - 80px);
+  background-color: var(--bg-darkest);
+  border-radius: var(--rounded-md);
+  overflow: hidden;
+  position: relative;
+}
+
+#video-editor-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-editor-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.load-feature-button {
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--rounded-md);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.load-feature-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner i {
+  font-size: 2rem;
+  color: var(--accent-primary);
+}
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #ef4444;
+}
+
+.error-message i {
+  font-size: 2rem;
+}
+
+.feature-content-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 80px);
+  background-color: var(--bg-darkest);
+  border-radius: var(--rounded-md);
+  padding: 2rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Hide elements */
+.hidden {
+  display: none !important;
+}

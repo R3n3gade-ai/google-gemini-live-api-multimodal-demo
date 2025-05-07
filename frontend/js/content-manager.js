@@ -10,6 +10,7 @@ class ContentManager {
     this.originalContent = this.mainContent.innerHTML;
     
     this.currentPage = 'chat';
+    this.currentFeature = 'feature-home';
     
     this.initEventListeners();
   }
@@ -20,37 +21,122 @@ class ContentManager {
   initEventListeners() {
     // Use event delegation for all navigation buttons
     document.addEventListener('click', (event) => {
+      // Main navigation buttons
       const navButton = event.target.closest('.nav-button');
-      if (!navButton) return;
+      if (navButton) {
+        const span = navButton.querySelector('span');
+        if (!span) return;
+        
+        const buttonText = span.textContent.trim();
+        
+        switch (buttonText) {
+          case 'Creation Studio':
+            event.preventDefault();
+            this.loadContent('creation-studio');
+            break;
+          case 'App/Web Builder':
+            event.preventDefault();
+            this.loadContent('app-builder');
+            break;
+          case 'Social Station':
+            event.preventDefault();
+            this.loadContent('social-station');
+            break;
+          case 'Brain':
+            event.preventDefault();
+            this.loadContent('brain');
+            break;
+          case 'Chat':
+            event.preventDefault();
+            this.loadContent('chat');
+            break;
+        }
+        return;
+      }
       
-      const span = navButton.querySelector('span');
-      if (!span) return;
+      // Feature navigation buttons
+      const featureNavButton = event.target.closest('.feature-nav-button');
+      if (featureNavButton) {
+        const featureId = featureNavButton.getAttribute('data-feature');
+        if (featureId) {
+          this.showFeature(featureId);
+        }
+        return;
+      }
       
-      const buttonText = span.textContent.trim();
-      
-      switch (buttonText) {
-        case 'Creation Studio':
-          event.preventDefault();
-          this.loadContent('creation-studio');
-          break;
-        case 'App/Web Builder':
-          event.preventDefault();
-          this.loadContent('app-builder');
-          break;
-        case 'Social Station':
-          event.preventDefault();
-          this.loadContent('social-station');
-          break;
-        case 'Brain':
-          event.preventDefault();
-          this.loadContent('brain');
-          break;
-        case 'Chat':
-          event.preventDefault();
-          this.loadContent('chat');
-          break;
+      const loadEditorButton = event.target.closest('#load-video-editor');
+      if (loadEditorButton) {
+        this.loadVideoEditor();
+        return;
       }
     });
+  }
+  
+  /**
+   * Show a specific feature in the Creation Studio
+   * @param {string} featureId - ID of the feature to show
+   */
+  showFeature(featureId) {
+    if (this.currentFeature === featureId) return;
+    
+    this.currentFeature = featureId;
+    
+    // Update navigation buttons
+    const navButtons = document.querySelectorAll('.feature-nav-button');
+    navButtons.forEach(button => {
+      if (button.getAttribute('data-feature') === featureId) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+    
+    const featurePanels = document.querySelectorAll('.feature-panel');
+    featurePanels.forEach(panel => {
+      if (panel.id === featureId) {
+        panel.classList.add('active');
+      } else {
+        panel.classList.remove('active');
+      }
+    });
+  }
+  
+  /**
+   * Load the video editor in an iframe
+   */
+  loadVideoEditor() {
+    const iframe = document.getElementById('video-editor-iframe');
+    const placeholder = document.querySelector('.video-editor-placeholder');
+    
+    if (iframe && placeholder) {
+      placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading Video Editor...</div>';
+      
+      const editorUrl = 'http://localhost:3000';
+      
+      iframe.src = editorUrl;
+      iframe.classList.remove('hidden');
+      
+      iframe.onload = () => {
+        placeholder.classList.add('hidden');
+      };
+      
+      iframe.onerror = () => {
+        placeholder.innerHTML = `
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load Video Editor. Please try again later.</p>
+            <button id="retry-load-editor" class="load-feature-button">
+              <i class="fas fa-redo"></i> Retry
+            </button>
+          </div>
+        `;
+        
+        const retryButton = document.getElementById('retry-load-editor');
+        if (retryButton) {
+          retryButton.addEventListener('click', () => this.loadVideoEditor());
+        }
+      };
+    }
   }
   
   /**
@@ -98,29 +184,97 @@ class ContentManager {
         <h2 class="page-title">Creation Studio</h2>
         <p class="page-description">Create and manage your AI-generated content</p>
         
-        <div class="content-grid">
-          <div class="content-card">
-            <div class="card-icon"><i class="fas fa-image"></i></div>
-            <h3>Image Generation</h3>
-            <p>Create stunning images with AI</p>
+        <div class="creation-studio-container">
+          <!-- Feature Navigation -->
+          <div class="feature-nav">
+            <button class="feature-nav-button active" data-feature="feature-home">
+              <i class="fas fa-home"></i> Home
+            </button>
+            <button class="feature-nav-button" data-feature="image-generation">
+              <i class="fas fa-image"></i> Image Generation
+            </button>
+            <button class="feature-nav-button" data-feature="video-creation">
+              <i class="fas fa-video"></i> Video Creation
+            </button>
+            <button class="feature-nav-button" data-feature="video-editor">
+              <i class="fas fa-film"></i> Video Editor
+            </button>
+            <button class="feature-nav-button" data-feature="audio-production">
+              <i class="fas fa-music"></i> Audio Production
+            </button>
           </div>
           
-          <div class="content-card">
-            <div class="card-icon"><i class="fas fa-video"></i></div>
-            <h3>Video Creation</h3>
-            <p>Generate videos from text prompts</p>
-          </div>
-          
-          <div class="content-card">
-            <div class="card-icon"><i class="fas fa-music"></i></div>
-            <h3>Audio Production</h3>
-            <p>Create music and sound effects</p>
-          </div>
-          
-          <div class="content-card">
-            <div class="card-icon"><i class="fas fa-pen-fancy"></i></div>
-            <h3>Text Generation</h3>
-            <p>Write articles, stories, and more</p>
+          <!-- Feature Content Container -->
+          <div class="feature-content">
+            <!-- Home View (Feature Cards) -->
+            <div class="feature-panel active" id="feature-home">
+              <div class="content-grid">
+                <div class="content-card" onclick="window.contentManager.showFeature('image-generation')">
+                  <div class="card-icon"><i class="fas fa-image"></i></div>
+                  <h3>Image Generation</h3>
+                  <p>Create stunning images with AI</p>
+                </div>
+                
+                <div class="content-card" onclick="window.contentManager.showFeature('video-creation')">
+                  <div class="card-icon"><i class="fas fa-video"></i></div>
+                  <h3>Video Creation</h3>
+                  <p>Generate videos from text prompts</p>
+                </div>
+                
+                <div class="content-card" onclick="window.contentManager.showFeature('video-editor')">
+                  <div class="card-icon"><i class="fas fa-film"></i></div>
+                  <h3>Video Editor</h3>
+                  <p>Edit and enhance your videos</p>
+                </div>
+                
+                <div class="content-card" onclick="window.contentManager.showFeature('audio-production')">
+                  <div class="card-icon"><i class="fas fa-music"></i></div>
+                  <h3>Audio Production</h3>
+                  <p>Create music and sound effects</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Image Generation Feature Panel -->
+            <div class="feature-panel" id="image-generation">
+              <h3 class="feature-title">Image Generation</h3>
+              <p class="feature-description">Create stunning images with AI</p>
+              <div class="feature-content-placeholder">
+                <p>Image generation feature will be implemented here.</p>
+              </div>
+            </div>
+            
+            <!-- Video Creation Feature Panel -->
+            <div class="feature-panel" id="video-creation">
+              <h3 class="feature-title">Video Creation</h3>
+              <p class="feature-description">Generate videos from text prompts</p>
+              <div class="feature-content-placeholder">
+                <p>Video creation feature will be implemented here.</p>
+              </div>
+            </div>
+            
+            <!-- Video Editor Feature Panel -->
+            <div class="feature-panel" id="video-editor">
+              <h3 class="feature-title">Video Editor</h3>
+              <p class="feature-description">Edit and enhance your videos</p>
+              <div class="video-editor-container">
+                <iframe id="video-editor-iframe" class="hidden" frameborder="0" allowfullscreen></iframe>
+                <div class="video-editor-placeholder">
+                  <button id="load-video-editor" class="load-feature-button">
+                    <i class="fas fa-play"></i> Load Video Editor
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Audio Production Feature Panel -->
+            <div class="feature-panel" id="audio-production">
+              <h3 class="feature-title">Audio Production</h3>
+              <p class="feature-description">Create music and sound effects</p>
+              <div class="feature-content-placeholder">
+                <p>Audio production feature will be implemented here.</p>
+              </div>
+            </div>
           </div>
         </div>
         
