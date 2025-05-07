@@ -80,11 +80,62 @@
         
         <!-- Social Station Container -->
         <div id="social-station-container" class="feature-container social-station-container hidden">
-          <!-- Social Station Layout -->
-          <div class="social-station-layout">
+          <!-- Social Station Dashboard -->
+          <div class="social-station-header">
+            <h2>Social Station</h2>
+            <p>Manage your social media presence with AI</p>
+          </div>
+          
+          <div class="social-station-dashboard">
+            <a href="#content-calendar" class="dashboard-tile">
+              <div class="tile-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <h3>Content Calendar</h3>
+              <p>Schedule and plan your content</p>
+            </a>
+            
+            <a href="#analytics" class="dashboard-tile">
+              <div class="tile-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3>Analytics</h3>
+              <p>Track performance and engagement</p>
+            </a>
+            
+            <a href="#community" class="dashboard-tile">
+              <div class="tile-icon">
+                <i class="fas fa-comments"></i>
+              </div>
+              <h3>Community Management</h3>
+              <p>Engage with your audience</p>
+            </a>
+            
+            <a href="#campaigns" class="dashboard-tile">
+              <div class="tile-icon">
+                <i class="fas fa-bullhorn"></i>
+              </div>
+              <h3>Campaign Creation</h3>
+              <p>Create and manage marketing campaigns</p>
+            </a>
+          </div>
+          
+          <div class="social-station-footer">
+            <button class="btn btn-primary" id="returnToChatBtn">
+              <i class="fas fa-arrow-left"></i>
+              Return to Chat
+            </button>
+          </div>
+          
+          <!-- Calendar View (initially hidden) -->
+          <div class="social-station-view social-station-layout hidden">
             <!-- Create Schedule Panel (Left Side) -->
             <div class="create-schedule-panel">
               <div class="panel-header">
+                <button class="back-btn" id="backToDashboardBtn">
+                  <i class="fas fa-arrow-left"></i>
+                  Back
+                </button>
                 <h2>Create &amp; Schedule</h2>
                 <button class="options-btn">
                   <i class="fas fa-ellipsis-v"></i>
