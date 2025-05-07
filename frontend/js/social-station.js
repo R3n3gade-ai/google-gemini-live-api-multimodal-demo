@@ -552,6 +552,35 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
     
+    // Add event listener for Return to Chat button in calendar view
+    const returnToChatBtn = document.querySelector('#returnToChatBtn');
+    if (returnToChatBtn) {
+      returnToChatBtn.addEventListener('click', () => {
+        document.querySelectorAll('.feature-container').forEach(container => {
+          container.classList.add('hidden');
+        });
+        
+        const mainCard = document.querySelector('.main-card');
+        if (mainCard) {
+          mainCard.classList.remove('hidden');
+        }
+        
+        const chatContainer = document.querySelector('.chat-container');
+        if (chatContainer) {
+          chatContainer.classList.remove('hidden');
+        }
+        
+        document.querySelectorAll('.nav-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        const chatBtn = document.querySelector('.nav-button[data-feature="chat"]');
+        if (chatBtn) {
+          chatBtn.classList.add('active');
+        }
+      });
+    }
+    
     const calendarHeader = view.querySelector('.panel-header');
     if (calendarHeader) {
       const backButton = document.createElement('button');
