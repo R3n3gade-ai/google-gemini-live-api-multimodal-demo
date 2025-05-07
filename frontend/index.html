@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/static/css/feature-panels.css">
   <link rel="stylesheet" href="/static/css/dual-view.css">
   <link rel="stylesheet" href="/static/css/system-prompt-modal.css">
+  <link rel="stylesheet" href="/static/css/agent-builder.css">
 </head>
 <body>
   <div class="app-container">
@@ -145,9 +146,9 @@
       <!-- Tools Tab Content -->
       <div class="tab-content active" id="tools-content">
         <div class="nav-buttons">
-          <a href="#" class="nav-button">
-            <i class="fas fa-file-alt"></i>
-            <span>Agent Flow</span>
+          <a href="#" class="nav-button" data-feature="agent-builder">
+            <i class="fas fa-robot"></i>
+            <span>Agent Builder</span>
           </a>
           <a href="#" class="nav-button">
             <i class="fas fa-comment-alt"></i>
@@ -271,6 +272,7 @@
   <script type="module" src="/static/js/main.js"></script>
   <script src="/static/js/navigation.js"></script>
   <script src="/static/js/system-prompt.js"></script>
+  <script src="/static/js/agent-builder.js"></script>
   
   <!-- Video Editor Integration -->
   <script>

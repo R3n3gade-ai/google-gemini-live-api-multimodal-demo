@@ -1,0 +1,42 @@
+/* Agent Builder Styles */
+.agent-builder-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  background-color: var(--bg-darker);
+  border-radius: var(--rounded-lg);
+  margin-bottom: 1rem;
+}
+
+/* Agent Builder Wrapper */
+.agent-builder-wrapper {
+  width: 100%;
+  height: calc(100% - 80px);
+  background-color: var(--bg-darkest);
+  border-radius: var(--rounded-md);
+  overflow: hidden;
+  position: relative;
+}
+
+#agent-builder-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.agent-builder-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Return to Chat Button */
+.return-to-chat {
+  margin-left: auto;
+}
