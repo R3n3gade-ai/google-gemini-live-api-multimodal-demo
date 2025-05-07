@@ -130,7 +130,7 @@ class ContentManager {
       let editorUrl;
       
       if (isTunnel) {
-        editorUrl = 'https://user:9603b2f332c40e7bcc3e2120037e15d1@google-gemini-demo-tunnel-iobggdm0.devinapps.com';
+        editorUrl = 'https://user:6dae2dcca92c1035914d385d5778dd3f@google-gemini-demo-tunnel-pd6hn0r2.devinapps.com';
       } else {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
