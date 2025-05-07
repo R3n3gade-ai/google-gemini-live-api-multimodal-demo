@@ -109,6 +109,10 @@ class ContentManager {
         panel.classList.remove('active');
       }
     });
+    
+    if (featureId === 'video-editor') {
+      this.loadVideoEditor();
+    }
   }
   
   /**
@@ -119,20 +123,24 @@ class ContentManager {
     const placeholder = document.querySelector('.video-editor-placeholder');
     
     if (iframe && placeholder) {
-      placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading Video Editor...</div>';
+      placeholder.style.display = 'flex';
+      placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Loading Video Editor...</p></div>';
       
       const protocol = window.location.protocol;
       const hostname = window.location.hostname;
-      const editorUrl = `${protocol}//${hostname}:3000`;
+      const port = '3000'; // Video editor runs on port 3000
+      const editorUrl = `${protocol}//${hostname}:${port}`;
       
-      iframe.src = editorUrl;
-      iframe.classList.remove('hidden');
+      if (!iframe.src) {
+        iframe.src = editorUrl;
+      }
       
       iframe.onload = () => {
-        placeholder.classList.add('hidden');
+        placeholder.style.display = 'none';
       };
       
       iframe.onerror = () => {
+        placeholder.style.display = 'flex';
         placeholder.innerHTML = `
           <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i>
@@ -270,11 +278,12 @@ class ContentManager {
               <h3 class="feature-title">Video Editor</h3>
               <p class="feature-description">Edit and enhance your videos</p>
               <div class="video-editor-container">
-                <iframe id="video-editor-iframe" class="hidden" frameborder="0" allowfullscreen></iframe>
-                <div class="video-editor-placeholder">
-                  <button id="load-video-editor" class="load-feature-button">
-                    <i class="fas fa-play"></i> Load Video Editor
-                  </button>
+                <iframe id="video-editor-iframe" frameborder="0" allowfullscreen></iframe>
+                <div class="video-editor-placeholder" style="display: none;">
+                  <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i> 
+                    <p>Loading Video Editor...</p>
+                  </div>
                 </div>
               </div>
             </div>
