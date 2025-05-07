@@ -7,13 +7,10 @@ export class UIController {
       // Cache DOM elements
       this.elements = {
         systemPrompt: document.getElementById('systemPrompt'),
-        voice: document.getElementById('voice'),
-        language: document.getElementById('language'),
         functionCalling: document.getElementById('functionCalling'),
         autoFunctionResponse: document.getElementById('autoFunctionResponse'),
         codeExecution: document.getElementById('codeExecution'),
         enableGoogleSearch: document.getElementById('enableGoogleSearch'),
-        toolUsage: document.getElementById('toolUsage'),
         allowInterruptions: document.getElementById('allowInterruptions'),
         startAudioBtn: document.getElementById('startAudioBtn'),
         startCameraBtn: document.getElementById('startCameraBtn'),
@@ -22,9 +19,9 @@ export class UIController {
         messages: document.getElementById('messages'),
         videoContainer: document.getElementById('videoContainer'),
         
-        toolsVoice: document.getElementById('tools-voice'),
-        toolsLanguage: document.getElementById('tools-language'),
-        toolsToolUsage: document.getElementById('tools-toolUsage'),
+        voice: document.getElementById('tools-voice'),
+        language: document.getElementById('tools-language'),
+        toolUsage: document.getElementById('tools-toolUsage'),
         toolsAllowInterruptions: document.getElementById('tools-allowInterruptions'),
         toolsAutoFunctionResponse: document.getElementById('tools-autoFunctionResponse'),
         toolsEnableGoogleSearch: document.getElementById('tools-enableGoogleSearch')
@@ -37,77 +34,6 @@ export class UIController {
      * Initialize synchronization between tools footer selectors and main content selectors
      */
     initToolsSync() {
-      if (this.elements.toolsVoice && this.elements.voice) {
-        this.elements.toolsVoice.value = this.elements.voice.value;
-        
-        this.elements.voice.addEventListener('change', () => {
-          this.elements.toolsVoice.value = this.elements.voice.value;
-        });
-        
-        this.elements.toolsVoice.addEventListener('change', () => {
-          this.elements.voice.value = this.elements.toolsVoice.value;
-        });
-      }
-      
-      if (this.elements.toolsLanguage && this.elements.language) {
-        this.elements.toolsLanguage.value = this.elements.language.value;
-        
-        this.elements.language.addEventListener('change', () => {
-          this.elements.toolsLanguage.value = this.elements.language.value;
-        });
-        
-        this.elements.toolsLanguage.addEventListener('change', () => {
-          this.elements.language.value = this.elements.toolsLanguage.value;
-        });
-      }
-      
-      if (this.elements.toolsToolUsage && this.elements.toolUsage) {
-        this.elements.toolsToolUsage.checked = this.elements.toolUsage.checked;
-        
-        this.elements.toolUsage.addEventListener('change', () => {
-          this.elements.toolsToolUsage.checked = this.elements.toolUsage.checked;
-        });
-        
-        this.elements.toolsToolUsage.addEventListener('change', () => {
-          this.elements.toolUsage.checked = this.elements.toolsToolUsage.checked;
-        });
-      }
-      
-      if (this.elements.toolsAllowInterruptions && this.elements.allowInterruptions) {
-        this.elements.toolsAllowInterruptions.checked = this.elements.allowInterruptions.checked;
-        
-        this.elements.allowInterruptions.addEventListener('change', () => {
-          this.elements.toolsAllowInterruptions.checked = this.elements.allowInterruptions.checked;
-        });
-        
-        this.elements.toolsAllowInterruptions.addEventListener('change', () => {
-          this.elements.allowInterruptions.checked = this.elements.toolsAllowInterruptions.checked;
-        });
-      }
-      
-      if (this.elements.toolsAutoFunctionResponse && this.elements.autoFunctionResponse) {
-        this.elements.toolsAutoFunctionResponse.checked = this.elements.autoFunctionResponse.checked;
-        
-        this.elements.autoFunctionResponse.addEventListener('change', () => {
-          this.elements.toolsAutoFunctionResponse.checked = this.elements.autoFunctionResponse.checked;
-        });
-        
-        this.elements.toolsAutoFunctionResponse.addEventListener('change', () => {
-          this.elements.autoFunctionResponse.checked = this.elements.toolsAutoFunctionResponse.checked;
-        });
-      }
-      
-      if (this.elements.toolsEnableGoogleSearch && this.elements.enableGoogleSearch) {
-        this.elements.toolsEnableGoogleSearch.checked = this.elements.enableGoogleSearch.checked;
-        
-        this.elements.enableGoogleSearch.addEventListener('change', () => {
-          this.elements.toolsEnableGoogleSearch.checked = this.elements.enableGoogleSearch.checked;
-        });
-        
-        this.elements.toolsEnableGoogleSearch.addEventListener('change', () => {
-          this.elements.enableGoogleSearch.checked = this.elements.toolsEnableGoogleSearch.checked;
-        });
-      }
     }
     
     /**
@@ -115,24 +41,16 @@ export class UIController {
      * @returns {Object} - Configuration object
      */
     getConfig() {
-      // Use tools-footer selectors if available, otherwise use main content selectors
-      const voice = this.elements.toolsVoice && this.elements.toolsVoice.value || this.elements.voice.value;
-      const language = this.elements.toolsLanguage && this.elements.toolsLanguage.value || this.elements.language.value;
-      const toolUsage = this.elements.toolsToolUsage && this.elements.toolsToolUsage.checked || this.elements.toolUsage.checked;
-      const allowInterruptions = this.elements.toolsAllowInterruptions && this.elements.toolsAllowInterruptions.checked || this.elements.allowInterruptions.checked;
-      const autoFunctionResponse = this.elements.toolsAutoFunctionResponse && this.elements.toolsAutoFunctionResponse.checked || this.elements.autoFunctionResponse.checked;
-      const googleSearch = this.elements.toolsEnableGoogleSearch && this.elements.toolsEnableGoogleSearch.checked || this.elements.enableGoogleSearch.checked;
-      
       return {
         systemPrompt: this.elements.systemPrompt.value,
-        voice: voice,
-        language: language,
+        voice: this.elements.voice.value,
+        language: this.elements.language.value,
         functionCalling: this.elements.functionCalling.checked,
-        autoFunctionResponse: autoFunctionResponse,
+        autoFunctionResponse: this.elements.autoFunctionResponse.checked,
         codeExecution: this.elements.codeExecution.checked,
-        googleSearch: googleSearch,
-        toolUsage: toolUsage,
-        allowInterruptions: allowInterruptions
+        googleSearch: this.elements.enableGoogleSearch.checked,
+        toolUsage: this.elements.toolUsage.checked,
+        allowInterruptions: this.elements.allowInterruptions.checked
       };
     }
     
