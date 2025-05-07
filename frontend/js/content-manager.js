@@ -131,6 +131,23 @@ class ContentManager {
       
       if (isTunnel) {
         editorUrl = 'https://fuzzy-ears-itch.loca.lt';
+        
+        iframe.addEventListener('load', () => {
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const passwordInput = iframeDoc.querySelector('input[type="password"]');
+            
+            if (passwordInput) {
+              passwordInput.value = '52.183.72.253';
+              const submitButton = iframeDoc.querySelector('button[type="submit"]');
+              if (submitButton) {
+                submitButton.click();
+              }
+            }
+          } catch (e) {
+            console.error('Error accessing iframe content:', e);
+          }
+        });
       } else {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
