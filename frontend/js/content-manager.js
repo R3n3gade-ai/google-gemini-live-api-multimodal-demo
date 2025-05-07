@@ -285,7 +285,7 @@ class ContentManager {
               <p class="feature-description">Edit and enhance your videos</p>
               <div class="video-editor-container">
                 <iframe id="video-editor-iframe" frameborder="0" allowfullscreen></iframe>
-                <div class="video-editor-placeholder" style="display: none;">
+                <div class="video-editor-placeholder">
                   <div class="loading-spinner">
                     <i class="fas fa-spinner fa-spin"></i> 
                     <p>Loading Video Editor...</p>
