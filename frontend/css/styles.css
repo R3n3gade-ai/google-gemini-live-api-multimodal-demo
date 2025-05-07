@@ -132,13 +132,32 @@
     flex: 1;
   }
   
-  .nav-footer-buttons {
+  .nav-footer-buttons, .tools-footer {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid var(--border-subtle);
+  }
+  
+  .tools-footer {
+    padding: 1rem 0.75rem 0;
+  }
+  
+  .tools-selectors {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .tools-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
   }
   
   .nav-button {

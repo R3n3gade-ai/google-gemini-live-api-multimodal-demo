@@ -20,8 +20,68 @@ export class UIController {
         startScreenBtn: document.getElementById('startScreenBtn'),
         stopButton: document.getElementById('stopButton'),
         messages: document.getElementById('messages'),
-        videoContainer: document.getElementById('videoContainer')
+        videoContainer: document.getElementById('videoContainer'),
+        
+        toolsVoice: document.getElementById('tools-voice'),
+        toolsLanguage: document.getElementById('tools-language'),
+        toolsToolUsage: document.getElementById('tools-toolUsage'),
+        toolsAllowInterruptions: document.getElementById('tools-allowInterruptions')
       };
+      
+      this.initToolsSync();
+    }
+    
+    /**
+     * Initialize synchronization between tools footer selectors and main content selectors
+     */
+    initToolsSync() {
+      if (this.elements.toolsVoice && this.elements.voice) {
+        this.elements.toolsVoice.value = this.elements.voice.value;
+        
+        this.elements.voice.addEventListener('change', () => {
+          this.elements.toolsVoice.value = this.elements.voice.value;
+        });
+        
+        this.elements.toolsVoice.addEventListener('change', () => {
+          this.elements.voice.value = this.elements.toolsVoice.value;
+        });
+      }
+      
+      if (this.elements.toolsLanguage && this.elements.language) {
+        this.elements.toolsLanguage.value = this.elements.language.value;
+        
+        this.elements.language.addEventListener('change', () => {
+          this.elements.toolsLanguage.value = this.elements.language.value;
+        });
+        
+        this.elements.toolsLanguage.addEventListener('change', () => {
+          this.elements.language.value = this.elements.toolsLanguage.value;
+        });
+      }
+      
+      if (this.elements.toolsToolUsage && this.elements.toolUsage) {
+        this.elements.toolsToolUsage.checked = this.elements.toolUsage.checked;
+        
+        this.elements.toolUsage.addEventListener('change', () => {
+          this.elements.toolsToolUsage.checked = this.elements.toolUsage.checked;
+        });
+        
+        this.elements.toolsToolUsage.addEventListener('change', () => {
+          this.elements.toolUsage.checked = this.elements.toolsToolUsage.checked;
+        });
+      }
+      
+      if (this.elements.toolsAllowInterruptions && this.elements.allowInterruptions) {
+        this.elements.toolsAllowInterruptions.checked = this.elements.allowInterruptions.checked;
+        
+        this.elements.allowInterruptions.addEventListener('change', () => {
+          this.elements.toolsAllowInterruptions.checked = this.elements.allowInterruptions.checked;
+        });
+        
+        this.elements.toolsAllowInterruptions.addEventListener('change', () => {
+          this.elements.allowInterruptions.checked = this.elements.toolsAllowInterruptions.checked;
+        });
+      }
     }
     
     /**
@@ -29,16 +89,22 @@ export class UIController {
      * @returns {Object} - Configuration object
      */
     getConfig() {
+      // Use tools-footer selectors if available, otherwise use main content selectors
+      const voice = this.elements.toolsVoice && this.elements.toolsVoice.value || this.elements.voice.value;
+      const language = this.elements.toolsLanguage && this.elements.toolsLanguage.value || this.elements.language.value;
+      const toolUsage = this.elements.toolsToolUsage && this.elements.toolsToolUsage.checked || this.elements.toolUsage.checked;
+      const allowInterruptions = this.elements.toolsAllowInterruptions && this.elements.toolsAllowInterruptions.checked || this.elements.allowInterruptions.checked;
+      
       return {
         systemPrompt: this.elements.systemPrompt.value,
-        voice: this.elements.voice.value,
-        language: this.elements.language.value,
+        voice: voice,
+        language: language,
         functionCalling: this.elements.functionCalling.checked,
         autoFunctionResponse: this.elements.autoFunctionResponse.checked,
         codeExecution: this.elements.codeExecution.checked,
         googleSearch: this.elements.enableGoogleSearch.checked,
-        toolUsage: this.elements.toolUsage.checked,
-        allowInterruptions: this.elements.allowInterruptions.checked
+        toolUsage: toolUsage,
+        allowInterruptions: allowInterruptions
       };
     }
     

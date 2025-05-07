@@ -243,25 +243,53 @@
             <i class="fas fa-users"></i>
             <span>Social Station</span>
           </a>
-        </div>
-        
-        <div class="nav-footer-buttons">
-          <a href="#" class="nav-button">
-            <i class="fas fa-code"></i>
-            <span>Code execution</span>
-          </a>
-          <a href="#" class="nav-button">
-            <i class="fas fa-cogs"></i>
-            <span>Function calling</span>
-          </a>
           <a href="#" class="nav-button">
             <i class="fas fa-brain"></i>
             <span>Brain</span>
           </a>
-          <a href="#" class="nav-button">
-            <i class="fas fa-microphone"></i>
-            <span>Voice</span>
-          </a>
+        </div>
+        
+        <!-- Tools Footer - Voice and Options -->
+        <div class="tools-footer">
+          <!-- Voice and Language Selectors -->
+          <div class="tools-selectors">
+            <div class="form-group voice-selector">
+              <label for="tools-voice" class="form-label">Voice</label>
+              <select id="tools-voice" class="form-control">
+                <option value="Puck">Puck</option>
+                <option value="Charon">Charon</option>
+                <option value="Kore">Kore</option>
+                <option value="Fenrir">Fenrir</option>
+                <option value="Aoede">Aoede</option>
+              </select>
+            </div>
+            
+            <div class="form-group language-selector">
+              <label for="tools-language" class="form-label">Language</label>
+              <select id="tools-language" class="form-control">
+                <option value="english">English</option>
+                <option value="spanish">Spanish</option>
+                <option value="french">French</option>
+                <option value="german">German</option>
+                <option value="japanese">Japanese</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Options -->
+          <div class="tools-options">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox-input" id="tools-toolUsage" checked>
+              <span class="checkbox-display"></span>
+              <span class="checkbox-label">Tool usage</span>
+            </label>
+            
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox-input" id="tools-allowInterruptions">
+              <span class="checkbox-display"></span>
+              <span class="checkbox-label">Allow Interruptions</span>
+            </label>
+          </div>
         </div>
       </div>
       
