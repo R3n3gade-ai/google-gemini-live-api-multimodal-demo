@@ -7,11 +7,6 @@ export class UIController {
       // Cache DOM elements
       this.elements = {
         systemPrompt: document.getElementById('systemPrompt'),
-        functionCalling: document.getElementById('functionCalling'),
-        autoFunctionResponse: document.getElementById('autoFunctionResponse'),
-        codeExecution: document.getElementById('codeExecution'),
-        enableGoogleSearch: document.getElementById('enableGoogleSearch'),
-        allowInterruptions: document.getElementById('allowInterruptions'),
         startAudioBtn: document.getElementById('startAudioBtn'),
         startCameraBtn: document.getElementById('startCameraBtn'),
         startScreenBtn: document.getElementById('startScreenBtn'),
@@ -40,9 +35,9 @@ export class UIController {
         systemPrompt: this.elements.systemPrompt.value,
         voice: document.getElementById('tools-voice') ? document.getElementById('tools-voice').value : 'Puck',
         language: document.getElementById('tools-language') ? document.getElementById('tools-language').value : 'english',
-        functionCalling: this.elements.functionCalling ? this.elements.functionCalling.checked : true,
+        functionCalling: document.getElementById('tools-functionCalling') ? document.getElementById('tools-functionCalling').checked : true,
         autoFunctionResponse: document.getElementById('tools-autoFunctionResponse') ? document.getElementById('tools-autoFunctionResponse').checked : true,
-        codeExecution: this.elements.codeExecution ? this.elements.codeExecution.checked : true,
+        codeExecution: document.getElementById('tools-codeExecution') ? document.getElementById('tools-codeExecution').checked : true,
         googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
         toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
         allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false

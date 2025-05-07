@@ -106,35 +106,9 @@
               placeholder="Enter system instructions for Gemini..."
             >You are a friendly AI Assistant.</textarea>
             
-            <!-- Gemini Features -->
-            <div class="features-grid">
-              <div class="feature-column">
-                <label class="toggle-wrapper">
-                  <input type="checkbox" class="toggle-input" id="functionCalling" checked>
-                  <span class="toggle-display"></span>
-                  <span class="toggle-label">Function calling</span>
-                </label>
-                
-                <label class="toggle-wrapper">
-                  <input type="checkbox" class="toggle-input" id="autoFunctionResponse" checked>
-                  <span class="toggle-display"></span>
-                  <span class="toggle-label">Automatic Function Response</span>
-                </label>
-              </div>
-              
-              <div class="feature-column">
-                <label class="toggle-wrapper">
-                  <input type="checkbox" class="toggle-input" id="codeExecution" checked>
-                  <span class="toggle-display"></span>
-                  <span class="toggle-label">Code Execution</span>
-                </label>
-                
-                <label class="toggle-wrapper">
-                  <input type="checkbox" class="toggle-input" id="enableGoogleSearch" checked>
-                  <span class="toggle-display"></span>
-                  <span class="toggle-label">Grounding with Google Search</span>
-                </label>
-              </div>
+            <!-- Gemini Features - Hidden to avoid duplication with tools tab -->
+            <div class="features-grid hidden">
+              <!-- Features moved to tools tab -->
             </div>
           </div>
 
@@ -251,9 +225,21 @@
             <!-- Toggles moved above tool search -->
             <div class="tools-toggles">
               <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-functionCalling" checked>
+                <span class="toggle-display"></span>
+                <span class="toggle-label">Function calling</span>
+              </label>
+              
+              <label class="toggle-wrapper">
                 <input type="checkbox" class="toggle-input" id="tools-autoFunctionResponse" checked>
                 <span class="toggle-display"></span>
                 <span class="toggle-label">Automatic Function Response</span>
+              </label>
+              
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-codeExecution" checked>
+                <span class="toggle-display"></span>
+                <span class="toggle-label">Code Execution</span>
               </label>
               
               <label class="toggle-wrapper">
