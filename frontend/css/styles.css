@@ -93,17 +93,17 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   
   .system-prompt-container {
     flex: 1;
-    margin-right: 1.5rem;
+    margin-right: 1rem;
     max-width: 70%;
   }
   
   .system-prompt-container .features-grid {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     align-items: flex-start;
   }
   
@@ -118,7 +118,7 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
   
   .voice-selector, .language-selector {
@@ -129,14 +129,14 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
   
   .feature-column {
     width: 48%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
   }
   
   .toggle-wrapper {
@@ -150,10 +150,10 @@
   }
   
   .toggle-display {
-    width: 2.5rem;
-    height: 1.25rem;
-    border-radius: 0.625rem;
-    margin-right: 0.75rem;
+    width: 2.25rem;
+    height: 1.1rem;
+    border-radius: 0.55rem;
+    margin-right: 0.5rem;
     position: relative;
     transition: var(--transition-normal);
     background: var(--bg-tertiary);
@@ -162,10 +162,10 @@
   .toggle-display::after {
     content: "";
     position: absolute;
-    top: 0.125rem;
-    left: 0.125rem;
-    width: 1rem;
-    height: 1rem;
+    top: 0.1rem;
+    left: 0.1rem;
+    width: 0.9rem;
+    height: 0.9rem;
     border-radius: 50%;
     background: var(--text-muted);
     transition: var(--transition-normal);
@@ -189,19 +189,19 @@
   .options-container {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
     width: 100%;
   }
   
   .form-group {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
   
   .form-label {
     display: block;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     font-size: 0.875rem;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -210,7 +210,7 @@
   
   .form-control {
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 0.6rem 0.8rem;
     background-color: var(--bg-tertiary);
     border: 1px solid var(--border-subtle);
     border-radius: var(--rounded-md);
@@ -231,7 +231,7 @@
   }
   
   textarea.form-control {
-    min-height: 80px;
+    min-height: 70px;
     resize: vertical;
   }
   
@@ -350,7 +350,7 @@
     background-color: var(--bg-secondary);
     border-radius: var(--rounded-md);
     overflow: hidden;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -361,13 +361,13 @@
   .messages {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 0.75rem;
     height: 100%;
   }
   
   .message {
-    padding: 0.75rem 1rem;
-    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
     background-color: var(--bg-tertiary);
     border-radius: var(--rounded-md);
     color: var(--text-secondary);
@@ -426,14 +426,14 @@
   /* Text Input Styling */
   .text-input-container {
     position: relative;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     display: flex;
     align-items: center;
   }
   
   .text-input {
     flex: 1;
-    padding: 1rem 10rem 1rem 1rem;
+    padding: 0.8rem 10rem 0.8rem 0.8rem;
     background-color: var(--bg-tertiary);
     border: 1px solid var(--border-subtle);
     border-radius: var(--rounded-md);
@@ -441,7 +441,7 @@
     font-family: inherit;
     font-size: 1rem;
     transition: var(--transition-normal);
-    height: 80px;
+    height: 70px;
   }
   
   .text-input:focus {
@@ -452,15 +452,15 @@
   
   .action-buttons {
     position: absolute;
-    right: 15px;
-    bottom: 22px;
+    right: 12px;
+    bottom: 18px;
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
   
   .btn-icon {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background-color: var(--bg-secondary);
     color: var(--text-secondary);
@@ -468,7 +468,7 @@
     align-items: center;
     justify-content: center;
     transition: var(--transition-normal);
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .btn-icon:hover {
@@ -478,8 +478,8 @@
   }
   
   .btn-send {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     border-radius: 50%;
     background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
