@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/static/css/feature-panels.css">
   <link rel="stylesheet" href="/static/css/dual-view.css">
   <link rel="stylesheet" href="/static/css/system-prompt-modal.css">
+  <link rel="stylesheet" href="/static/css/social-station.css">
 </head>
 <body>
   <div class="app-container">
@@ -75,6 +76,56 @@
         <!-- Messages Area - Conversation -->
         <div class="chat-container">
           <div id="messages" class="messages"></div>
+        </div>
+        
+        <!-- Social Station Container -->
+        <div id="social-station-container" class="feature-container social-station-container hidden">
+          <div class="social-station-header">
+            <div class="social-station-title">Social Station</div>
+            <div class="social-station-actions">
+              <button class="btn btn-sm">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="social-station-tabs">
+            <div class="social-station-tab active" data-tab="mixpost">Mixpost</div>
+            <div class="social-station-tab" data-tab="analytics">Analytics</div>
+            <div class="social-station-tab" data-tab="accounts">Accounts</div>
+          </div>
+          
+          <div class="social-station-content">
+            <div id="mixpost-panel" class="social-station-panel active">
+              <iframe 
+                id="social-station-iframe" 
+                class="social-station-iframe" 
+                src="about:blank"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                allow="camera; microphone; fullscreen"
+              ></iframe>
+              
+              <div id="social-station-loading" class="social-station-loading">
+                <div class="social-station-spinner"></div>
+                <div class="social-station-loading-text">Loading Mixpost...</div>
+              </div>
+            </div>
+            
+            <div id="analytics-panel" class="social-station-panel">
+              <div class="panel-placeholder">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics Dashboard Coming Soon</span>
+              </div>
+            </div>
+            
+            <div id="accounts-panel" class="social-station-panel">
+              <div class="panel-placeholder">
+                <i class="fas fa-users-cog"></i>
+                <span>Account Management Coming Soon</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Video Preview / Canvas (for camera/screen) -->
@@ -163,7 +214,7 @@
             <i class="fas fa-layer-group"></i>
             <span>Model Training</span>
           </a>
-          <a href="#" class="nav-button">
+          <a href="#" class="nav-button" data-feature="social-station">
             <i class="fas fa-users"></i>
             <span>Social Station</span>
           </a>
@@ -279,6 +330,7 @@
   <script src="/static/js/navigation.js"></script>
   <script src="/static/js/content-manager.js"></script>
   <script src="/static/js/system-prompt.js"></script>
+  <script src="/static/js/social-station.js"></script>
   
   <!-- Video Editor Integration -->
   <script>
