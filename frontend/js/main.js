@@ -68,9 +68,9 @@ class GeminiApp {
       });
       
       this.webSocketConnected = true;
-      this.uiController.appendMessage('WebSocket connected and ready');
+      console.log('WebSocket connected and ready');
     } catch (error) {
-      this.uiController.showError(`WebSocket connection failed: ${error.message}`);
+      console.error(`WebSocket connection failed: ${error.message}`);
       setTimeout(() => this.initWebSocket(), 3000);
     }
   }
@@ -155,7 +155,7 @@ class GeminiApp {
    * Handle WebSocket connection close
    */
   handleWebSocketClose() {
-    this.uiController.appendMessage('WebSocket disconnected - attempting to reconnect...');
+    console.log('WebSocket disconnected - attempting to reconnect...');
     this.webSocketConnected = false;
     this.stopStream();
     
@@ -170,7 +170,7 @@ class GeminiApp {
    * Handle WebSocket errors
    */
   handleWebSocketError(error) {
-    this.uiController.showError(`WebSocket error: ${error.message}`);
+    console.error(`WebSocket error: ${error.message}`);
   }
   
   /**
@@ -185,6 +185,9 @@ class GeminiApp {
       this.webSocketClient.sendText(this.textInput.value);
       
       this.textInput.value = '';
+      
+      this.stopButton.classList.remove('hidden');
+      this.stopButton.disabled = false;
     } catch (error) {
       this.uiController.showError(`Failed to send message: ${error.message}`);
     }

@@ -99,18 +99,21 @@
         </div>
         
         <div class="controls-container">
-          <!-- System Prompt -->
+          <!-- System Prompt (Collapsible) -->
           <div class="system-prompt-container">
-            <label for="systemPrompt" class="form-label">System Prompt</label>
-            <textarea 
-              id="systemPrompt" 
-              class="form-control"
-              placeholder="Enter system instructions for Gemini..."
-            >You are a friendly AI Assistant.</textarea>
-            
-            <!-- Gemini Features - Hidden to avoid duplication with tools tab -->
-            <div class="features-grid hidden">
-              <!-- Features moved to tools tab -->
+            <div class="system-prompt-toggle" id="systemPromptToggle">
+              <i class="fas fa-chevron-down"></i>
+              <span>System Prompt</span>
+            </div>
+            <div class="system-prompt-content" id="systemPromptContent">
+              <textarea 
+                id="systemPrompt" 
+                class="form-control"
+                placeholder="Enter system instructions for Gemini..."
+              >You are a friendly AI Assistant.</textarea>
+              <div class="prompt-actions">
+                <button id="savePromptBtn" class="btn btn-sm btn-primary">Save</button>
+              </div>
             </div>
           </div>
 
@@ -282,6 +285,7 @@
   <script type="module" src="/static/js/main.js"></script>
   <script src="/static/js/navigation.js"></script>
   <script src="/static/js/content-manager.js"></script>
+  <script src="/static/js/system-prompt.js"></script>
   
   <!-- Video Editor Integration -->
   <script>

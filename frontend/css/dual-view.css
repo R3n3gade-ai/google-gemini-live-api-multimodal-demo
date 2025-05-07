@@ -2,27 +2,35 @@
 .dual-view-layout .card-body {
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 120px);
+  position: relative;
 }
 
 .dual-view-layout .chat-container {
   flex: 1;
-  min-height: 200px;
-  max-height: 300px;
-  margin-bottom: 1rem;
+  height: calc(100% - 80px);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  padding-bottom: 1rem;
 }
 
 .dual-view-layout .video-container {
   height: 300px;
   margin-top: 0;
+  border-radius: var(--rounded-md);
+  overflow: hidden;
 }
 
 .dual-view-layout .video-wrapper {
   height: 100%;
+  border-radius: var(--rounded-md);
+  overflow: hidden;
 }
 
 .dual-view-layout .video-wrapper video {
   max-height: 280px;
+  border-radius: var(--rounded-md);
 }
 
 /* Message styling */
@@ -57,8 +65,12 @@
 .dual-view-layout .text-input-container {
   display: flex;
   width: 100%;
-  margin-top: 1rem;
-  position: relative;
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  padding: 0 1rem;
+  z-index: 10;
 }
 
 .dual-view-layout .text-input {
@@ -71,21 +83,67 @@
   color: var(--text-primary);
   font-size: 1rem;
   transition: var(--transition-normal);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .dual-view-layout .text-input:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: var(--input-glow);
+  box-shadow: var(--input-glow), 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .dual-view-layout .action-buttons {
   position: absolute;
-  right: 0.5rem;
+  right: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   gap: 0.25rem;
+}
+
+/* System Prompt Styling */
+.dual-view-layout .system-prompt-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.dual-view-layout .system-prompt-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-darkest);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.dual-view-layout .system-prompt-toggle:hover {
+  border-color: var(--accent-primary);
+}
+
+.dual-view-layout .system-prompt-toggle i {
+  transition: transform 0.2s ease;
+}
+
+.dual-view-layout .system-prompt-toggle.active i {
+  transform: rotate(180deg);
+}
+
+.dual-view-layout .system-prompt-content {
+  display: none;
+  padding: 1rem;
+  background-color: var(--bg-darkest);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-md);
+  margin-top: 0.5rem;
+}
+
+.dual-view-layout .system-prompt-content.active {
+  display: block;
 }
 
 /* Responsive adjustments */
