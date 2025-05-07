@@ -121,7 +121,9 @@ class ContentManager {
     if (iframe && placeholder) {
       placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading Video Editor...</div>';
       
-      const editorUrl = 'http://localhost:3000';
+      const protocol = window.location.protocol;
+      const hostname = window.location.hostname;
+      const editorUrl = `${protocol}//${hostname}:3000`;
       
       iframe.src = editorUrl;
       iframe.classList.remove('hidden');
