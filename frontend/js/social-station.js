@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const dashboard = document.querySelector('.social-station-dashboard');
     if (dashboard) {
-      dashboard.parentElement.classList.add('hidden');
+      dashboard.classList.add('hidden');
     }
   }
   
