@@ -130,22 +130,32 @@ class ContentManager {
       let editorUrl;
       
       if (isTunnel) {
-        editorUrl = 'https://fuzzy-ears-itch.loca.lt';
+        editorUrl = 'https://fuzzy-ears-itch.loca.lt?bypass=true';
+        
+        const directUrl = `https://52.183.72.253:fuzzy-ears-itch.loca.lt`;
         
         iframe.addEventListener('load', () => {
           try {
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            const passwordInput = iframeDoc.querySelector('input[type="password"]');
             
-            if (passwordInput) {
+            const passwordInput = iframeDoc.querySelector('input[type="password"]');
+            const submitButton = iframeDoc.querySelector('button[type="submit"]');
+            
+            if (passwordInput && submitButton) {
+              console.log('Authentication form detected, filling password');
               passwordInput.value = '52.183.72.253';
-              const submitButton = iframeDoc.querySelector('button[type="submit"]');
-              if (submitButton) {
-                submitButton.click();
-              }
+              submitButton.click();
+              
+              setTimeout(() => {
+                if (iframeDoc.querySelector('input[type="password"]')) {
+                  console.log('Authentication still showing, trying direct URL');
+                  iframe.src = directUrl;
+                }
+              }, 1000);
             }
           } catch (e) {
             console.error('Error accessing iframe content:', e);
+            iframe.src = directUrl;
           }
         });
       } else {
