@@ -73,15 +73,22 @@ document.addEventListener('DOMContentLoaded', () => {
     hideAllViews();
     
     if (!calendarView) {
-      calendarView = createCalendarView();
-      socialStationContainer.appendChild(calendarView);
-    } else {
-      calendarView.classList.remove('hidden');
+      calendarView = document.querySelector('.social-station-container .social-station-view.social-station-layout');
+      
+      if (!calendarView) {
+        calendarView = createCalendarView();
+        socialStationContainer.appendChild(calendarView);
+      } else {
+        // Initialize the existing calendar view
+        initCalendarView(calendarView);
+      }
     }
     
-    const dashboard = document.querySelector('.social-station-container > div:not(.social-station-layout)');
+    calendarView.classList.remove('hidden');
+    
+    const dashboard = document.querySelector('.social-station-dashboard');
     if (dashboard) {
-      dashboard.classList.add('hidden');
+      dashboard.parentElement.classList.add('hidden');
     }
   }
   
