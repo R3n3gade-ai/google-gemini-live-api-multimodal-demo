@@ -218,11 +218,18 @@ class ContentManager {
       videoContainer.classList.add('hidden');
     }
     
-    this.mainContent.innerHTML = '';
+    const featureContainers = document.querySelectorAll('.feature-container');
+    featureContainers.forEach(container => {
+      container.classList.add('hidden');
+    });
+    
+    const chatContainer = document.querySelector('.chat-container');
+    if (chatContainer) {
+      chatContainer.classList.remove('hidden');
+    }
     
     switch (contentId) {
       case 'chat':
-        this.mainContent.innerHTML = this.originalContent;
         break;
       case 'creation-studio':
         this.mainContent.innerHTML = this.getCreationStudioContent();
@@ -231,7 +238,17 @@ class ContentManager {
         this.mainContent.innerHTML = this.getAppBuilderContent();
         break;
       case 'social-station':
-        this.mainContent.innerHTML = this.getSocialStationContent();
+        const socialStationContainer = document.getElementById('social-station-container');
+        if (socialStationContainer) {
+          chatContainer.classList.add('hidden');
+          socialStationContainer.classList.remove('hidden');
+          
+          if (window.initSocialStationDashboard) {
+            window.initSocialStationDashboard();
+          }
+        } else {
+          this.mainContent.innerHTML = this.getSocialStationContent();
+        }
         break;
       case 'brain':
         this.mainContent.innerHTML = this.getBrainContent();
