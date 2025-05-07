@@ -64,6 +64,16 @@ class ContentManager {
         return;
       }
       
+      // Feature content cards
+      const contentCard = event.target.closest('.content-card');
+      if (contentCard) {
+        const featureId = contentCard.getAttribute('data-feature');
+        if (featureId) {
+          this.showFeature(featureId);
+        }
+        return;
+      }
+      
       const loadEditorButton = event.target.closest('#load-video-editor');
       if (loadEditorButton) {
         this.loadVideoEditor();
@@ -209,25 +219,25 @@ class ContentManager {
             <!-- Home View (Feature Cards) -->
             <div class="feature-panel active" id="feature-home">
               <div class="content-grid">
-                <div class="content-card" onclick="window.contentManager.showFeature('image-generation')">
+                <div class="content-card" data-feature="image-generation">
                   <div class="card-icon"><i class="fas fa-image"></i></div>
                   <h3>Image Generation</h3>
                   <p>Create stunning images with AI</p>
                 </div>
                 
-                <div class="content-card" onclick="window.contentManager.showFeature('video-creation')">
+                <div class="content-card" data-feature="video-creation">
                   <div class="card-icon"><i class="fas fa-video"></i></div>
                   <h3>Video Creation</h3>
                   <p>Generate videos from text prompts</p>
                 </div>
                 
-                <div class="content-card" onclick="window.contentManager.showFeature('video-editor')">
+                <div class="content-card" data-feature="video-editor">
                   <div class="card-icon"><i class="fas fa-film"></i></div>
                   <h3>Video Editor</h3>
                   <p>Edit and enhance your videos</p>
                 </div>
                 
-                <div class="content-card" onclick="window.contentManager.showFeature('audio-production')">
+                <div class="content-card" data-feature="audio-production">
                   <div class="card-icon"><i class="fas fa-music"></i></div>
                   <h3>Audio Production</h3>
                   <p>Create music and sound effects</p>
