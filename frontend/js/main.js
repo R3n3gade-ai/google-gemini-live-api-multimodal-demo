@@ -114,19 +114,22 @@ class GeminiApp {
    * Stop all streaming and clean up resources
    */
   stopStream() {
-    if (!this.isStreaming) return;
-    
     // Clean up resources (but keep WebSocket connected)
-    this.audioManager.stopCapture();
-    this.videoManager.stopCapture();
+    if (this.isStreaming) {
+      this.audioManager.stopCapture();
+      this.videoManager.stopCapture();
+      
+      // Reset state
+      this.isStreaming = false;
+      this.currentMode = null;
+      
+      // Update UI
+      this.uiController.updateUIForStreaming(false);
+      this.uiController.hideVideoPreview();
+    }
     
-    // Reset state
-    this.isStreaming = false;
-    this.currentMode = null;
-    
-    // Update UI
-    this.uiController.updateUIForStreaming(false);
-    this.uiController.hideVideoPreview();
+    this.stopButton.classList.add('hidden');
+    this.stopButton.disabled = true;
   }
   
   /**
@@ -180,17 +183,30 @@ class GeminiApp {
     if (!this.textInput.value.trim()) return;
     
     try {
-      this.uiController.appendMessage(this.textInput.value, 'user');
-      
-      this.webSocketClient.sendText(this.textInput.value);
-      
-      this.textInput.value = '';
-      
-      this.stopButton.classList.remove('hidden');
-      this.stopButton.disabled = false;
+      if (!this.webSocketConnected) {
+        this.initWebSocket().then(() => {
+          this.sendTextMessageInternal();
+        });
+      } else {
+        this.sendTextMessageInternal();
+      }
     } catch (error) {
       this.uiController.showError(`Failed to send message: ${error.message}`);
     }
+  }
+  
+  /**
+   * Internal method to send text message after ensuring WebSocket is connected
+   */
+  sendTextMessageInternal() {
+    this.uiController.appendMessage(this.textInput.value, 'user');
+    
+    this.webSocketClient.sendText(this.textInput.value);
+    
+    this.textInput.value = '';
+    
+    this.stopButton.classList.remove('hidden');
+    this.stopButton.disabled = false;
   }
 }
 
