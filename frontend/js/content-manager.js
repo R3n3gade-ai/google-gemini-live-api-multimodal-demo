@@ -126,23 +126,8 @@ class ContentManager {
       placeholder.style.display = 'flex';
       placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Loading Video Editor...</p></div>';
       
-      const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-      const hostname = window.location.hostname;
-      
-      const isTunnel = hostname.includes('devinapps.com');
-      let editorUrl;
-      
-      if (isTunnel) {
-        const tunnelParts = hostname.split('.');
-        const tunnelPrefix = tunnelParts[0];
-        
-        editorUrl = `${protocol}//video-editor-${tunnelPrefix}.devinapps.com`;
-        
-        console.log('Loading video editor from tunnel URL:', editorUrl);
-      } else {
-        editorUrl = `${protocol}//${hostname}:3000`;
-        console.log('Loading video editor from local URL:', editorUrl);
-      }
+      const editorUrl = 'https://fuzzy-ears-itch.loca.lt';
+      console.log('Loading video editor from URL:', editorUrl);
       
       iframe.src = editorUrl;
       
