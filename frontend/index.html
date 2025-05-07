@@ -5,6 +5,7 @@
   <title>AI Workstation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
@@ -14,8 +15,7 @@
       
       <div class="card-body">
         <!-- Messages Area - Conversation -->
-        <div class="messages-container">
-          <div class="messages-heading">Conversation</div>
+        <div class="chat-container">
           <div id="messages" class="messages"></div>
         </div>
 
@@ -81,22 +81,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Control Buttons -->
-        <div class="btn-row">
-          <button id="startAudioBtn" class="btn btn-primary">
-            Start Chatting
-          </button>
-          <button id="startCameraBtn" class="btn btn-primary">
-            Start Chatting with Video
-          </button>
-          <button id="startScreenBtn" class="btn btn-primary">
-            Start Chatting with Screen
-          </button>
-          <button id="stopButton" class="btn btn-danger" disabled>
-            Stop Chat
-          </button>
-        </div>
         
         <!-- Text Chat Input -->
         <div class="text-input-container">
@@ -106,8 +90,22 @@
             class="text-input" 
             placeholder="Enter your prompt"
           >
-          <button id="sendTextBtn" class="btn btn-send">
-            <span class="send-icon">➤</span>
+          <div class="action-buttons">
+            <button id="startAudioBtn" class="btn btn-icon">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button id="startCameraBtn" class="btn btn-icon">
+              <i class="fas fa-camera"></i>
+            </button>
+            <button id="startScreenBtn" class="btn btn-icon">
+              <i class="fas fa-desktop"></i>
+            </button>
+            <button id="sendTextBtn" class="btn btn-send">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <button id="stopButton" class="btn btn-danger stop-btn hidden" disabled>
+            <i class="fas fa-stop"></i>
           </button>
         </div>
       </div>
