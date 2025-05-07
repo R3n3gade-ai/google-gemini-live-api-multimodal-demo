@@ -215,22 +215,7 @@
         
         <!-- Tools Footer - Voice and Options -->
         <div class="tools-footer">
-          <!-- Top Section - Toggles -->
-          <div class="tools-toggles">
-            <label class="toggle-wrapper">
-              <input type="checkbox" class="toggle-input" id="tools-autoFunctionResponse" checked>
-              <span class="toggle-display"></span>
-              <span class="toggle-label">Automatic Function Response</span>
-            </label>
-            
-            <label class="toggle-wrapper">
-              <input type="checkbox" class="toggle-input" id="tools-enableGoogleSearch" checked>
-              <span class="toggle-display"></span>
-              <span class="toggle-label">Grounding with Google Search</span>
-            </label>
-          </div>
-          
-          <!-- Middle Section - Voice and Language in same row -->
+          <!-- Voice and Language in same row -->
           <div class="tools-selectors-row">
             <select id="tools-voice" class="form-control">
               <option value="Puck">Puck</option>
@@ -249,7 +234,7 @@
             </select>
           </div>
           
-          <!-- Bottom Section - Options -->
+          <!-- Options -->
           <div class="tools-options">
             <label class="checkbox-wrapper">
               <input type="checkbox" class="checkbox-input" id="tools-toolUsage" checked>
@@ -262,6 +247,21 @@
               <span class="checkbox-display"></span>
               <span class="checkbox-label">Allow Interruptions</span>
             </label>
+            
+            <!-- Toggles moved above tool search -->
+            <div class="tools-toggles">
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-autoFunctionResponse" checked>
+                <span class="toggle-display"></span>
+                <span class="toggle-label">Automatic Function Response</span>
+              </label>
+              
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-enableGoogleSearch" checked>
+                <span class="toggle-display"></span>
+                <span class="toggle-label">Grounding with Google Search</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
