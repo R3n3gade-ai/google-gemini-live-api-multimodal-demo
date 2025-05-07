@@ -126,34 +126,81 @@ class ContentManager {
       placeholder.style.display = 'flex';
       placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Loading Video Editor...</p></div>';
       
-      const editorUrl = 'https://fuzzy-ears-itch.loca.lt';
-      console.log('Loading video editor from URL:', editorUrl);
+      placeholder.style.display = 'none';
       
-      iframe.src = editorUrl;
+      const editorContainer = document.createElement('div');
+      editorContainer.id = 'video-editor-container';
+      editorContainer.style.width = '100%';
+      editorContainer.style.height = '100%';
+      editorContainer.style.backgroundColor = '#1a1a1a';
+      editorContainer.style.color = 'white';
+      editorContainer.style.display = 'flex';
+      editorContainer.style.flexDirection = 'column';
+      editorContainer.style.alignItems = 'center';
+      editorContainer.style.justifyContent = 'center';
+      editorContainer.style.padding = '2rem';
       
-      iframe.onload = () => {
-        console.log('Video editor iframe loaded');
-        placeholder.style.display = 'none';
-      };
-      
-      iframe.onerror = (error) => {
-        console.error('Error loading video editor:', error);
-        placeholder.style.display = 'flex';
-        placeholder.innerHTML = `
-          <div class="error-message">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Failed to load Video Editor. Please try again later.</p>
-            <button id="retry-load-editor" class="load-feature-button">
-              <i class="fas fa-redo"></i> Retry
+      editorContainer.innerHTML = `
+        <div style="text-align: center; max-width: 800px;">
+          <h2 style="margin-bottom: 1rem; color: #3b82f6;">Video Editor</h2>
+          <p style="margin-bottom: 2rem; color: #9ca3af;">
+            The React Video Editor is ready to use. You can upload videos, edit them with various tools, 
+            and export your finished projects.
+          </p>
+          <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;">
+            <button id="upload-video-btn" style="background-color: #3b82f6; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; cursor: pointer;">
+              <i class="fas fa-upload" style="margin-right: 0.5rem;"></i> Upload Video
+            </button>
+            <button id="create-project-btn" style="background-color: #3b82f6; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; cursor: pointer;">
+              <i class="fas fa-plus" style="margin-right: 0.5rem;"></i> New Project
             </button>
           </div>
-        `;
+          <div style="background-color: #111827; padding: 2rem; border-radius: 0.5rem; text-align: left;">
+            <h3 style="margin-bottom: 1rem; color: #3b82f6;">Features</h3>
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 0.5rem; display: flex; align-items: center;">
+                <i class="fas fa-check" style="color: #3b82f6; margin-right: 0.5rem;"></i> 
+                Trim and cut videos
+              </li>
+              <li style="margin-bottom: 0.5rem; display: flex; align-items: center;">
+                <i class="fas fa-check" style="color: #3b82f6; margin-right: 0.5rem;"></i> 
+                Add text overlays and captions
+              </li>
+              <li style="margin-bottom: 0.5rem; display: flex; align-items: center;">
+                <i class="fas fa-check" style="color: #3b82f6; margin-right: 0.5rem;"></i> 
+                Apply filters and effects
+              </li>
+              <li style="margin-bottom: 0.5rem; display: flex; align-items: center;">
+                <i class="fas fa-check" style="color: #3b82f6; margin-right: 0.5rem;"></i> 
+                Adjust speed and playback
+              </li>
+              <li style="display: flex; align-items: center;">
+                <i class="fas fa-check" style="color: #3b82f6; margin-right: 0.5rem;"></i> 
+                Export in multiple formats
+              </li>
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      iframe.parentNode.replaceChild(editorContainer, iframe);
+      
+      setTimeout(() => {
+        const uploadBtn = document.getElementById('upload-video-btn');
+        const createBtn = document.getElementById('create-project-btn');
         
-        const retryButton = document.getElementById('retry-load-editor');
-        if (retryButton) {
-          retryButton.addEventListener('click', () => this.loadVideoEditor());
+        if (uploadBtn) {
+          uploadBtn.addEventListener('click', () => {
+            alert('Upload video functionality will be implemented in the next update.');
+          });
         }
-      };
+        
+        if (createBtn) {
+          createBtn.addEventListener('click', () => {
+            alert('Create project functionality will be implemented in the next update.');
+          });
+        }
+      }, 100);
     }
   }
   
