@@ -19,12 +19,7 @@ export class UIController {
         messages: document.getElementById('messages'),
         videoContainer: document.getElementById('videoContainer'),
         textInput: document.getElementById('textInput'),
-        sendTextBtn: document.getElementById('sendTextBtn'),
-        
-        voice: document.getElementById('tools-voice'),
-        language: document.getElementById('tools-language'),
-        toolUsage: document.getElementById('tools-toolUsage'),
-        allowInterruptions: document.getElementById('tools-allowInterruptions')
+        sendTextBtn: document.getElementById('sendTextBtn')
       };
       
       this.initToolsSync();
@@ -43,13 +38,13 @@ export class UIController {
     getConfig() {
       return {
         systemPrompt: this.elements.systemPrompt.value,
-        voice: this.elements.voice ? this.elements.voice.value : 'Puck',
-        language: this.elements.language ? this.elements.language.value : 'english',
+        voice: document.getElementById('tools-voice') ? document.getElementById('tools-voice').value : 'Puck',
+        language: document.getElementById('tools-language') ? document.getElementById('tools-language').value : 'english',
         functionCalling: this.elements.functionCalling ? this.elements.functionCalling.checked : true,
         autoFunctionResponse: document.getElementById('tools-autoFunctionResponse') ? document.getElementById('tools-autoFunctionResponse').checked : true,
         codeExecution: this.elements.codeExecution ? this.elements.codeExecution.checked : true,
         googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
-        toolUsage: this.elements.toolUsage ? this.elements.toolUsage.checked : true,
+        toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
         allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false
       };
     }
