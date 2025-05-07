@@ -9,11 +9,40 @@
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-  <div class="container">
-    <div class="main-card">
-      <div class="card-gradient-border"></div>
-      
-      <div class="card-body">
+  <div class="app-container">
+    <!-- Left Navigation Menu -->
+    <div class="left-nav">
+      <div class="nav-header">
+        <div class="logo">G</div>
+        <h3>AI Workstation</h3>
+      </div>
+      <nav class="nav-menu">
+        <ul>
+          <li class="nav-item active">
+            <a href="#"><i class="fas fa-comment-alt"></i> Chat</a>
+          </li>
+          <li class="nav-item">
+            <a href="#"><i class="fas fa-image"></i> Image</a>
+          </li>
+          <li class="nav-item">
+            <a href="#"><i class="fas fa-code"></i> Code</a>
+          </li>
+          <li class="nav-item">
+            <a href="#"><i class="fas fa-file-alt"></i> Documents</a>
+          </li>
+          <li class="nav-item">
+            <a href="#"><i class="fas fa-chart-bar"></i> Analytics</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="main-card">
+        <div class="card-gradient-border"></div>
+        
+        <div class="card-body">
         <!-- Messages Area - Conversation -->
         <div class="chat-container">
           <div id="messages" class="messages"></div>
@@ -151,6 +180,43 @@
           <button id="stopButton" class="btn btn-danger stop-btn hidden" disabled>
             <i class="fas fa-stop"></i>
           </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Navigation Menu -->
+    <div class="right-nav">
+      <div class="right-nav-header">
+        <h3>Tools</h3>
+      </div>
+      <div class="right-nav-content">
+        <div class="nav-section">
+          <h4 class="nav-section-title">Recent Chats</h4>
+          <ul class="nav-list">
+            <li class="nav-list-item">
+              <a href="#"><i class="fas fa-history"></i> Project Planning</a>
+            </li>
+            <li class="nav-list-item">
+              <a href="#"><i class="fas fa-history"></i> Code Review</a>
+            </li>
+            <li class="nav-list-item">
+              <a href="#"><i class="fas fa-history"></i> Data Analysis</a>
+            </li>
+          </ul>
+        </div>
+        <div class="nav-section">
+          <h4 class="nav-section-title">Saved Prompts</h4>
+          <ul class="nav-list">
+            <li class="nav-list-item">
+              <a href="#"><i class="fas fa-bookmark"></i> Code Generator</a>
+            </li>
+            <li class="nav-list-item">
+              <a href="#"><i class="fas fa-bookmark"></i> SQL Helper</a>
+            </li>
+            <li class="nav-list-item">
+              <a href="#"><i class="fas fa-bookmark"></i> Meeting Summary</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
