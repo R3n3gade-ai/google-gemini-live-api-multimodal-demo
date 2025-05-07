@@ -41,7 +41,6 @@ export class UIController {
         googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
         toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
         allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false,
-        enableVoiceInput: document.getElementById('tools-enableVoiceInput') ? document.getElementById('tools-enableVoiceInput').checked : false,
         enableVoiceOutput: document.getElementById('tools-enableVoiceOutput') ? document.getElementById('tools-enableVoiceOutput').checked : false
       };
     }

@@ -90,8 +90,7 @@ class GeminiApp {
       
       const config = this.uiController.getConfig();
       
-      // Initialize audio capture if voice input is enabled or we're in audio/camera/screen mode
-      if (config.enableVoiceInput || mode !== 'text') {
+      if (mode !== 'text') {
         await this.audioManager.startCapture((audioData) => {
           this.webSocketClient.sendAudio(audioData);
         });
@@ -195,10 +194,6 @@ class GeminiApp {
         this.sendTextMessageInternal();
       }
       
-      const config = this.uiController.getConfig();
-      if (config.enableVoiceInput && !this.isStreaming && this.currentMode !== 'text') {
-        this.startStream('text');
-      }
     } catch (error) {
       this.uiController.showError(`Failed to send message: ${error.message}`);
     }
