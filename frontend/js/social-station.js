@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
    * Initialize Social Station Dashboard
    */
   function initSocialStationDashboard() {
-    contentCalendarTile = document.querySelector('.social-station-container a[href="#content-calendar"]');
+    socialStationDashboard = document.querySelector('.social-station-dashboard');
+    contentCalendarTile = document.querySelector('#social-station-container a[href="#content-calendar"]');
     
     if (contentCalendarTile) {
       contentCalendarTile.addEventListener('click', (e) => {
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
     
-    const dashboardTiles = document.querySelectorAll('.social-station-container a[href^="#"]');
+    const dashboardTiles = document.querySelectorAll('#social-station-container a[href^="#"]');
     if (dashboardTiles.length > 0) {
       dashboardTiles.forEach(tile => {
         tile.addEventListener('click', (e) => {
