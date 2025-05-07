@@ -196,7 +196,7 @@ class GeminiApp {
       }
       
       const config = this.uiController.getConfig();
-      if (config.enableVoiceInput && !this.isStreaming) {
+      if (config.enableVoiceInput && !this.isStreaming && this.currentMode !== 'text') {
         this.startStream('text');
       }
     } catch (error) {
@@ -214,8 +214,11 @@ class GeminiApp {
     
     this.textInput.value = '';
     
-    this.stopButton.classList.remove('hidden');
-    this.stopButton.disabled = false;
+    // Only show stop button for streaming modes (audio, camera, screen)
+    if (this.isStreaming) {
+      this.stopButton.classList.remove('hidden');
+      this.stopButton.disabled = false;
+    }
   }
 }
 
