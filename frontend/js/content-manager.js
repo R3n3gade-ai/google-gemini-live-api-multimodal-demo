@@ -126,10 +126,16 @@ class ContentManager {
       placeholder.style.display = 'flex';
       placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Loading Video Editor...</p></div>';
       
-      const protocol = window.location.protocol;
-      const hostname = window.location.hostname;
-      const port = '3000'; // Video editor runs on port 3000
-      const editorUrl = `${protocol}//${hostname}:${port}`;
+      const isTunnel = window.location.hostname.includes('devinapps.com');
+      let editorUrl;
+      
+      if (isTunnel) {
+        editorUrl = 'https://user:9603b2f332c40e7bcc3e2120037e15d1@google-gemini-demo-tunnel-iobggdm0.devinapps.com';
+      } else {
+        const protocol = window.location.protocol;
+        const hostname = window.location.hostname;
+        editorUrl = `${protocol}//${hostname}:3000`;
+      }
       
       if (!iframe.src) {
         iframe.src = editorUrl;
