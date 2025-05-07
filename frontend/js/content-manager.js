@@ -130,7 +130,7 @@ class ContentManager {
       let editorUrl;
       
       if (isTunnel) {
-        editorUrl = 'https://user:6dae2dcca92c1035914d385d5778dd3f@google-gemini-demo-tunnel-pd6hn0r2.devinapps.com';
+        editorUrl = 'https://fuzzy-ears-itch.loca.lt';
       } else {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
