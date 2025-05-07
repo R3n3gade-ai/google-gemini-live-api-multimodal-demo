@@ -39,21 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function initSocialStationDashboard() {
     socialStationDashboard = document.querySelector('.social-station-dashboard');
-    contentCalendarTile = document.querySelector('#social-station-container a[href="#content-calendar"]');
     
-    if (contentCalendarTile) {
-      contentCalendarTile.addEventListener('click', (e) => {
-        e.preventDefault();
-        showCalendarView();
-      });
-    }
-    
-    const dashboardTiles = document.querySelectorAll('#social-station-container a[href^="#"]');
+    const dashboardTiles = document.querySelectorAll('.social-station-dashboard .dashboard-tile');
     if (dashboardTiles.length > 0) {
       dashboardTiles.forEach(tile => {
         tile.addEventListener('click', (e) => {
           e.preventDefault();
           const feature = tile.getAttribute('href').substring(1);
+          console.log('Tile clicked:', feature);
           
           if (feature === 'content-calendar') {
             showCalendarView();
@@ -64,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       });
+    } else {
+      console.error('No dashboard tiles found');
     }
+    
+    console.log('Dashboard HTML:', socialStationDashboard ? socialStationDashboard.innerHTML : 'Dashboard not found');
   }
   
   /**
