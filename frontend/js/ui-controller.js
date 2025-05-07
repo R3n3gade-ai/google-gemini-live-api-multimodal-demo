@@ -54,17 +54,19 @@ export class UIController {
     }
     
     /**
-     * Show video preview container
+     * Show video preview container and hide chat container
      */
     showVideoPreview() {
       this.elements.videoContainer.classList.remove('hidden');
+      this.elements.messages.parentElement.classList.add('hidden');
     }
     
     /**
-     * Hide video preview container
+     * Hide video preview container and show chat container
      */
     hideVideoPreview() {
       this.elements.videoContainer.classList.add('hidden');
+      this.elements.messages.parentElement.classList.remove('hidden');
     }
     
     /**
