@@ -126,53 +126,33 @@ class ContentManager {
       placeholder.style.display = 'flex';
       placeholder.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Loading Video Editor...</p></div>';
       
-      const isTunnel = window.location.hostname.includes('devinapps.com');
+      const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+      const hostname = window.location.hostname;
+      
+      const isTunnel = hostname.includes('devinapps.com');
       let editorUrl;
       
       if (isTunnel) {
-        editorUrl = 'https://fuzzy-ears-itch.loca.lt?bypass=true';
+        const tunnelParts = hostname.split('.');
+        const tunnelPrefix = tunnelParts[0];
         
-        const directUrl = `https://52.183.72.253:fuzzy-ears-itch.loca.lt`;
+        editorUrl = `${protocol}//video-editor-${tunnelPrefix}.devinapps.com`;
         
-        iframe.addEventListener('load', () => {
-          try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            
-            const passwordInput = iframeDoc.querySelector('input[type="password"]');
-            const submitButton = iframeDoc.querySelector('button[type="submit"]');
-            
-            if (passwordInput && submitButton) {
-              console.log('Authentication form detected, filling password');
-              passwordInput.value = '52.183.72.253';
-              submitButton.click();
-              
-              setTimeout(() => {
-                if (iframeDoc.querySelector('input[type="password"]')) {
-                  console.log('Authentication still showing, trying direct URL');
-                  iframe.src = directUrl;
-                }
-              }, 1000);
-            }
-          } catch (e) {
-            console.error('Error accessing iframe content:', e);
-            iframe.src = directUrl;
-          }
-        });
+        console.log('Loading video editor from tunnel URL:', editorUrl);
       } else {
-        const protocol = window.location.protocol;
-        const hostname = window.location.hostname;
         editorUrl = `${protocol}//${hostname}:3000`;
+        console.log('Loading video editor from local URL:', editorUrl);
       }
       
-      if (!iframe.src) {
-        iframe.src = editorUrl;
-      }
+      iframe.src = editorUrl;
       
       iframe.onload = () => {
+        console.log('Video editor iframe loaded');
         placeholder.style.display = 'none';
       };
       
-      iframe.onerror = () => {
+      iframe.onerror = (error) => {
+        console.error('Error loading video editor:', error);
         placeholder.style.display = 'flex';
         placeholder.innerHTML = `
           <div class="error-message">
