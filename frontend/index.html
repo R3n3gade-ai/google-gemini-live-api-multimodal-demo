@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/static/css/tools-footer.css">
   <link rel="stylesheet" href="/static/css/feature-panels.css">
   <link rel="stylesheet" href="/static/css/dual-view.css">
+  <link rel="stylesheet" href="/static/css/system-prompt-modal.css">
 </head>
 <body>
   <div class="app-container">
@@ -98,30 +99,7 @@
           </div>
         </div>
         
-        <div class="controls-container">
-          <!-- System Prompt (Collapsible) -->
-          <div class="system-prompt-container">
-            <div class="system-prompt-toggle" id="systemPromptToggle">
-              <i class="fas fa-chevron-down"></i>
-              <span>System Prompt</span>
-            </div>
-            <div class="system-prompt-content" id="systemPromptContent">
-              <textarea 
-                id="systemPrompt" 
-                class="form-control"
-                placeholder="Enter system instructions for Gemini..."
-              >You are a friendly AI Assistant.</textarea>
-              <div class="prompt-actions">
-                <button id="savePromptBtn" class="btn btn-sm btn-primary">Save</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Placeholder for original voice/language options - removed to avoid duplication -->
-          <div class="voice-options-container hidden">
-            <!-- Content moved to tools footer -->
-          </div>
-        </div>
+        <!-- Removed system prompt container to make chat extend to edge -->
         
         <!-- Text Chat Input -->
         <div class="text-input-container">
@@ -132,6 +110,9 @@
             placeholder="Enter your prompt"
           >
           <div class="action-buttons">
+            <button id="systemPromptBtn" class="btn btn-icon">
+              <i class="fas fa-cog"></i>
+            </button>
             <button id="startAudioBtn" class="btn btn-icon">
               <i class="fas fa-microphone"></i>
             </button>
@@ -313,5 +294,24 @@
       });
     });
   </script>
+  <!-- System Prompt Modal -->
+  <div id="systemPromptModal" class="system-prompt-modal">
+    <div class="system-prompt-modal-content">
+      <div class="system-prompt-modal-header">
+        <div class="system-prompt-modal-title">System Prompt</div>
+        <button id="closeSystemPromptModal" class="system-prompt-modal-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <textarea 
+        id="systemPrompt" 
+        placeholder="Enter system instructions for Gemini..."
+      >You are a friendly AI Assistant.</textarea>
+      <div class="system-prompt-modal-footer">
+        <button id="cancelSystemPromptBtn" class="btn-cancel">Cancel</button>
+        <button id="saveSystemPromptBtn" class="btn-save">Save</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

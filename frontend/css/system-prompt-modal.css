@@ -1,0 +1,111 @@
+/* System Prompt Modal Styles */
+.system-prompt-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.system-prompt-modal.active {
+  display: flex;
+}
+
+.system-prompt-modal-content {
+  background-color: var(--bg-darkest);
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--border-subtle);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  padding: 1.5rem;
+}
+
+.system-prompt-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.system-prompt-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.system-prompt-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.system-prompt-modal-close:hover {
+  color: var(--text-primary);
+}
+
+.system-prompt-modal textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 0.75rem;
+  background-color: var(--bg-darker);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.system-prompt-modal textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--input-glow);
+}
+
+.system-prompt-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.system-prompt-modal-footer button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--rounded-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.system-prompt-modal-footer .btn-cancel {
+  background-color: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.system-prompt-modal-footer .btn-cancel:hover {
+  background-color: var(--bg-darker);
+  color: var(--text-primary);
+}
+
+.system-prompt-modal-footer .btn-save {
+  background-color: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: white;
+}
+
+.system-prompt-modal-footer .btn-save:hover {
+  background-color: var(--accent-primary-hover);
+}
