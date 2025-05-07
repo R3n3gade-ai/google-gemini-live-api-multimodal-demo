@@ -102,6 +102,11 @@
     max-width: 70%;
   }
   
+  .system-prompt-container .features-grid {
+    margin-top: 1rem;
+    align-items: flex-start;
+  }
+  
   .voice-options-container {
     width: 280px;
     display: flex;
