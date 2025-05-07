@@ -34,10 +34,9 @@
 }
 
 .tools-options .tools-toggles {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   border-top: 1px solid var(--border-subtle);
-  padding-top: 1rem;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: var(--rounded-md);
-  padding: 1rem;
+  padding: 0.5rem;
 }
