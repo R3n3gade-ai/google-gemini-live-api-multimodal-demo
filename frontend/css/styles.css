@@ -101,14 +101,89 @@
   }
   
   .voice-options-container {
-    width: 180px;
+    width: 280px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
   }
   
-  .voice-selector {
-    margin-bottom: 0.5rem;
+  .selectors-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+  
+  .voice-selector, .language-selector {
+    width: 48%;
+  }
+  
+  .features-grid {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+  
+  .feature-column {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .toggle-wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .toggle-input {
+    display: none;
+  }
+  
+  .toggle-display {
+    width: 2.5rem;
+    height: 1.25rem;
+    border-radius: 0.625rem;
+    margin-right: 0.75rem;
+    position: relative;
+    transition: var(--transition-normal);
+    background: var(--bg-tertiary);
+  }
+  
+  .toggle-display::after {
+    content: "";
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: var(--transition-normal);
+  }
+  
+  .toggle-input:checked + .toggle-display {
+    background: var(--accent-primary);
+  }
+  
+  .toggle-input:checked + .toggle-display::after {
+    transform: translateX(1.25rem);
+    background: white;
+  }
+  
+  .toggle-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+  }
+  
+  .options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
     width: 100%;
   }
   

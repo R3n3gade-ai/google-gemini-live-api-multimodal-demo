@@ -8,7 +8,12 @@ export class UIController {
       this.elements = {
         systemPrompt: document.getElementById('systemPrompt'),
         voice: document.getElementById('voice'),
+        language: document.getElementById('language'),
+        functionCalling: document.getElementById('functionCalling'),
+        autoFunctionResponse: document.getElementById('autoFunctionResponse'),
+        codeExecution: document.getElementById('codeExecution'),
         enableGoogleSearch: document.getElementById('enableGoogleSearch'),
+        toolUsage: document.getElementById('toolUsage'),
         allowInterruptions: document.getElementById('allowInterruptions'),
         startAudioBtn: document.getElementById('startAudioBtn'),
         startCameraBtn: document.getElementById('startCameraBtn'),
@@ -27,7 +32,12 @@ export class UIController {
       return {
         systemPrompt: this.elements.systemPrompt.value,
         voice: this.elements.voice.value,
+        language: this.elements.language.value,
+        functionCalling: this.elements.functionCalling.checked,
+        autoFunctionResponse: this.elements.autoFunctionResponse.checked,
+        codeExecution: this.elements.codeExecution.checked,
         googleSearch: this.elements.enableGoogleSearch.checked,
+        toolUsage: this.elements.toolUsage.checked,
         allowInterruptions: this.elements.allowInterruptions.checked
       };
     }

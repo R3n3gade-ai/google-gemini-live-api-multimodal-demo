@@ -52,23 +52,67 @@
             >You are a friendly AI Assistant.</textarea>
           </div>
 
-          <!-- Voice and Options -->
+          <!-- Voice and Language -->
           <div class="voice-options-container">
-            <div class="form-group voice-selector">
-              <label for="voice" class="form-label">Voice</label>
-              <select id="voice" class="form-control">
-                <option value="Puck">Puck</option>
-                <option value="Charon">Charon</option>
-                <option value="Kore">Kore</option>
-                <option value="Fenrir">Fenrir</option>
-                <option value="Aoede">Aoede</option>
-              </select>
+            <div class="selectors-container">
+              <div class="form-group voice-selector">
+                <label for="voice" class="form-label">Voice</label>
+                <select id="voice" class="form-control">
+                  <option value="Puck">Puck</option>
+                  <option value="Charon">Charon</option>
+                  <option value="Kore">Kore</option>
+                  <option value="Fenrir">Fenrir</option>
+                  <option value="Aoede">Aoede</option>
+                </select>
+              </div>
+              
+              <div class="form-group language-selector">
+                <label for="language" class="form-label">Language</label>
+                <select id="language" class="form-control">
+                  <option value="english">English</option>
+                  <option value="spanish">Spanish</option>
+                  <option value="french">French</option>
+                  <option value="german">German</option>
+                  <option value="japanese">Japanese</option>
+                </select>
+              </div>
             </div>
 
+            <!-- Gemini Features -->
+            <div class="features-grid">
+              <div class="feature-column">
+                <label class="toggle-wrapper">
+                  <input type="checkbox" class="toggle-input" id="functionCalling" checked>
+                  <span class="toggle-display"></span>
+                  <span class="toggle-label">Function calling</span>
+                </label>
+                
+                <label class="toggle-wrapper">
+                  <input type="checkbox" class="toggle-input" id="autoFunctionResponse" checked>
+                  <span class="toggle-display"></span>
+                  <span class="toggle-label">Automatic Function Response</span>
+                </label>
+              </div>
+              
+              <div class="feature-column">
+                <label class="toggle-wrapper">
+                  <input type="checkbox" class="toggle-input" id="codeExecution" checked>
+                  <span class="toggle-display"></span>
+                  <span class="toggle-label">Code Execution</span>
+                </label>
+                
+                <label class="toggle-wrapper">
+                  <input type="checkbox" class="toggle-input" id="enableGoogleSearch" checked>
+                  <span class="toggle-display"></span>
+                  <span class="toggle-label">Grounding with Google Search</span>
+                </label>
+              </div>
+            </div>
+            
             <!-- Options -->
-            <div class="checkbox-container">
+            <div class="options-container">
               <label class="checkbox-wrapper">
-                <input type="checkbox" class="checkbox-input" id="enableGoogleSearch" checked>
+                <input type="checkbox" class="checkbox-input" id="toolUsage" checked>
                 <span class="checkbox-display"></span>
                 <span class="checkbox-label">Tool usage</span>
               </label>
