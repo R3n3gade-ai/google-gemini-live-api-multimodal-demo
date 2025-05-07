@@ -18,13 +18,13 @@ export class UIController {
         stopButton: document.getElementById('stopButton'),
         messages: document.getElementById('messages'),
         videoContainer: document.getElementById('videoContainer'),
+        textInput: document.getElementById('textInput'),
+        sendTextBtn: document.getElementById('sendTextBtn'),
         
         voice: document.getElementById('tools-voice'),
         language: document.getElementById('tools-language'),
         toolUsage: document.getElementById('tools-toolUsage'),
-        toolsAllowInterruptions: document.getElementById('tools-allowInterruptions'),
-        toolsAutoFunctionResponse: document.getElementById('tools-autoFunctionResponse'),
-        toolsEnableGoogleSearch: document.getElementById('tools-enableGoogleSearch')
+        allowInterruptions: document.getElementById('tools-allowInterruptions')
       };
       
       this.initToolsSync();
@@ -43,14 +43,14 @@ export class UIController {
     getConfig() {
       return {
         systemPrompt: this.elements.systemPrompt.value,
-        voice: this.elements.voice.value,
-        language: this.elements.language.value,
-        functionCalling: this.elements.functionCalling.checked,
-        autoFunctionResponse: this.elements.autoFunctionResponse.checked,
-        codeExecution: this.elements.codeExecution.checked,
-        googleSearch: this.elements.enableGoogleSearch.checked,
-        toolUsage: this.elements.toolUsage.checked,
-        allowInterruptions: this.elements.allowInterruptions.checked
+        voice: this.elements.voice ? this.elements.voice.value : 'Puck',
+        language: this.elements.language ? this.elements.language.value : 'english',
+        functionCalling: this.elements.functionCalling ? this.elements.functionCalling.checked : true,
+        autoFunctionResponse: document.getElementById('tools-autoFunctionResponse') ? document.getElementById('tools-autoFunctionResponse').checked : true,
+        codeExecution: this.elements.codeExecution ? this.elements.codeExecution.checked : true,
+        googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
+        toolUsage: this.elements.toolUsage ? this.elements.toolUsage.checked : true,
+        allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false
       };
     }
     
