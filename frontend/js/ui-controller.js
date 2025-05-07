@@ -56,28 +56,36 @@ export class UIController {
     }
     
     /**
-     * Show video preview container and hide chat container
+     * Show video preview container alongside chat container
      */
     showVideoPreview() {
       this.elements.videoContainer.classList.remove('hidden');
-      this.elements.messages.parentElement.classList.add('hidden');
     }
     
     /**
-     * Hide video preview container and show chat container
+     * Hide video preview container
      */
     hideVideoPreview() {
       this.elements.videoContainer.classList.add('hidden');
-      this.elements.messages.parentElement.classList.remove('hidden');
     }
     
     /**
      * Append a message to the conversation area
      * @param {string} message - Message text to display
+     * @param {string} type - Message type (user, gemini, system, error)
      */
-    appendMessage(message) {
+    appendMessage(message, type = 'system') {
       const messageDiv = document.createElement('div');
       messageDiv.className = 'message';
+      
+      if (type === 'user') {
+        messageDiv.classList.add('user-message');
+      } else if (type === 'gemini') {
+        messageDiv.classList.add('gemini-message');
+      } else if (type === 'error') {
+        messageDiv.style.borderLeftColor = 'var(--accent-danger)';
+      }
+      
       messageDiv.textContent = message;
       
       this.elements.messages.appendChild(messageDiv);

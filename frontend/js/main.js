@@ -139,15 +139,15 @@ class GeminiApp {
         break;
         
       case 'text':
-        this.uiController.appendMessage(`[Gemini Text] ${response.text}`);
+        this.uiController.appendMessage(response.text, 'gemini');
         break;
         
       case 'turn_complete':
-        this.uiController.appendMessage('[Gemini Turn Complete]');
+        console.log('Gemini turn complete');
         break;
         
       default:
-        this.uiController.appendMessage(`[Unknown] ${JSON.stringify(response)}`);
+        console.log('Unknown message type:', response);
     }
   }
   
@@ -180,7 +180,7 @@ class GeminiApp {
     if (!this.textInput.value.trim()) return;
     
     try {
-      this.uiController.appendMessage(`[You] ${this.textInput.value}`);
+      this.uiController.appendMessage(this.textInput.value, 'user');
       
       this.webSocketClient.sendText(this.textInput.value);
       
