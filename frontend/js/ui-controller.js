@@ -40,7 +40,8 @@ export class UIController {
         codeExecution: document.getElementById('tools-codeExecution') ? document.getElementById('tools-codeExecution').checked : true,
         googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
         toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
-        allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false
+        allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false,
+        enableVoice: document.getElementById('tools-enableVoice') ? document.getElementById('tools-enableVoice').checked : false
       };
     }
     

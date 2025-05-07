@@ -59,11 +59,15 @@ class GeminiConnection:
             )
 
             # Build 'setup' payload from config
+            response_modalities = ["TEXT"]
+            if self.config.get("enableVoice", False):
+                response_modalities.append("AUDIO")
+            
             setup_message = {
                 "setup": {
                     "model": f"models/{self.model}",
                     "generation_config": {
-                        "response_modalities": ["AUDIO"],
+                        "response_modalities": response_modalities,
                         "speech_config": {
                             "voice_config": {
                                 "prebuilt_voice_config": {
