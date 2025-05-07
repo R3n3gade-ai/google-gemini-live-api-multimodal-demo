@@ -1,6 +1,6 @@
 /**
  * Social Station Integration
- * Handles integration with Mixpost for social media management
+ * Lightweight implementation for social media scheduling
  */
 document.addEventListener('DOMContentLoaded', () => {
   const socialStationBtn = document.querySelector('.nav-button[data-feature="social-station"]');
@@ -34,126 +34,339 @@ document.addEventListener('DOMContentLoaded', () => {
     container.id = 'social-station-container';
     container.className = 'feature-container social-station-container';
     
+    const currentDate = new Date();
+    const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+    const currentYear = currentDate.getFullYear();
+    
     container.innerHTML = `
-      <div class="social-station-header">
-        <div class="social-station-title">Social Station</div>
-        <div class="social-station-actions">
-          <button id="refresh-mixpost" class="btn btn-sm">
-            <i class="fas fa-sync-alt"></i>
-            <span>Refresh</span>
-          </button>
-          <button id="fullscreen-mixpost" class="btn btn-sm">
-            <i class="fas fa-expand"></i>
-            <span>Fullscreen</span>
-          </button>
+      <div class="social-station-layout">
+        <!-- Left Panel: Create Schedule -->
+        <div class="create-schedule-panel">
+          <div class="panel-header">
+            <h2>Create Schedule</h2>
+            <button class="options-btn"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+          
+          <div class="social-account-selector">
+            <div class="account-info">
+              <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img">
+              <span class="account-name">@AnjasTravel</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="social-platforms">
+              <button class="platform-btn linkedin"><i class="fab fa-linkedin-in"></i></button>
+              <button class="platform-btn instagram"><i class="fab fa-instagram"></i></button>
+              <button class="platform-btn facebook"><i class="fab fa-facebook-f"></i></button>
+              <button class="platform-btn add"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+          
+          <div class="post-type-tabs">
+            <button class="tab-btn active"><i class="fas fa-file-alt"></i> Post</button>
+            <button class="tab-btn"><i class="fas fa-image"></i> Story</button>
+            <button class="tab-btn"><i class="fas fa-film"></i> Story</button>
+          </div>
+          
+          <div class="post-content-editor">
+            <div class="media-preview">
+              <img src="https://via.placeholder.com/600x400?text=Mountain+Biking" alt="Post media" class="post-media">
+            </div>
+            
+            <div class="post-text-content">
+              <p>Experience the ultimate thrill of mountain biking as you conquer rugged trails, enjoy breathtaking scenery, and tackle adrenaline-pumping descents. Challenge yourself, push your limits, and embrace the excitement of outdoor adventure on two wheels!</p>
+              
+              <div class="hashtags">
+                <span class="hashtag">#MountainBiking</span>
+                <span class="hashtag">#OutdoorAdventure</span>
+                <span class="hashtag">#TrailRiding</span>
+                <span class="hashtag">#AdrenalineRush</span>
+              </div>
+            </div>
+            
+            <div class="post-actions">
+              <button class="action-btn"><i class="fas fa-magic"></i> Rewrite With AI</button>
+              <button class="action-btn"><i class="fas fa-arrow-right"></i> Continue</button>
+              <button class="action-btn emoji-btn"><i class="far fa-smile"></i></button>
+            </div>
+          </div>
+          
+          <div class="schedule-options">
+            <div class="schedule-time">
+              <i class="far fa-clock"></i>
+              <span>Sept 17, 12:22 PM</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <button class="schedule-btn">Schedule <i class="fas fa-chevron-down"></i></button>
+          </div>
         </div>
-      </div>
-      
-      <div class="social-station-content">
-        <iframe 
-          id="mixpost-iframe" 
-          class="mixpost-iframe" 
-          src="/social-station/mixpost"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads allow-modals allow-top-navigation"
-          allow="camera; microphone; fullscreen; clipboard-read; clipboard-write"
-        ></iframe>
         
-        <div id="mixpost-loading" class="mixpost-loading">
-          <div class="mixpost-spinner"></div>
-          <div class="mixpost-loading-text">Loading Mixpost...</div>
-        </div>
-        
-        <div id="mixpost-setup-required" class="mixpost-setup-required hidden">
-          <div class="setup-message">
-            <i class="fas fa-server"></i>
-            <h3>Mixpost Setup Required</h3>
-            <p>Mixpost needs to be set up before you can use it. Run the setup script to get started:</p>
-            <pre>cd ~/repos/google-gemini-live-api-multimodal-demo && ./scripts/setup-mixpost.sh</pre>
-            <button id="retry-mixpost" class="btn btn-primary">Retry Connection</button>
+        <!-- Right Panel: Calendar View -->
+        <div class="calendar-panel">
+          <div class="panel-header">
+            <h2>Your Schedule</h2>
+            
+            <div class="calendar-filters">
+              <div class="filter-dropdown">
+                <span>Social Account</span>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              
+              <div class="filter-dropdown">
+                <span>Post Status</span>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              
+              <div class="view-options">
+                <button class="view-btn"><i class="fas fa-calendar-day"></i></button>
+                <button class="view-btn active"><i class="fas fa-th-large"></i></button>
+                <button class="view-btn"><i class="fas fa-list"></i></button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="calendar-navigation">
+            <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+            <h3>Today</h3>
+            <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+            <h3 class="current-date">19 Sept 2024</h3>
+          </div>
+          
+          <div class="calendar-grid">
+            <div class="calendar-header">
+              <div class="day-header">Sun</div>
+              <div class="day-header">Mon</div>
+              <div class="day-header">Tue</div>
+              <div class="day-header">Wed</div>
+              <div class="day-header">Thu</div>
+              <div class="day-header">Fri</div>
+              <div class="day-header">Sat</div>
+            </div>
+            
+            <div class="calendar-body">
+              <!-- Week 1 -->
+              <div class="calendar-day">
+                <div class="day-number">1</div>
+                <div class="day-posts">
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                </div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">2</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">3</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">4</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">5</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">6</div>
+                <div class="day-posts">
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                </div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">7</div>
+                <div class="day-posts"></div>
+              </div>
+              
+              <!-- Week 2 -->
+              <div class="calendar-day">
+                <div class="day-number">8</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">9</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">10</div>
+                <div class="day-posts">
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                </div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">11</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">12</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">13</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">14</div>
+                <div class="day-posts"></div>
+              </div>
+              
+              <!-- Week 3 -->
+              <div class="calendar-day">
+                <div class="day-number">15</div>
+                <div class="day-posts">
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                </div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">16</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">17</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">18</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day current-day">
+                <div class="day-number">19</div>
+                <div class="day-posts">
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                </div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">20</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">21</div>
+                <div class="day-posts"></div>
+              </div>
+              
+              <!-- Remaining weeks -->
+              <!-- Week 4 -->
+              <div class="calendar-day">
+                <div class="day-number">22</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">23</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">24</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">25</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">26</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">27</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">28</div>
+                <div class="day-posts">
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                  <div class="post-thumbnail"><img src="https://via.placeholder.com/30" alt="Post"></div>
+                </div>
+              </div>
+              
+              <!-- Week 5 -->
+              <div class="calendar-day">
+                <div class="day-number">29</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day">
+                <div class="day-number">30</div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day disabled">
+                <div class="day-number"></div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day disabled">
+                <div class="day-number"></div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day disabled">
+                <div class="day-number"></div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day disabled">
+                <div class="day-number"></div>
+                <div class="day-posts"></div>
+              </div>
+              <div class="calendar-day disabled">
+                <div class="day-number"></div>
+                <div class="day-posts"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     `;
     
     mainContent.appendChild(container);
-    
-    initMixpost();
-    
-    const refreshBtn = document.getElementById('refresh-mixpost');
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => {
-        const iframe = document.getElementById('mixpost-iframe');
-        if (iframe) {
-          iframe.src = iframe.src;
-        }
-      });
-    }
-    
-    const fullscreenBtn = document.getElementById('fullscreen-mixpost');
-    if (fullscreenBtn) {
-      fullscreenBtn.addEventListener('click', () => {
-        const iframe = document.getElementById('mixpost-iframe');
-        if (iframe) {
-          if (iframe.requestFullscreen) {
-            iframe.requestFullscreen();
-          } else if (iframe.mozRequestFullScreen) {
-            iframe.mozRequestFullScreen();
-          } else if (iframe.webkitRequestFullscreen) {
-            iframe.webkitRequestFullscreen();
-          } else if (iframe.msRequestFullscreen) {
-            iframe.msRequestFullscreen();
-          }
-        }
-      });
-    }
-    
-    const retryBtn = document.getElementById('retry-mixpost');
-    if (retryBtn) {
-      retryBtn.addEventListener('click', initMixpost);
-    }
+    initSocialStation();
   }
   
   /**
-   * Initialize Mixpost iframe and handle loading states
+   * Initialize Social Station functionality
    */
-  function initMixpost() {
-    const iframe = document.getElementById('mixpost-iframe');
-    const loading = document.getElementById('mixpost-loading');
-    const setupRequired = document.getElementById('mixpost-setup-required');
+  function initSocialStation() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    if (tabButtons.length > 0) {
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    }
     
-    if (iframe && loading) {
-      loading.classList.remove('hidden');
-      setupRequired.classList.add('hidden');
-      
-      iframe.onload = () => {
-        loading.classList.add('hidden');
-        
-        try {
-          setTimeout(() => {
-            try {
-              const iframeContent = iframe.contentWindow.document.body.innerHTML;
-              if (iframeContent.includes('Error connecting to Mixpost') || 
-                  iframeContent.includes('404 Not Found') ||
-                  iframeContent.includes('500 Internal Server Error')) {
-                setupRequired.classList.remove('hidden');
-                iframe.classList.add('hidden');
-              } else {
-                iframe.classList.remove('hidden');
-              }
-            } catch (e) {
-              iframe.classList.remove('hidden');
-            }
-          }, 1000);
-        } catch (e) {
-          iframe.classList.remove('hidden');
+    const calendarDays = document.querySelectorAll('.calendar-day:not(.disabled)');
+    if (calendarDays.length > 0) {
+      calendarDays.forEach(day => {
+        day.addEventListener('click', () => {
+          calendarDays.forEach(d => d.classList.remove('selected'));
+          day.classList.add('selected');
+        });
+      });
+    }
+    
+    const platformButtons = document.querySelectorAll('.platform-btn');
+    if (platformButtons.length > 0) {
+      platformButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!btn.classList.contains('add')) {
+            btn.classList.toggle('selected');
+          }
+        });
+      });
+    }
+    
+    const rewriteBtn = document.querySelector('.action-btn:first-child');
+    if (rewriteBtn) {
+      rewriteBtn.addEventListener('click', () => {
+        const postContent = document.querySelector('.post-text-content p');
+        if (postContent) {
+          postContent.innerHTML = 'Embark on an exhilarating mountain biking adventure! Navigate challenging trails, soak in stunning panoramic views, and experience heart-racing descents. Push beyond your comfort zone, test your endurance, and discover the pure joy of exploring nature\'s playground on your trusty two-wheeler!';
         }
-      };
-      
-      iframe.onerror = () => {
-        loading.classList.add('hidden');
-        setupRequired.classList.remove('hidden');
-        iframe.classList.add('hidden');
-      };
+      });
     }
   }
 });
