@@ -481,6 +481,11 @@ document.addEventListener('DOMContentLoaded', () => {
           container.classList.add('hidden');
         });
         
+        const mainCard = document.querySelector('.main-card');
+        if (mainCard) {
+          mainCard.classList.remove('hidden');
+        }
+        
         const chatContainer = document.querySelector('.chat-container');
         if (chatContainer) {
           chatContainer.classList.remove('hidden');
