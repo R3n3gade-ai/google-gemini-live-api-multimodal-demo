@@ -6,10 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const socialStationBtn = document.querySelector('.nav-button[data-feature="social-station"]');
   const mainContent = document.querySelector('.main-content');
   const socialStationContainer = document.getElementById('social-station-container');
-  const socialStationIframe = document.getElementById('social-station-iframe');
-  const socialStationLoading = document.getElementById('social-station-loading');
-  const socialStationTabs = document.querySelectorAll('.social-station-tab');
-  const socialStationPanels = document.querySelectorAll('.social-station-panel');
   
   if (socialStationBtn && mainContent) {
     socialStationBtn.addEventListener('click', () => {
@@ -30,28 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  if (socialStationTabs) {
-    socialStationTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabId = tab.getAttribute('data-tab');
-        
-        socialStationTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        socialStationPanels.forEach(panel => {
-          panel.classList.remove('active');
-          if (panel.id === `${tabId}-panel`) {
-            panel.classList.add('active');
-          }
-        });
-        
-        if (tabId === 'mixpost' && socialStationIframe) {
-          loadMixpost();
-        }
-      });
-    });
-  }
-  
   /**
    * Create Social Station container and append to main content
    */
@@ -64,46 +38,38 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="social-station-header">
         <div class="social-station-title">Social Station</div>
         <div class="social-station-actions">
-          <button class="btn btn-sm">
+          <button id="refresh-mixpost" class="btn btn-sm">
             <i class="fas fa-sync-alt"></i>
             <span>Refresh</span>
+          </button>
+          <button id="fullscreen-mixpost" class="btn btn-sm">
+            <i class="fas fa-expand"></i>
+            <span>Fullscreen</span>
           </button>
         </div>
       </div>
       
-      <div class="social-station-tabs">
-        <div class="social-station-tab active" data-tab="mixpost">Mixpost</div>
-        <div class="social-station-tab" data-tab="analytics">Analytics</div>
-        <div class="social-station-tab" data-tab="accounts">Accounts</div>
-      </div>
-      
       <div class="social-station-content">
-        <div id="mixpost-panel" class="social-station-panel active">
-          <iframe 
-            id="social-station-iframe" 
-            class="social-station-iframe" 
-            src="about:blank"
-            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            allow="camera; microphone; fullscreen"
-          ></iframe>
-          
-          <div id="social-station-loading" class="social-station-loading">
-            <div class="social-station-spinner"></div>
-            <div class="social-station-loading-text">Loading Mixpost...</div>
-          </div>
+        <iframe 
+          id="mixpost-iframe" 
+          class="mixpost-iframe" 
+          src="/social-station/mixpost"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads allow-modals allow-top-navigation"
+          allow="camera; microphone; fullscreen; clipboard-read; clipboard-write"
+        ></iframe>
+        
+        <div id="mixpost-loading" class="mixpost-loading">
+          <div class="mixpost-spinner"></div>
+          <div class="mixpost-loading-text">Loading Mixpost...</div>
         </div>
         
-        <div id="analytics-panel" class="social-station-panel">
-          <div class="panel-placeholder">
-            <i class="fas fa-chart-line"></i>
-            <span>Analytics Dashboard Coming Soon</span>
-          </div>
-        </div>
-        
-        <div id="accounts-panel" class="social-station-panel">
-          <div class="panel-placeholder">
-            <i class="fas fa-users-cog"></i>
-            <span>Account Management Coming Soon</span>
+        <div id="mixpost-setup-required" class="mixpost-setup-required hidden">
+          <div class="setup-message">
+            <i class="fas fa-server"></i>
+            <h3>Mixpost Setup Required</h3>
+            <p>Mixpost needs to be set up before you can use it. Run the setup script to get started:</p>
+            <pre>cd ~/repos/google-gemini-live-api-multimodal-demo && ./scripts/setup-mixpost.sh</pre>
+            <button id="retry-mixpost" class="btn btn-primary">Retry Connection</button>
           </div>
         </div>
       </div>
@@ -111,65 +77,82 @@ document.addEventListener('DOMContentLoaded', () => {
     
     mainContent.appendChild(container);
     
-    const iframe = document.getElementById('social-station-iframe');
-    const loading = document.getElementById('social-station-loading');
-    const tabs = container.querySelectorAll('.social-station-tab');
+    initMixpost();
     
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabId = tab.getAttribute('data-tab');
-        
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        const panels = container.querySelectorAll('.social-station-panel');
-        panels.forEach(panel => {
-          panel.classList.remove('active');
-          if (panel.id === `${tabId}-panel`) {
-            panel.classList.add('active');
-          }
-        });
-        
-        if (tabId === 'mixpost' && iframe) {
-          loadMixpost();
+    const refreshBtn = document.getElementById('refresh-mixpost');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        const iframe = document.getElementById('mixpost-iframe');
+        if (iframe) {
+          iframe.src = iframe.src;
         }
       });
-    });
+    }
     
-    if (iframe && loading) {
-      loadMixpost();
+    const fullscreenBtn = document.getElementById('fullscreen-mixpost');
+    if (fullscreenBtn) {
+      fullscreenBtn.addEventListener('click', () => {
+        const iframe = document.getElementById('mixpost-iframe');
+        if (iframe) {
+          if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+          } else if (iframe.mozRequestFullScreen) {
+            iframe.mozRequestFullScreen();
+          } else if (iframe.webkitRequestFullscreen) {
+            iframe.webkitRequestFullscreen();
+          } else if (iframe.msRequestFullscreen) {
+            iframe.msRequestFullscreen();
+          }
+        }
+      });
+    }
+    
+    const retryBtn = document.getElementById('retry-mixpost');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', initMixpost);
     }
   }
   
   /**
-   * Load Mixpost in iframe
+   * Initialize Mixpost iframe and handle loading states
    */
-  function loadMixpost() {
-    const iframe = document.getElementById('social-station-iframe');
-    const loading = document.getElementById('social-station-loading');
+  function initMixpost() {
+    const iframe = document.getElementById('mixpost-iframe');
+    const loading = document.getElementById('mixpost-loading');
+    const setupRequired = document.getElementById('mixpost-setup-required');
     
     if (iframe && loading) {
       loading.classList.remove('hidden');
-      
-      iframe.src = '/social-station/mixpost';
+      setupRequired.classList.add('hidden');
       
       iframe.onload = () => {
         loading.classList.add('hidden');
+        
+        try {
+          setTimeout(() => {
+            try {
+              const iframeContent = iframe.contentWindow.document.body.innerHTML;
+              if (iframeContent.includes('Error connecting to Mixpost') || 
+                  iframeContent.includes('404 Not Found') ||
+                  iframeContent.includes('500 Internal Server Error')) {
+                setupRequired.classList.remove('hidden');
+                iframe.classList.add('hidden');
+              } else {
+                iframe.classList.remove('hidden');
+              }
+            } catch (e) {
+              iframe.classList.remove('hidden');
+            }
+          }, 1000);
+        } catch (e) {
+          iframe.classList.remove('hidden');
+        }
       };
       
       iframe.onerror = () => {
-        loading.innerHTML = `
-          <div class="error-message">
-            <i class="fas fa-exclamation-circle"></i>
-            <span>Failed to load Mixpost. Please try again.</span>
-            <button class="btn btn-sm btn-retry">Retry</button>
-          </div>
-        `;
-        
-        const retryBtn = loading.querySelector('.btn-retry');
-        if (retryBtn) {
-          retryBtn.addEventListener('click', loadMixpost);
-        }
+        loading.classList.add('hidden');
+        setupRequired.classList.remove('hidden');
+        iframe.classList.add('hidden');
       };
     }
   }
