@@ -88,10 +88,14 @@ class GeminiApp {
         await this.initWebSocket();
       }
       
-      // Initialize audio capture
-      await this.audioManager.startCapture((audioData) => {
-        this.webSocketClient.sendAudio(audioData);
-      });
+      const config = this.uiController.getConfig();
+      
+      // Initialize audio capture if voice input is enabled or we're in audio/camera/screen mode
+      if (config.enableVoiceInput || mode !== 'text') {
+        await this.audioManager.startCapture((audioData) => {
+          this.webSocketClient.sendAudio(audioData);
+        });
+      }
       
       // Initialize video if needed
       if (mode !== 'audio') {
@@ -189,6 +193,11 @@ class GeminiApp {
         });
       } else {
         this.sendTextMessageInternal();
+      }
+      
+      const config = this.uiController.getConfig();
+      if (config.enableVoiceInput && !this.isStreaming) {
+        this.startStream('text');
       }
     } catch (error) {
       this.uiController.showError(`Failed to send message: ${error.message}`);

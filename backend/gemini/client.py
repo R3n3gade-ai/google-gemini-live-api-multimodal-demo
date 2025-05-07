@@ -60,7 +60,7 @@ class GeminiConnection:
 
             # Build 'setup' payload from config
             response_modalities = ["TEXT"]
-            if self.config.get("enableVoice", False):
+            if self.config.get("enableVoiceOutput", False):
                 response_modalities.append("AUDIO")
             
             setup_message = {
