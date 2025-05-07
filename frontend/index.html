@@ -13,7 +13,7 @@
       <div class="card-gradient-border"></div>
       
       <div class="card-body">
-        <!-- Messages Area - Moved to the top -->
+        <!-- Messages Area - Conversation -->
         <div class="messages-container">
           <div class="messages-heading">Conversation</div>
           <div id="messages" class="messages"></div>
@@ -41,9 +41,9 @@
           </div>
         </div>
         
-        <div class="settings-grid">
+        <div class="controls-container">
           <!-- System Prompt -->
-          <div class="form-group">
+          <div class="system-prompt-container">
             <label for="systemPrompt" class="form-label">System Prompt</label>
             <textarea 
               id="systemPrompt" 
@@ -52,9 +52,9 @@
             >You are a friendly AI Assistant.</textarea>
           </div>
 
-          <!-- Voice Selection -->
-          <div>
-            <div class="form-group">
+          <!-- Voice and Options -->
+          <div class="voice-options-container">
+            <div class="form-group voice-selector">
               <label for="voice" class="form-label">Voice</label>
               <select id="voice" class="form-control">
                 <option value="Puck">Puck</option>
@@ -95,6 +95,19 @@
           </button>
           <button id="stopButton" class="btn btn-danger" disabled>
             Stop Chat
+          </button>
+        </div>
+        
+        <!-- Text Chat Input -->
+        <div class="text-input-container">
+          <input 
+            type="text" 
+            id="textInput" 
+            class="text-input" 
+            placeholder="Enter your prompt"
+          >
+          <button id="sendTextBtn" class="btn btn-send">
+            <span class="send-icon">➤</span>
           </button>
         </div>
       </div>

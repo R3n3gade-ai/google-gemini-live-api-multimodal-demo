@@ -35,12 +35,21 @@ class GeminiApp {
     this.startCameraBtn = document.getElementById('startCameraBtn');
     this.startScreenBtn = document.getElementById('startScreenBtn');
     this.stopButton = document.getElementById('stopButton');
+    this.textInput = document.getElementById('textInput');
+    this.sendTextBtn = document.getElementById('sendTextBtn');
     
     // Add click handlers
     this.startAudioBtn.addEventListener('click', () => this.startStream('audio'));
     this.startCameraBtn.addEventListener('click', () => this.startStream('camera'));
     this.startScreenBtn.addEventListener('click', () => this.startStream('screen'));
     this.stopButton.addEventListener('click', () => this.stopStream());
+    
+    this.sendTextBtn.addEventListener('click', () => this.sendTextMessage());
+    this.textInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.sendTextMessage();
+      }
+    });
   }
   
   /**
@@ -162,6 +171,23 @@ class GeminiApp {
    */
   handleWebSocketError(error) {
     this.uiController.showError(`WebSocket error: ${error.message}`);
+  }
+  
+  /**
+   * Send text message to Gemini
+   */
+  sendTextMessage() {
+    if (!this.textInput.value.trim()) return;
+    
+    try {
+      this.uiController.appendMessage(`[You] ${this.textInput.value}`);
+      
+      this.webSocketClient.sendText(this.textInput.value);
+      
+      this.textInput.value = '';
+    } catch (error) {
+      this.uiController.showError(`Failed to send message: ${error.message}`);
+    }
   }
 }
 
