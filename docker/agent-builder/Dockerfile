@@ -13,6 +13,9 @@ RUN git clone https://github.com/abhishekkumar35/google-adk-nocode.git .
 # Install Python dependencies
 RUN pip install --no-cache-dir -e .
 
+# Copy the modified app.js file from the build context
+COPY files/app.js /app/src/google/adk/nocode/static/js/app.js
+
 # Expose port 8080
 EXPOSE 8080
 
@@ -21,7 +24,7 @@ ENV HOST=0.0.0.0
 ENV PORT=8080
 
 # Create a custom entry point script
-RUN echo '#!/bin/bash\n\
+RUN echo '#!/usr/bin/env python3\n\
 import os\n\
 import sys\n\
 from pathlib import Path\n\
@@ -37,6 +40,9 @@ if __name__ == "__main__":\n\
     app = create_app()\n\
     uvicorn.run(app, host="0.0.0.0", port=8080)\n\
 ' > /app/run_app.py
+
+# Make the entry point script executable
+RUN chmod +x /app/run_app.py
 
 # Run the application
 CMD ["python", "run_app.py"]

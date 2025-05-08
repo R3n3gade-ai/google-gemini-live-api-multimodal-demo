@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           
           <div class="agent-builder-wrapper hidden">
-            <iframe id="agent-builder-iframe" src="" frameborder="0"></iframe>
+            <iframe id="agent-builder-iframe" frameborder="0"></iframe>
           </div>
         </div>
       </div>
@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.querySelector('.agent-builder-wrapper');
     
     if (iframe) {
-      iframe.src = 'https://user:d0e627eb894cf1c91fdc86cce8bfa0bd@google-gemini-demo-tunnel-ti4yu1qs.devinapps.com';
+      // Use localhost without credentials for direct access
+      iframe.src = 'http://localhost:8080';
       
       iframe.addEventListener('load', () => {
         placeholder.classList.add('hidden');
