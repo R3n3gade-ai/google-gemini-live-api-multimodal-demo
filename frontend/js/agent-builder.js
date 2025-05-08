@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.querySelector('.agent-builder-wrapper');
     
     if (iframe) {
-      iframe.src = 'http://localhost:8080';
+      iframe.src = 'https://user:435666851a19e1e6cc2ce6bc8ad70c80@google-gemini-demo-tunnel-7d80aqop.devinapps.com';
       
       iframe.addEventListener('load', () => {
         placeholder.classList.add('hidden');
