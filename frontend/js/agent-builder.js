@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="agent-builder-direct-link">
         <h3>Agent Builder is ready!</h3>
         <p>Click the button below to open the Agent Builder in a new tab:</p>
-        <a href="https://user:435666851a19e1e6cc2ce6bc8ad70c80@google-gemini-demo-tunnel-7d80aqop.devinapps.com" 
+        <a href="https://user:1dcc8b17f20c6e292bdc15427b3f9a2a@google-gemini-demo-tunnel-2pb94c3z.devinapps.com" 
            target="_blank" 
            class="agent-builder-link-button">
           <i class="fas fa-external-link-alt"></i>
