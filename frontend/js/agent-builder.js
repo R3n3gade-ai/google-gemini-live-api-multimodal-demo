@@ -80,40 +80,25 @@ document.addEventListener('DOMContentLoaded', () => {
    * Load Agent Builder iframe
    */
   function loadAgentBuilder() {
-    const iframe = document.getElementById('agent-builder-iframe');
     const placeholder = document.querySelector('.agent-builder-placeholder');
     const wrapper = document.querySelector('.agent-builder-wrapper');
     
-    if (iframe) {
-      iframe.src = 'https://user:435666851a19e1e6cc2ce6bc8ad70c80@google-gemini-demo-tunnel-7d80aqop.devinapps.com';
-      
-      iframe.addEventListener('load', () => {
-        placeholder.classList.add('hidden');
-        wrapper.classList.remove('hidden');
-        
-        setTimeout(() => {
-          sendApiKeyToAgentBuilder();
-        }, 1000);
-      });
-      
-      iframe.addEventListener('error', () => {
-        placeholder.innerHTML = `
-          <div class="error-message">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>Failed to load Agent Builder. Please make sure the container is running.</span>
-            <button class="load-feature-button" id="retry-agent-builder">
-              <i class="fas fa-sync"></i>
-              <span>Retry</span>
-            </button>
-          </div>
-        `;
-        
-        const retryBtn = document.getElementById('retry-agent-builder');
-        if (retryBtn) {
-          retryBtn.addEventListener('click', loadAgentBuilder);
-        }
-      });
-    }
+    wrapper.innerHTML = `
+      <div class="agent-builder-direct-link">
+        <h3>Agent Builder is ready!</h3>
+        <p>Click the button below to open the Agent Builder in a new tab:</p>
+        <a href="https://user:435666851a19e1e6cc2ce6bc8ad70c80@google-gemini-demo-tunnel-7d80aqop.devinapps.com" 
+           target="_blank" 
+           class="agent-builder-link-button">
+          <i class="fas fa-external-link-alt"></i>
+          Open Agent Builder
+        </a>
+        <p class="agent-builder-note">Note: The Agent Builder will open in a new tab. You can return to this tab to continue using the AI Workstation.</p>
+      </div>
+    `;
+    
+    placeholder.classList.add('hidden');
+    wrapper.classList.remove('hidden');
   }
   
   /**
