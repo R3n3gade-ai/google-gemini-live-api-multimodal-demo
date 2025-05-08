@@ -20,5 +20,23 @@ EXPOSE 8080
 ENV HOST=0.0.0.0
 ENV PORT=8080
 
+# Create a custom entry point script
+RUN echo '#!/bin/bash\n\
+import os\n\
+import sys\n\
+from pathlib import Path\n\
+\n\
+# Add the src directory to the Python path\n\
+src_dir = Path(__file__).parent / "src"\n\
+sys.path.insert(0, str(src_dir))\n\
+\n\
+from google.adk.nocode.app import create_app\n\
+import uvicorn\n\
+\n\
+if __name__ == "__main__":\n\
+    app = create_app()\n\
+    uvicorn.run(app, host="0.0.0.0", port=8080)\n\
+' > /app/run_app.py
+
 # Run the application
-CMD ["python", "app.py"]
+CMD ["python", "run_app.py"]
