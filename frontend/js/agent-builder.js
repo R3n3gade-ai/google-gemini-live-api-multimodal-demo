@@ -83,19 +83,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const placeholder = document.querySelector('.agent-builder-placeholder');
     const wrapper = document.querySelector('.agent-builder-wrapper');
     
-    wrapper.innerHTML = `
-      <div class="agent-builder-direct-link">
-        <h3>Agent Builder is ready!</h3>
-        <p>Click the button below to open the Agent Builder in a new tab:</p>
-        <a href="https://user:5601d5feaae9622152e6a5da2f4ba473@google-gemini-demo-tunnel-0hdiersd.devinapps.com" 
-           target="_blank" 
-           class="agent-builder-link-button">
-          <i class="fas fa-external-link-alt"></i>
-          Open Agent Builder
-        </a>
-        <p class="agent-builder-note">Note: The Agent Builder will open in a new tab. You can return to this tab to continue using the AI Workstation.</p>
-      </div>
-    `;
+    const iframe = document.createElement('iframe');
+    iframe.id = 'agent-builder-iframe';
+    iframe.src = 'https://user:5601d5feaae9622152e6a5da2f4ba473@google-gemini-demo-tunnel-0hdiersd.devinapps.com';
+    iframe.frameBorder = '0';
+    iframe.allowFullscreen = true;
+    
+    wrapper.innerHTML = '';
+    wrapper.appendChild(iframe);
+    
+    iframe.addEventListener('load', () => {
+      console.log('Agent Builder iframe loaded');
+      sendApiKeyToAgentBuilder();
+    });
+    
+    iframe.addEventListener('error', () => {
+      console.error('Failed to load Agent Builder iframe');
+      wrapper.innerHTML = `
+        <div class="agent-builder-direct-link">
+          <h3>Agent Builder is ready!</h3>
+          <p>Click the button below to open the Agent Builder in a new tab:</p>
+          <a href="https://user:5601d5feaae9622152e6a5da2f4ba473@google-gemini-demo-tunnel-0hdiersd.devinapps.com" 
+             target="_blank" 
+             class="agent-builder-link-button">
+            <i class="fas fa-external-link-alt"></i>
+            Open Agent Builder
+          </a>
+          <p class="agent-builder-note">Note: The Agent Builder will open in a new tab. You can return to this tab to continue using the AI Workstation.</p>
+        </div>
+      `;
+    });
     
     placeholder.classList.add('hidden');
     wrapper.classList.remove('hidden');
