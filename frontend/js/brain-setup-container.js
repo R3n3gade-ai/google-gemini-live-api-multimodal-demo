@@ -1,5 +1,5 @@
 
-function createBrainSetupContainer() {
+window.createBrainSetupContainer = function() {
   if (document.getElementById('brainSetupContainer')) {
     return;
   }
@@ -88,7 +88,7 @@ function createProgressIndicator() {
   return progressIndicator;
 }
 
-function closeBrainSetup() {
+window.closeBrainSetup = function() {
   const container = document.getElementById('brainSetupContainer');
   if (container) {
     container.classList.remove('active');
