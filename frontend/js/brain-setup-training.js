@@ -395,21 +395,35 @@ window.showTrainingError = function(error) {
   
   stepContent.appendChild(errorContent);
   
-  const footer = document.querySelector('.brain-setup-footer');
-  footer.innerHTML = '';
+  let footer = document.querySelector('.brain-setup-footer');
+  if (!footer) {
+    footer = document.createElement('div');
+    footer.className = 'brain-setup-footer';
+    const container = document.getElementById('brainSetupContainer');
+    if (container) {
+      const content = container.querySelector('.brain-setup-content');
+      if (content) {
+        content.appendChild(footer);
+      }
+    }
+  }
   
-  const retryButton = document.createElement('button');
-  retryButton.className = 'btn btn-primary';
-  retryButton.textContent = 'Retry';
-  retryButton.addEventListener('click', () => {
-    window.loadStep(3);
-  });
-  
-  const closeButton = document.createElement('button');
-  closeButton.className = 'btn btn-secondary';
-  closeButton.textContent = 'Close';
-  closeButton.addEventListener('click', window.closeBrainSetup);
-  
-  footer.appendChild(closeButton);
-  footer.appendChild(retryButton);
+  if (footer) {
+    footer.innerHTML = '';
+    
+    const retryButton = document.createElement('button');
+    retryButton.className = 'btn btn-primary';
+    retryButton.textContent = 'Retry';
+    retryButton.addEventListener('click', () => {
+      window.loadStep(3);
+    });
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'btn btn-secondary';
+    closeButton.textContent = 'Close';
+    closeButton.addEventListener('click', window.closeBrainSetup);
+    
+    footer.appendChild(closeButton);
+    footer.appendChild(retryButton);
+  }
 }
