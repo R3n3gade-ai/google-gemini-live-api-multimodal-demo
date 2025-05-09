@@ -21,7 +21,7 @@ window.createBrainSetupContainer = function() {
   const closeButton = document.createElement('button');
   closeButton.className = 'brain-setup-close';
   closeButton.innerHTML = '<i class="fas fa-times"></i>';
-  closeButton.addEventListener('click', closeBrainSetup);
+  closeButton.addEventListener('click', window.closeBrainSetup);
   
   header.appendChild(title);
   header.appendChild(closeButton);
@@ -29,7 +29,7 @@ window.createBrainSetupContainer = function() {
   const body = document.createElement('div');
   body.className = 'brain-setup-body';
   
-  const progressIndicator = createProgressIndicator();
+  const progressIndicator = window.createProgressIndicator();
   body.appendChild(progressIndicator);
   
   const stepContent = document.createElement('div');
@@ -41,14 +41,14 @@ window.createBrainSetupContainer = function() {
   container.appendChild(content);
   document.body.appendChild(container);
   
-  loadStep(1);
+  window.loadStep(1);
   
   setTimeout(() => {
     container.classList.add('active');
   }, 10);
 }
 
-function createProgressIndicator() {
+window.createProgressIndicator = function() {
   const progressIndicator = document.createElement('div');
   progressIndicator.className = 'progress-indicator';
   
@@ -98,8 +98,8 @@ window.closeBrainSetup = function() {
   }
 }
 
-function loadStep(step) {
-  currentStep = step;
+window.loadStep = function(step) {
+  window.currentStep = step;
   const stepContent = document.getElementById('brainSetupStepContent');
   const title = document.querySelector('.brain-setup-title');
   
@@ -118,32 +118,32 @@ function loadStep(step) {
   switch(step) {
     case 1:
       title.textContent = 'Define Your Identity';
-      loadIdentityStep(stepContent);
+      window.loadIdentityStep(stepContent);
       break;
     case 2:
       title.textContent = 'Upload Memories';
-      loadMemoriesStep(stepContent);
+      window.loadMemoriesStep(stepContent);
       break;
     case 3:
       title.textContent = 'Train Your Brain';
-      loadTrainingStep(stepContent);
+      window.loadTrainingStep(stepContent);
       break;
   }
 }
 
-function updateCharCount(input, countElement) {
+window.updateCharCount = function(input, countElement) {
   const maxLength = input.maxLength;
   const currentLength = input.value.length;
   countElement.textContent = `${currentLength}/${maxLength} characters`;
 }
 
-function formatFileSize(bytes) {
+window.formatFileSize = function(bytes) {
   if (bytes < 1024) return bytes + ' bytes';
   else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
   else return (bytes / 1048576).toFixed(1) + ' MB';
 }
 
-function fetchBrainsAPI() {
+window.fetchBrainsAPI = function() {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -164,14 +164,14 @@ function fetchBrainsAPI() {
   });
 }
 
-function toggleBrainAPI(brainId, active) {
+window.toggleBrainAPI = function(brainId, active) {
   return new Promise((resolve) => {
     console.log(`Toggling brain ${brainId} to ${active ? 'active' : 'inactive'}`);
     setTimeout(resolve, 300);
   });
 }
 
-function startTrainingAPI(brainData) {
+window.startTrainingAPI = function(brainData) {
   return new Promise((resolve) => {
     console.log('Starting training with data:', brainData);
     setTimeout(() => {
@@ -184,7 +184,7 @@ function startTrainingAPI(brainData) {
   });
 }
 
-function validateIdentityStep() {
+window.validateIdentityStep = function() {
   const nameInput = document.getElementById('brainName');
   const emailInput = document.getElementById('brainEmail');
   

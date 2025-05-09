@@ -1,5 +1,5 @@
 
-function loadTrainingStep(container) {
+window.loadTrainingStep = function(container) {
   const content = document.createElement('div');
   
   const synthesisGroup = document.createElement('div');
@@ -20,14 +20,14 @@ function loadTrainingStep(container) {
   
   modes.forEach(mode => {
     const modeElement = document.createElement('div');
-    modeElement.className = `synthesis-mode ${mode.id === brainData.training.synthesisMode ? 'active' : ''}`;
+    modeElement.className = `synthesis-mode ${mode.id === window.brainData.training.synthesisMode ? 'active' : ''}`;
     modeElement.textContent = mode.label;
     modeElement.dataset.mode = mode.id;
     
     modeElement.addEventListener('click', () => {
       document.querySelectorAll('.synthesis-mode').forEach(el => el.classList.remove('active'));
       modeElement.classList.add('active');
-      brainData.training.synthesisMode = mode.id;
+      window.brainData.training.synthesisMode = mode.id;
     });
     
     synthesisModes.appendChild(modeElement);
@@ -69,12 +69,12 @@ function loadTrainingStep(container) {
     const option = document.createElement('option');
     option.value = model.id;
     option.textContent = model.label;
-    option.selected = model.id === brainData.training.baseModel;
+    option.selected = model.id === window.brainData.training.baseModel;
     modelSelect.appendChild(option);
   });
   
   modelSelect.addEventListener('change', (e) => {
-    brainData.training.baseModel = e.target.value;
+    window.brainData.training.baseModel = e.target.value;
   });
   
   selectWrapper.appendChild(modelSelect);
@@ -105,7 +105,7 @@ function loadTrainingStep(container) {
   const learningRateInput = document.createElement('input');
   learningRateInput.type = 'number';
   learningRateInput.className = 'form-input';
-  learningRateInput.value = brainData.training.learningRate;
+  learningRateInput.value = window.brainData.training.learningRate;
   learningRateInput.step = '0.00001';
   learningRateInput.min = '0.00001';
   learningRateInput.max = '0.005';
@@ -115,7 +115,7 @@ function loadTrainingStep(container) {
   learningRateDescription.textContent = 'Enter a value between 0.00001 and 0.005 (recommended: 0.0001)';
   
   learningRateInput.addEventListener('input', (e) => {
-    brainData.training.learningRate = parseFloat(e.target.value);
+    window.brainData.training.learningRate = parseFloat(e.target.value);
   });
   
   learningRateGroup.appendChild(learningRateLabel);
@@ -133,7 +133,7 @@ function loadTrainingStep(container) {
   const epochsInput = document.createElement('input');
   epochsInput.type = 'number';
   epochsInput.className = 'form-input';
-  epochsInput.value = brainData.training.epochs;
+  epochsInput.value = window.brainData.training.epochs;
   epochsInput.min = '1';
   epochsInput.max = '10';
   
@@ -142,7 +142,7 @@ function loadTrainingStep(container) {
   epochsDescription.textContent = 'Enter an integer between 1 and 10 (recommended: 3)';
   
   epochsInput.addEventListener('input', (e) => {
-    brainData.training.epochs = parseInt(e.target.value);
+    window.brainData.training.epochs = parseInt(e.target.value);
   });
   
   epochsGroup.appendChild(epochsLabel);
@@ -160,7 +160,7 @@ function loadTrainingStep(container) {
   const threadsInput = document.createElement('input');
   threadsInput.type = 'number';
   threadsInput.className = 'form-input';
-  threadsInput.value = brainData.training.threads;
+  threadsInput.value = window.brainData.training.threads;
   threadsInput.min = '1';
   threadsInput.max = '10';
   
@@ -169,7 +169,7 @@ function loadTrainingStep(container) {
   threadsDescription.textContent = 'Enter an integer between 1 and 10 (recommended: 2)';
   
   threadsInput.addEventListener('input', (e) => {
-    brainData.training.threads = parseInt(e.target.value);
+    window.brainData.training.threads = parseInt(e.target.value);
   });
   
   threadsGroup.appendChild(threadsLabel);
@@ -190,7 +190,7 @@ function loadTrainingStep(container) {
   const gpuInput = document.createElement('input');
   gpuInput.type = 'checkbox';
   gpuInput.className = 'toggle-input';
-  gpuInput.checked = brainData.training.enableGPU;
+  gpuInput.checked = window.brainData.training.enableGPU;
   
   const gpuDisplay = document.createElement('span');
   gpuDisplay.className = 'toggle-display';
@@ -200,7 +200,7 @@ function loadTrainingStep(container) {
   gpuStatus.textContent = 'CUDA acceleration is not available on this system.';
   
   gpuInput.addEventListener('change', (e) => {
-    brainData.training.enableGPU = e.target.checked;
+    window.brainData.training.enableGPU = e.target.checked;
   });
   
   gpuToggle.appendChild(gpuInput);
@@ -226,7 +226,7 @@ function loadTrainingStep(container) {
   const thinkingInput = document.createElement('input');
   thinkingInput.type = 'checkbox';
   thinkingInput.className = 'toggle-input';
-  thinkingInput.checked = brainData.training.thinkingModel;
+  thinkingInput.checked = window.brainData.training.thinkingModel;
   
   const thinkingDisplay = document.createElement('span');
   thinkingDisplay.className = 'toggle-display';
@@ -236,7 +236,7 @@ function loadTrainingStep(container) {
   thinkingLabel.textContent = 'Thinking Model';
   
   thinkingInput.addEventListener('change', (e) => {
-    brainData.training.thinkingModel = e.target.checked;
+    window.brainData.training.thinkingModel = e.target.checked;
   });
   
   thinkingToggle.appendChild(thinkingInput);
@@ -264,14 +264,14 @@ function loadTrainingStep(container) {
   backButton.className = 'btn btn-secondary';
   backButton.textContent = 'Back';
   backButton.addEventListener('click', () => {
-    loadStep(2);
+    window.loadStep(2);
   });
   
   const startTrainingButton = document.createElement('button');
   startTrainingButton.className = 'btn btn-primary';
   startTrainingButton.textContent = 'Start Training';
   startTrainingButton.addEventListener('click', () => {
-    startTraining();
+    window.startTraining();
   });
   
   footer.appendChild(backButton);
@@ -281,7 +281,7 @@ function loadTrainingStep(container) {
   container.appendChild(footer);
 }
 
-function startTraining() {
+window.startTraining = function() {
   const stepContent = document.getElementById('brainSetupStepContent');
   stepContent.innerHTML = '';
   
@@ -309,16 +309,16 @@ function startTraining() {
   
   stepContent.appendChild(loadingContent);
   
-  startTrainingAPI(brainData)
+  window.startTrainingAPI(window.brainData)
     .then(response => {
-      showTrainingSuccess(response);
+      window.showTrainingSuccess(response);
     })
     .catch(error => {
-      showTrainingError(error);
+      window.showTrainingError(error);
     });
 }
 
-function showTrainingSuccess(response) {
+window.showTrainingSuccess = function(response) {
   const stepContent = document.getElementById('brainSetupStepContent');
   stepContent.innerHTML = '';
   
@@ -353,21 +353,21 @@ function showTrainingSuccess(response) {
   closeButton.className = 'btn btn-primary';
   closeButton.textContent = 'Close';
   closeButton.addEventListener('click', () => {
-    closeBrainSetup();
-    fetchExistingBrains(); // Refresh brain list
+    window.closeBrainSetup();
+    window.fetchExistingBrains(); // Refresh brain list
   });
   
   footer.appendChild(closeButton);
   
-  addBrainToList({
+  window.addBrainToList({
     id: response?.id || `brain-${Date.now()}`,
-    name: brainData.identity.name,
-    description: brainData.identity.description,
+    name: window.brainData.identity.name,
+    description: window.brainData.identity.description,
     active: false
   });
 }
 
-function showTrainingError(error) {
+window.showTrainingError = function(error) {
   const stepContent = document.getElementById('brainSetupStepContent');
   stepContent.innerHTML = '';
   
@@ -402,13 +402,13 @@ function showTrainingError(error) {
   retryButton.className = 'btn btn-primary';
   retryButton.textContent = 'Retry';
   retryButton.addEventListener('click', () => {
-    loadStep(3);
+    window.loadStep(3);
   });
   
   const closeButton = document.createElement('button');
   closeButton.className = 'btn btn-secondary';
   closeButton.textContent = 'Close';
-  closeButton.addEventListener('click', closeBrainSetup);
+  closeButton.addEventListener('click', window.closeBrainSetup);
   
   footer.appendChild(closeButton);
   footer.appendChild(retryButton);
