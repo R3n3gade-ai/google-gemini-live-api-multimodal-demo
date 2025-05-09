@@ -1,5 +1,5 @@
 
-function loadMemoriesStep(container) {
+window.loadMemoriesStep = function(container) {
   const content = document.createElement('div');
   
   const subtitle = document.createElement('div');
@@ -38,7 +38,7 @@ function loadMemoriesStep(container) {
       document.querySelectorAll('.upload-method').forEach(el => el.classList.remove('active'));
       methodElement.classList.add('active');
       activeMethod = method.id;
-      showUploadForm(method.id, uploadFormContainer);
+      window.showUploadForm(method.id, uploadFormContainer);
     });
     
     uploadMethodsContainer.appendChild(methodElement);
@@ -50,7 +50,7 @@ function loadMemoriesStep(container) {
   uploadFormContainer.id = 'uploadFormContainer';
   content.appendChild(uploadFormContainer);
   
-  showUploadForm(activeMethod, uploadFormContainer);
+  window.showUploadForm(activeMethod, uploadFormContainer);
   
   const memoryListContainer = document.createElement('div');
   memoryListContainer.className = 'form-group';
@@ -77,9 +77,9 @@ function loadMemoriesStep(container) {
   const tableBody = document.createElement('tbody');
   tableBody.id = 'memoryTableBody';
   
-  if (brainData.memories.length > 0) {
-    brainData.memories.forEach(memory => {
-      addMemoryToTable(memory, tableBody);
+  if (window.brainData.memories.length > 0) {
+    window.brainData.memories.forEach(memory => {
+      window.addMemoryToTable(memory, tableBody);
     });
   }
   
@@ -95,14 +95,14 @@ function loadMemoriesStep(container) {
   backButton.className = 'btn btn-secondary';
   backButton.textContent = 'Back';
   backButton.addEventListener('click', () => {
-    loadStep(1);
+    window.loadStep(1);
   });
   
   const nextButton = document.createElement('button');
   nextButton.className = 'btn btn-primary';
   nextButton.textContent = 'Next: Train Brain';
   nextButton.addEventListener('click', () => {
-    loadStep(3);
+    window.loadStep(3);
   });
   
   footer.appendChild(backButton);
@@ -112,7 +112,7 @@ function loadMemoriesStep(container) {
   container.appendChild(footer);
 }
 
-function showUploadForm(method, container) {
+window.showUploadForm = function(method, container) {
   container.innerHTML = '';
   
   switch(method) {
@@ -137,8 +137,8 @@ function showUploadForm(method, container) {
             content: textArea.value
           };
           
-          brainData.memories.push(memory);
-          addMemoryToTable(memory, document.getElementById('memoryTableBody'));
+          window.brainData.memories.push(memory);
+          window.addMemoryToTable(memory, document.getElementById('memoryTableBody'));
           textArea.value = '';
         }
       });
@@ -179,8 +179,8 @@ function showUploadForm(method, container) {
             file: file
           };
           
-          brainData.memories.push(memory);
-          addMemoryToTable(memory, document.getElementById('memoryTableBody'));
+          window.brainData.memories.push(memory);
+          window.addMemoryToTable(memory, document.getElementById('memoryTableBody'));
         }
       });
       
@@ -224,8 +224,8 @@ function showUploadForm(method, container) {
             files: files
           };
           
-          brainData.memories.push(memory);
-          addMemoryToTable(memory, document.getElementById('memoryTableBody'));
+          window.brainData.memories.push(memory);
+          window.addMemoryToTable(memory, document.getElementById('memoryTableBody'));
         }
       });
       
@@ -243,7 +243,7 @@ function showUploadForm(method, container) {
   }
 }
 
-function addMemoryToTable(memory, tableBody) {
+window.addMemoryToTable = function(memory, tableBody) {
   const row = document.createElement('tr');
   
   const typeCell = document.createElement('td');
@@ -266,12 +266,12 @@ function addMemoryToTable(memory, tableBody) {
   deleteButton.className = 'memory-action';
   deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
   deleteButton.addEventListener('click', () => {
-    const index = brainData.memories.findIndex(m => 
+    const index = window.brainData.memories.findIndex(m => 
       m.name === memory.name && m.uploaded === memory.uploaded
     );
     
     if (index !== -1) {
-      brainData.memories.splice(index, 1);
+      window.brainData.memories.splice(index, 1);
       row.remove();
     }
   });

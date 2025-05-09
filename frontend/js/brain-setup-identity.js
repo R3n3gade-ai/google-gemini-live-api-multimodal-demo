@@ -1,5 +1,5 @@
 
-function loadIdentityStep(container) {
+window.loadIdentityStep = function(container) {
   const content = document.createElement('div');
   
   const subtitle = document.createElement('div');
@@ -22,16 +22,16 @@ function loadIdentityStep(container) {
   nameInput.type = 'text';
   nameInput.className = 'form-input';
   nameInput.id = 'brainName';
-  nameInput.value = brainData.identity.name;
+  nameInput.value = window.brainData.identity.name;
   nameInput.maxLength = 50;
   nameInput.addEventListener('input', (e) => {
-    brainData.identity.name = e.target.value;
-    updateCharCount(e.target, nameCharCount);
+    window.brainData.identity.name = e.target.value;
+    window.updateCharCount(e.target, nameCharCount);
   });
   
   const nameCharCount = document.createElement('div');
   nameCharCount.className = 'char-count';
-  nameCharCount.textContent = `${brainData.identity.name.length}/50 characters`;
+  nameCharCount.textContent = `${window.brainData.identity.name.length}/50 characters`;
   
   nameGroup.appendChild(nameLabel);
   nameGroup.appendChild(nameDescription);
@@ -53,16 +53,16 @@ function loadIdentityStep(container) {
   const descInput = document.createElement('textarea');
   descInput.className = 'form-textarea';
   descInput.id = 'brainDescription';
-  descInput.value = brainData.identity.description;
+  descInput.value = window.brainData.identity.description;
   descInput.maxLength = 500;
   descInput.addEventListener('input', (e) => {
-    brainData.identity.description = e.target.value;
-    updateCharCount(e.target, descCharCount);
+    window.brainData.identity.description = e.target.value;
+    window.updateCharCount(e.target, descCharCount);
   });
   
   const descCharCount = document.createElement('div');
   descCharCount.className = 'char-count';
-  descCharCount.textContent = `${brainData.identity.description.length}/500 characters`;
+  descCharCount.textContent = `${window.brainData.identity.description.length}/500 characters`;
   
   descGroup.appendChild(descLabel);
   descGroup.appendChild(descDescription);
@@ -85,9 +85,9 @@ function loadIdentityStep(container) {
   emailInput.type = 'email';
   emailInput.className = 'form-input';
   emailInput.id = 'brainEmail';
-  emailInput.value = brainData.identity.email;
+  emailInput.value = window.brainData.identity.email;
   emailInput.addEventListener('input', (e) => {
-    brainData.identity.email = e.target.value;
+    window.brainData.identity.email = e.target.value;
   });
   
   emailGroup.appendChild(emailLabel);
@@ -102,8 +102,8 @@ function loadIdentityStep(container) {
   nextButton.className = 'btn btn-primary';
   nextButton.textContent = 'Next: Upload Memories';
   nextButton.addEventListener('click', () => {
-    if (validateIdentityStep()) {
-      loadStep(2);
+    if (window.validateIdentityStep()) {
+      window.loadStep(2);
     }
   });
   
@@ -113,6 +113,6 @@ function loadIdentityStep(container) {
   container.appendChild(content);
   container.appendChild(footer);
   
-  updateCharCount(nameInput, nameCharCount);
-  updateCharCount(descInput, descCharCount);
+  window.updateCharCount(nameInput, nameCharCount);
+  window.updateCharCount(descInput, descCharCount);
 }
