@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const brainButton = document.querySelector('.nav-button:has(.fa-brain)');
+  const brainButton = document.querySelector('.nav-button[data-feature="brain-setup"]');
   const mainContent = document.querySelector('.main-content');
   
   let currentStep = 1;
