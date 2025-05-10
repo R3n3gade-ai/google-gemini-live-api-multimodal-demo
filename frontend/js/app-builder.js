@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="app-builder-close-button">&times;</button>
           </div>
           <div class="app-builder-modal-body">
-            <iframe src="static/app-builder/index.html" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe src="/static/app-builder/index.html" width="100%" height="100%" frameborder="0"></iframe>
           </div>
         </div>
       `;
