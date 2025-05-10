@@ -129,10 +129,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     brainArea.appendChild(container);
     
-    const cardBody = document.querySelector('.card-body');
+    const mainContent = document.querySelector('.main-content');
     
-    if (cardBody) {
-      cardBody.appendChild(brainArea);
+    if (mainContent) {
+      const conversationContainer = document.querySelector('.conversation-container');
+      if (conversationContainer) {
+        mainContent.insertBefore(brainArea, conversationContainer);
+      } else {
+        mainContent.appendChild(brainArea);
+      }
     }
   };
   
