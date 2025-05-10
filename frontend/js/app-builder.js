@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="app-builder-close-button">&times;</button>
           </div>
           <div class="app-builder-modal-body">
-            <iframe src="${window.location.protocol === 'https:' ? 'https' : 'http'}://${window.location.hostname}:2150" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe src="https://user:d43662c50a7556be215825839ae4a456@google-gemini-demo-tunnel-0me6wvgy.devinapps.com" width="100%" height="100%" frameborder="0"></iframe>
           </div>
         </div>
       `;
