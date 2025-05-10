@@ -119,13 +119,20 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
+    const brainArea = document.createElement('div');
+    brainArea.id = 'brainArea';
+    brainArea.className = 'brain-area';
+    
     const container = document.createElement('div');
     container.id = 'brainContainer';
     container.className = 'brain-button-container';
     
-    const textInputContainer = document.querySelector('.text-input-container');
-    if (textInputContainer) {
-      textInputContainer.insertAdjacentElement('afterend', container);
+    brainArea.appendChild(container);
+    
+    const cardBody = document.querySelector('.card-body');
+    
+    if (cardBody) {
+      cardBody.appendChild(brainArea);
     }
   };
   

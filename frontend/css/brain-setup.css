@@ -517,13 +517,24 @@
 }
 
 /* Brain Button Container */
+/* Brain Area - Positioned below the prompt box */
+.brain-area {
+  width: 100%;
+  padding: 20px 0;
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+}
+
 .brain-button-container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 16px;
-  margin-bottom: 16px;
   padding: 12px;
   width: 100%;
   max-width: 100%;
