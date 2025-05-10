@@ -139,6 +139,22 @@ window.showUploadForm = function(method, container) {
           
           window.brainData.memories.push(memory);
           window.addMemoryToTable(memory, document.getElementById('memoryTableBody'));
+          
+          if (window.brainData.brainId) {
+            window.uploadMemoryAPI(window.brainData.brainId, {
+              title: memory.name,
+              content: memory.content,
+              source: 'text-input'
+            })
+            .then(response => {
+              memory.filename = response.filename;
+              console.log(`Memory uploaded successfully: ${memory.filename}`);
+            })
+            .catch(error => {
+              console.error('Error uploading memory:', error);
+            });
+          }
+          
           textArea.value = '';
         }
       });
@@ -181,6 +197,21 @@ window.showUploadForm = function(method, container) {
           
           window.brainData.memories.push(memory);
           window.addMemoryToTable(memory, document.getElementById('memoryTableBody'));
+          
+          if (window.brainData.brainId) {
+            window.uploadMemoryAPI(window.brainData.brainId, {
+              file: file,
+              title: file.name,
+              source: 'file-upload'
+            })
+            .then(response => {
+              memory.filename = response.filename;
+              console.log(`File uploaded successfully: ${memory.filename}`);
+            })
+            .catch(error => {
+              console.error('Error uploading file:', error);
+            });
+          }
         }
       });
       
@@ -226,6 +257,34 @@ window.showUploadForm = function(method, container) {
           
           window.brainData.memories.push(memory);
           window.addMemoryToTable(memory, document.getElementById('memoryTableBody'));
+          
+          if (window.brainData.brainId) {
+            const uploadPromises = files.map(file => {
+              return window.uploadMemoryAPI(window.brainData.brainId, {
+                file: file,
+                title: file.name,
+                source: `folder-upload/${folderName}`
+              })
+              .then(response => {
+                console.log(`File uploaded successfully: ${response.filename}`);
+                return response;
+              })
+              .catch(error => {
+                console.error(`Error uploading file ${file.name}:`, error);
+                return null;
+              });
+            });
+            
+            Promise.all(uploadPromises)
+              .then(responses => {
+                const validResponses = responses.filter(r => r !== null);
+                memory.filenames = validResponses.map(r => r.filename);
+                console.log(`Folder upload complete: ${validResponses.length}/${files.length} files uploaded`);
+              })
+              .catch(error => {
+                console.error('Error uploading folder:', error);
+              });
+          }
         }
       });
       
@@ -271,6 +330,26 @@ window.addMemoryToTable = function(memory, tableBody) {
     );
     
     if (index !== -1) {
+      if (memory.filename && window.brainData.brainId) {
+        window.deleteMemoryAPI(memory.filename)
+          .then(() => {
+            console.log(`Memory ${memory.filename} deleted from API`);
+          })
+          .catch(error => {
+            console.error(`Error deleting memory ${memory.filename}:`, error);
+          });
+      } else if (memory.filenames && memory.filenames.length > 0 && window.brainData.brainId) {
+        memory.filenames.forEach(filename => {
+          window.deleteMemoryAPI(filename)
+            .then(() => {
+              console.log(`Memory ${filename} deleted from API`);
+            })
+            .catch(error => {
+              console.error(`Error deleting memory ${filename}:`, error);
+            });
+        });
+      }
+      
       window.brainData.memories.splice(index, 1);
       row.remove();
     }

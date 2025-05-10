@@ -143,46 +143,6 @@ window.formatFileSize = function(bytes) {
   else return (bytes / 1048576).toFixed(1) + ' MB';
 }
 
-window.fetchBrainsAPI = function() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 'brain-1',
-          name: 'Personal Assistant',
-          description: 'Helps with scheduling and organization',
-          active: true
-        },
-        {
-          id: 'brain-2',
-          name: 'Creative Writer',
-          description: 'Specialized in creative writing and storytelling',
-          active: false
-        }
-      ]);
-    }, 500);
-  });
-}
-
-window.toggleBrainAPI = function(brainId, active) {
-  return new Promise((resolve) => {
-    console.log(`Toggling brain ${brainId} to ${active ? 'active' : 'inactive'}`);
-    setTimeout(resolve, 300);
-  });
-}
-
-window.startTrainingAPI = function(brainData) {
-  return new Promise((resolve) => {
-    console.log('Starting training with data:', brainData);
-    setTimeout(() => {
-      resolve({
-        id: `brain-${Date.now()}`,
-        name: brainData.identity.name,
-        status: 'success'
-      });
-    }, 3000);
-  });
-}
 
 window.validateIdentityStep = function() {
   const nameInput = document.getElementById('brainName');

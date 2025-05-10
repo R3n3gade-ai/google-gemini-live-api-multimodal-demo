@@ -1,4 +1,5 @@
 window.brainData = {
+  brainId: null,
   identity: {
     name: '',
     description: '',
@@ -112,52 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         brains.forEach(brain => {
-          const brainItem = document.createElement('div');
-          brainItem.className = 'brain-item';
-          
-          const brainIcon = document.createElement('div');
-          brainIcon.className = 'brain-icon';
-          brainIcon.innerHTML = '<i class="fas fa-brain"></i>';
-          
-          const brainInfo = document.createElement('div');
-          brainInfo.className = 'brain-info';
-          
-          const brainName = document.createElement('div');
-          brainName.className = 'brain-name';
-          brainName.textContent = brain.name;
-          
-          const brainDescription = document.createElement('div');
-          brainDescription.className = 'brain-description';
-          brainDescription.textContent = brain.description;
-          
-          brainInfo.appendChild(brainName);
-          brainInfo.appendChild(brainDescription);
-          
-          const brainToggle = document.createElement('label');
-          brainToggle.className = 'toggle-wrapper brain-toggle';
-          
-          const toggleInput = document.createElement('input');
-          toggleInput.type = 'checkbox';
-          toggleInput.className = 'toggle-input';
-          toggleInput.checked = brain.active;
-          toggleInput.addEventListener('change', (e) => {
-            window.toggleBrainAPI(brain.id, e.target.checked)
-              .then(() => {
-                console.log(`Brain ${brain.id} toggled to ${e.target.checked ? 'active' : 'inactive'}`);
-              });
-          });
-          
-          const toggleDisplay = document.createElement('span');
-          toggleDisplay.className = 'toggle-display';
-          
-          brainToggle.appendChild(toggleInput);
-          brainToggle.appendChild(toggleDisplay);
-          
-          brainItem.appendChild(brainIcon);
-          brainItem.appendChild(brainInfo);
-          brainItem.appendChild(brainToggle);
-          
-          brainList.appendChild(brainItem);
+          window.addBrainToList(brain);
         });
       })
       .catch(error => {

@@ -309,11 +309,18 @@ window.startTraining = function() {
   
   stepContent.appendChild(loadingContent);
   
-  window.startTrainingAPI(window.brainData)
+  window.createBrainAPI(window.brainData)
+    .then(brainResponse => {
+      const brainId = brainResponse.id;
+      window.brainData.brainId = brainId;
+      
+      return window.startTrainingAPI(brainId, window.brainData.training);
+    })
     .then(response => {
       window.showTrainingSuccess(response);
     })
     .catch(error => {
+      console.error('Training error:', error);
       window.showTrainingError(error);
     });
 }
@@ -346,18 +353,32 @@ window.showTrainingSuccess = function(response) {
   
   stepContent.appendChild(successContent);
   
-  const footer = document.querySelector('.brain-setup-footer');
-  footer.innerHTML = '';
+  let footer = document.querySelector('.brain-setup-footer');
+  if (!footer) {
+    footer = document.createElement('div');
+    footer.className = 'brain-setup-footer';
+    const container = document.getElementById('brainSetupContainer');
+    if (container) {
+      const content = container.querySelector('.brain-setup-content');
+      if (content) {
+        content.appendChild(footer);
+      }
+    }
+  }
   
-  const closeButton = document.createElement('button');
-  closeButton.className = 'btn btn-primary';
-  closeButton.textContent = 'Close';
-  closeButton.addEventListener('click', () => {
-    window.closeBrainSetup();
-    window.fetchExistingBrains(); // Refresh brain list
-  });
-  
-  footer.appendChild(closeButton);
+  if (footer) {
+    footer.innerHTML = '';
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'btn btn-primary';
+    closeButton.textContent = 'Close';
+    closeButton.addEventListener('click', () => {
+      window.closeBrainSetup();
+      window.fetchExistingBrains(); // Refresh brain list
+    });
+    
+    footer.appendChild(closeButton);
+  }
   
   window.addBrainToList({
     id: response?.id || `brain-${Date.now()}`,
