@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const textInputContainer = document.querySelector('.text-input-container');
     if (textInputContainer) {
-      textInputContainer.parentNode.insertBefore(container, textInputContainer.nextSibling);
+      textInputContainer.insertAdjacentElement('afterend', container);
     }
   };
   
