@@ -517,28 +517,7 @@
 }
 
 /* Brain Button Container */
-/* Brain Area - Positioned below the prompt box */
-.brain-area {
-  width: 100%;
-  padding: 20px 0;
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  clear: both;
-}
-
-.brain-button-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 12px;
-  width: 100%;
-  max-width: 100%;
-}
-
+/* Brain Buttons - Positioned below the prompt box */
 .brain-button {
   display: flex;
   flex-direction: column;
@@ -555,6 +534,8 @@
   transition: background-color 0.2s, border-color 0.2s;
   padding: 8px;
   text-align: center;
+  margin: 10px 6px;
+  float: left;
 }
 
 .brain-button i {
@@ -579,4 +560,9 @@
 .brain-button.active {
   background-color: rgba(59, 130, 246, 0.2);
   border-color: #3b82f6;
+}
+
+/* Clear fix for brain buttons */
+.text-input-container + .brain-button + .brain-button + .brain-button + .brain-button + .conversation-container {
+  clear: both;
 }

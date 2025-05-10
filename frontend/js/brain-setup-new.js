@@ -17,11 +17,12 @@ window.brainData = {
   }
 };
 
-window.addBrainToList = function(brain) {
-  const brainContainer = document.getElementById('brainContainer');
-  if (!brainContainer) return;
+window.addBrainButton = function(brain) {
+  const promptBox = document.querySelector('.text-input-container');
+  if (!promptBox) return;
   
-  if (brainContainer.children.length >= 4) return;
+  const existingButtons = document.querySelectorAll('.brain-button');
+  if (existingButtons.length >= 4) return;
   
   const brainButton = document.createElement('button');
   brainButton.className = 'brain-button';
@@ -44,7 +45,7 @@ window.addBrainToList = function(brain) {
       });
   });
   
-  brainContainer.appendChild(brainButton);
+  promptBox.parentNode.insertBefore(brainButton, promptBox.nextSibling);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -54,8 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const initBrainSetup = () => {
     brainButton.addEventListener('click', window.openBrainSetup);
-    
-    window.createBrainContainer();
     
     window.fetchExistingBrains();
   };
@@ -75,14 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   
   window.fetchExistingBrains = () => {
-    const brainContainer = document.getElementById('brainContainer');
-    if (!brainContainer) return;
-    
-    brainContainer.innerHTML = '<div class="loading-brains">Loading...</div>';
+    const existingButtons = document.querySelectorAll('.brain-button');
+    existingButtons.forEach(button => button.remove());
     
     const addTestBrains = () => {
-      brainContainer.innerHTML = '';
-      
       const testBrains = [
         { id: 'test1', name: 'Work Brain', active: true },
         { id: 'test2', name: 'Personal', active: false },
@@ -91,54 +86,25 @@ document.addEventListener('DOMContentLoaded', () => {
       ];
       
       testBrains.forEach(brain => {
-        window.addBrainToList(brain);
+        window.addBrainButton(brain);
       });
     };
     
     window.fetchBrainsAPI()
       .then(brains => {
-        brainContainer.innerHTML = '';
-        
         if (brains.length === 0) {
           addTestBrains();
           return;
         }
         
         brains.slice(0, 4).forEach(brain => {
-          window.addBrainToList(brain);
+          window.addBrainButton(brain);
         });
       })
       .catch(error => {
         console.error('Error fetching brains:', error);
         addTestBrains();
       });
-  };
-  
-  window.createBrainContainer = () => {
-    if (document.getElementById('brainContainer')) {
-      return;
-    }
-    
-    const brainArea = document.createElement('div');
-    brainArea.id = 'brainArea';
-    brainArea.className = 'brain-area';
-    
-    const container = document.createElement('div');
-    container.id = 'brainContainer';
-    container.className = 'brain-button-container';
-    
-    brainArea.appendChild(container);
-    
-    const mainContent = document.querySelector('.main-content');
-    
-    if (mainContent) {
-      const conversationContainer = document.querySelector('.conversation-container');
-      if (conversationContainer) {
-        mainContent.insertBefore(brainArea, conversationContainer);
-      } else {
-        mainContent.appendChild(brainArea);
-      }
-    }
   };
   
   initBrainSetup();
