@@ -1,0 +1,57 @@
+/* App/Web Builder Modal Styles */
+.app-builder-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.app-builder-modal-content {
+  width: 90%;
+  height: 90%;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-builder-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2d2d2d;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+.app-builder-modal-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.app-builder-close-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.app-builder-modal-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+.app-builder-modal-body iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
