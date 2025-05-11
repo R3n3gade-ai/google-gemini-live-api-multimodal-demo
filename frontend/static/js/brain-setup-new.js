@@ -62,7 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const initBrainSetup = () => {
     brainButton.addEventListener('click', window.openBrainSetup);
     
-    window.fetchExistingBrains();
+    setTimeout(() => {
+      window.fetchExistingBrains();
+    }, 500);
   };
   
   window.openBrainSetup = () => {
@@ -84,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     existingButtons.forEach(button => button.remove());
     
     const addTestBrains = () => {
+      console.log('Adding test brains to left nav');
       const testBrains = [
         { id: 'test1', name: 'Work Brain', active: true },
         { id: 'test2', name: 'Personal', active: false },
@@ -94,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
       testBrains.forEach(brain => {
         window.addBrainButton(brain);
       });
+      
+      console.log('Brain buttons created:', document.querySelectorAll('.left-nav-brain-button').length);
     };
     
     window.fetchBrainsAPI()
