@@ -580,12 +580,15 @@
 .text-input-container + .brain-button-wrapper {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 100px;
+  margin-top: 20px;
   margin-bottom: 20px;
   width: 100%;
-  position: relative;
-  clear: both;
+  position: absolute;
+  top: 80px;
+  left: 0;
+  padding: 0 20px;
   z-index: 1;
+  justify-content: center;
 }
 
 .brain-button-wrapper .brain-button {
