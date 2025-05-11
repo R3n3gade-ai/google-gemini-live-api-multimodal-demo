@@ -1,6 +1,6 @@
 window.fetchBrainsAPI = async function() {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/roles`);
     if (!response.ok) {
       throw new Error(`Failed to fetch brains: ${response.status}`);
@@ -20,7 +20,7 @@ window.fetchBrainsAPI = async function() {
 
 window.toggleBrainAPI = async function(brainId, active) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/roles/${brainId}`, {
       method: 'PUT',
       headers: {
@@ -42,7 +42,7 @@ window.toggleBrainAPI = async function(brainId, active) {
 
 window.createBrainAPI = async function(brainData) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/roles`, {
       method: 'POST',
       headers: {
@@ -79,7 +79,7 @@ window.uploadMemoryAPI = async function(brainId, memoryData) {
     formData.append('title', memoryData.title || '');
     formData.append('source', memoryData.source || '');
     
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/memory/upload`, {
       method: 'POST',
       body: formData
@@ -98,7 +98,7 @@ window.uploadMemoryAPI = async function(brainId, memoryData) {
 
 window.deleteMemoryAPI = async function(filename) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/memory/${filename}`, {
       method: 'DELETE'
     });
@@ -116,7 +116,7 @@ window.deleteMemoryAPI = async function(filename) {
 
 window.startTrainingAPI = async function(brainId, trainingData) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/training/start`, {
       method: 'POST',
       headers: {
@@ -147,7 +147,7 @@ window.startTrainingAPI = async function(brainId, trainingData) {
 
 window.getTrainingStatusAPI = async function(brainId) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : 'http://localhost:8000');
+    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : 'http://localhost:8000');
     const response = await fetch(`${apiBaseUrl}/second-me/training/status?brainId=${brainId}`);
     
     if (!response.ok) {

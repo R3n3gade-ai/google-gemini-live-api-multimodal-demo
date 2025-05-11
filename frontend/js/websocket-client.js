@@ -29,7 +29,7 @@ export class WebSocketClient {
         
         // Create WebSocket connection using backend server
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const backendHost = window.location.hostname.includes('devinapps.com') ? 'user:548f935ea4ef6cffb08e07436a6ec9bf@second-brain-app-tunnel-xpflwrii.devinapps.com' : window.location.host;
+        const backendHost = window.location.hostname.includes('devinapps.com') ? 'user:e3fb3862ba599aae238274f609a5aeaf@second-brain-app-tunnel-q3n64hve.devinapps.com' : window.location.host;
         this.websocket = new WebSocket(`${protocol}//${backendHost}/ws/${this.clientId}`);
         
         this.websocket.onopen = () => {
