@@ -535,9 +535,6 @@
   padding: 8px;
   text-align: center;
   margin: 10px 6px;
-  float: left;
-  position: relative;
-  z-index: 10;
 }
 
 /* Hide brain buttons at the top of the interface */
@@ -583,9 +580,11 @@
 .text-input-container + .brain-button-wrapper {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 80px;
   margin-bottom: 20px;
   width: 100%;
+  position: relative;
+  clear: both;
 }
 
 .brain-button-wrapper .brain-button {
