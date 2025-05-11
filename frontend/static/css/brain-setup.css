@@ -581,7 +581,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 15px;
+  padding: 10px;
   position: absolute;
   bottom: 20px;
   left: 0;
@@ -590,15 +590,21 @@
 
 .left-nav-brain-button {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  height: 60px;
+  justify-content: flex-start;
+  height: 50px;
   margin: 0;
   background-color: #1e1e1e;
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   width: 100%;
+  padding: 0 15px;
+}
+
+.left-nav-brain-button i {
+  margin-right: 10px;
+  font-size: 16px;
 }
 
 .left-nav-brain-button.active {
@@ -606,7 +612,7 @@
   border-color: #4299e1;
 }
 
-/* Hide the original brain button wrapper */
-.brain-button-wrapper {
+/* Hide any brain buttons not in the left nav */
+.brain-button:not(.left-nav-brain-button) {
   display: none;
 }

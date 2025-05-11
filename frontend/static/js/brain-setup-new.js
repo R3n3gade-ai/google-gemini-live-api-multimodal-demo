@@ -17,14 +17,14 @@ window.brainData = {
 };
 
 window.addBrainButton = function(brain) {
-  const workspaceMenu = document.querySelector('.workspace-menu');
-  if (!workspaceMenu) return;
+  const leftNav = document.querySelector('.left-nav');
+  if (!leftNav) return;
   
   let leftNavBrainWrapper = document.querySelector('.left-nav-brain-wrapper');
   if (!leftNavBrainWrapper) {
     leftNavBrainWrapper = document.createElement('div');
     leftNavBrainWrapper.className = 'left-nav-brain-wrapper';
-    workspaceMenu.appendChild(leftNavBrainWrapper);
+    leftNav.appendChild(leftNavBrainWrapper);
   }
   
   const existingButtons = leftNavBrainWrapper.querySelectorAll('.brain-button');
