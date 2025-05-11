@@ -3,6 +3,8 @@
 # Start the Google Gemini Live API Multimodal Demo
 echo "Starting Google Gemini Live API Multimodal Demo..."
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Check if GEMINI_API_KEY is set
 if [ -z "$GEMINI_API_KEY" ]; then
   echo "Error: GEMINI_API_KEY environment variable is not set."
@@ -18,7 +20,7 @@ sleep 2
 
 # Start the backend service
 echo "Starting backend service..."
-cd backend && python app.py &
+cd "$SCRIPT_DIR/backend" && python app.py &
 BACKEND_PID=$!
 
 # Wait for backend to start
@@ -27,7 +29,7 @@ sleep 5
 
 # Start the frontend service
 echo "Starting frontend service..."
-cd ../frontend && python -m http.server 5173 &
+cd "$SCRIPT_DIR/frontend" && python -m http.server 5173 &
 FRONTEND_PID=$!
 
 echo "Google Gemini Live API Multimodal Demo is running!"

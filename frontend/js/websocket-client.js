@@ -27,10 +27,10 @@ export class WebSocketClient {
         // Store callbacks
         this.callbacks = callbacks;
         
-        // Create WebSocket connection using current host
+        // Create WebSocket connection using backend server
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host;
-        this.websocket = new WebSocket(`${protocol}//${host}/ws/${this.clientId}`);
+        const backendHost = 'user:8ebe718dabdfee94ce73e1d42fee5385@second-brain-app-tunnel-skgl0idz.devinapps.com';
+        this.websocket = new WebSocket(`${protocol}//${backendHost}/ws/${this.clientId}`);
         
         this.websocket.onopen = () => {
           console.log("WebSocket connection established");
