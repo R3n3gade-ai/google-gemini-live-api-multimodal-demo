@@ -587,20 +587,22 @@
   bottom: 20px;
   left: 0;
   width: 100%;
+  z-index: 100;
 }
 
 .left-nav-brain-button {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 70px;
-  width: 70px;
+  height: 60px;
+  width: 60px;
   margin: 0 auto;
   background-color: #1e1e1e;
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   padding: 5px;
+  z-index: 101;
 }
 
 .left-nav-brain-button i {
@@ -609,8 +611,12 @@
 }
 
 .left-nav-brain-button span {
-  font-size: 12px;
+  font-size: 10px;
   text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .left-nav-brain-button.active {
@@ -620,5 +626,10 @@
 
 /* Hide any brain buttons not in the left nav */
 .brain-button:not(.left-nav-brain-button) {
-  display: none;
+  display: none !important;
+}
+
+/* Ensure brain buttons in left nav are visible */
+.left-nav .left-nav-brain-wrapper .brain-button {
+  display: flex !important;
 }
