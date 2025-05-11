@@ -542,9 +542,9 @@
   display: none;
 }
 
-/* Only show brain buttons that are placed after the text input container */
+/* Hide brain buttons that are placed after the text input container */
 .text-input-container + .brain-button {
-  display: flex;
+  display: none !important;
 }
 
 .brain-button i {
