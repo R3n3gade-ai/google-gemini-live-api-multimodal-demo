@@ -123,44 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   
   window.createBrainContainer = () => {
-    if (document.getElementById('brainContainer')) {
-      return;
-    }
-    
-    const container = document.createElement('div');
-    container.id = 'brainContainer';
-    container.className = 'brain-container';
-    
-    const header = document.createElement('div');
-    header.className = 'brain-container-header';
-    
-    const title = document.createElement('div');
-    title.className = 'brain-container-title';
-    title.textContent = 'Your Brains';
-    
-    const actions = document.createElement('div');
-    actions.className = 'brain-container-actions';
-    
-    const refreshButton = document.createElement('button');
-    refreshButton.className = 'brain-container-action';
-    refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
-    refreshButton.addEventListener('click', window.fetchExistingBrains);
-    
-    actions.appendChild(refreshButton);
-    header.appendChild(title);
-    header.appendChild(actions);
-    
-    const brainList = document.createElement('div');
-    brainList.id = 'brainList';
-    brainList.className = 'brain-list';
-    
-    container.appendChild(header);
-    container.appendChild(brainList);
-    
-    const chatContainer = document.querySelector('.chat-container');
-    if (chatContainer) {
-      chatContainer.parentNode.insertBefore(container, chatContainer.nextSibling);
-    }
+    return;
   };
   
   initBrainSetup();
