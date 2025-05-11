@@ -1,7 +1,23 @@
+window.getApiConfig = function() {
+  let apiBaseUrl = 'http://localhost:8000';
+  let headers = {};
+  
+  if (window.API_GATEWAY_URL) {
+    apiBaseUrl = window.API_GATEWAY_URL;
+  } else if (window.location.hostname.includes('devinapps.com')) {
+    apiBaseUrl = 'https://second-brain-app-tunnel-zzym0sqj.devinapps.com';
+    const authString = 'user:b3835957c261e52bbff4cdc7fbdfc426';
+    const base64Auth = btoa(authString);
+    headers['Authorization'] = `Basic ${base64Auth}`;
+  }
+  
+  return { apiBaseUrl, headers };
+};
+
 window.fetchBrainsAPI = async function() {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
-    const response = await fetch(`${apiBaseUrl}/second-me/roles`);
+    const { apiBaseUrl, headers } = window.getApiConfig();
+    const response = await fetch(`${apiBaseUrl}/second-me/roles`, { headers });
     if (!response.ok) {
       throw new Error(`Failed to fetch brains: ${response.status}`);
     }
@@ -20,12 +36,12 @@ window.fetchBrainsAPI = async function() {
 
 window.toggleBrainAPI = async function(brainId, active) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
+    const { apiBaseUrl, headers } = window.getApiConfig();
+    headers['Content-Type'] = 'application/json';
+    
     const response = await fetch(`${apiBaseUrl}/second-me/roles/${brainId}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: headers,
       body: JSON.stringify({ active })
     });
     
@@ -42,12 +58,12 @@ window.toggleBrainAPI = async function(brainId, active) {
 
 window.createBrainAPI = async function(brainData) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
+    const { apiBaseUrl, headers } = window.getApiConfig();
+    headers['Content-Type'] = 'application/json';
+    
     const response = await fetch(`${apiBaseUrl}/second-me/roles`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: headers,
       body: JSON.stringify({
         name: brainData.identity.name,
         description: brainData.identity.description,
@@ -79,9 +95,10 @@ window.uploadMemoryAPI = async function(brainId, memoryData) {
     formData.append('title', memoryData.title || '');
     formData.append('source', memoryData.source || '');
     
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
+    const { apiBaseUrl, headers } = window.getApiConfig();
     const response = await fetch(`${apiBaseUrl}/second-me/memory/upload`, {
       method: 'POST',
+      headers: headers,
       body: formData
     });
     
@@ -98,9 +115,10 @@ window.uploadMemoryAPI = async function(brainId, memoryData) {
 
 window.deleteMemoryAPI = async function(filename) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
+    const { apiBaseUrl, headers } = window.getApiConfig();
     const response = await fetch(`${apiBaseUrl}/second-me/memory/${filename}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: headers
     });
     
     if (!response.ok) {
@@ -116,12 +134,12 @@ window.deleteMemoryAPI = async function(filename) {
 
 window.startTrainingAPI = async function(brainId, trainingData) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
+    const { apiBaseUrl, headers } = window.getApiConfig();
+    headers['Content-Type'] = 'application/json';
+    
     const response = await fetch(`${apiBaseUrl}/second-me/training/start`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: headers,
       body: JSON.stringify({
         brainId,
         synthesisMode: trainingData.synthesisMode,
@@ -147,8 +165,10 @@ window.startTrainingAPI = async function(brainId, trainingData) {
 
 window.getTrainingStatusAPI = async function(brainId) {
   try {
-    const apiBaseUrl = window.API_GATEWAY_URL || (window.location.hostname.includes('devinapps.com') ? 'https://user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : 'http://localhost:8000');
-    const response = await fetch(`${apiBaseUrl}/second-me/training/status?brainId=${brainId}`);
+    const { apiBaseUrl, headers } = window.getApiConfig();
+    const response = await fetch(`${apiBaseUrl}/second-me/training/status?brainId=${brainId}`, {
+      headers: headers
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to get training status: ${response.status}`);

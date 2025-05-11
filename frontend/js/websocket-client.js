@@ -29,8 +29,17 @@ export class WebSocketClient {
         
         // Create WebSocket connection using backend server
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const backendHost = window.location.hostname.includes('devinapps.com') ? 'user:b3835957c261e52bbff4cdc7fbdfc426@second-brain-app-tunnel-zzym0sqj.devinapps.com' : window.location.host;
-        this.websocket = new WebSocket(`${protocol}//${backendHost}/ws/${this.clientId}`);
+        let backendHost = window.location.host;
+        let authHeader = null;
+        
+        if (window.location.hostname.includes('devinapps.com')) {
+          backendHost = 'second-brain-app-tunnel-zzym0sqj.devinapps.com';
+          // Store auth for connection
+          authHeader = 'Basic ' + btoa('user:b3835957c261e52bbff4cdc7fbdfc426');
+        }
+        
+        this.websocket = new WebSocket(`${protocol}//${backendHost}/ws/${this.clientId}`, 
+          authHeader ? ['authorization', authHeader] : undefined);
         
         this.websocket.onopen = () => {
           console.log("WebSocket connection established");
