@@ -576,21 +576,37 @@
   clear: both;
 }
 
-/* Create a container for brain buttons below the prompt box */
-.text-input-container + .brain-button-wrapper {
+/* Create a container for brain buttons in the left navigation menu */
+.left-nav-brain-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  width: 100%;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
   position: absolute;
-  top: 80px;
+  bottom: 20px;
   left: 0;
-  padding: 0 20px;
-  z-index: 1;
-  justify-content: center;
+  width: 100%;
 }
 
-.brain-button-wrapper .brain-button {
+.left-nav-brain-button {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  margin: 0;
+  background-color: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.left-nav-brain-button.active {
+  background-color: #2a4365;
+  border-color: #4299e1;
+}
+
+/* Hide the original brain button wrapper */
+.brain-button-wrapper {
+  display: none;
 }

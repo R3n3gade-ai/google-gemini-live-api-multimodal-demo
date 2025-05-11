@@ -17,21 +17,21 @@ window.brainData = {
 };
 
 window.addBrainButton = function(brain) {
-  const textInputContainer = document.querySelector('.text-input-container');
-  if (!textInputContainer) return;
+  const workspaceMenu = document.querySelector('.workspace-menu');
+  if (!workspaceMenu) return;
   
-  let brainButtonWrapper = document.querySelector('.brain-button-wrapper');
-  if (!brainButtonWrapper) {
-    brainButtonWrapper = document.createElement('div');
-    brainButtonWrapper.className = 'brain-button-wrapper';
-    textInputContainer.parentNode.insertBefore(brainButtonWrapper, textInputContainer.nextSibling);
+  let leftNavBrainWrapper = document.querySelector('.left-nav-brain-wrapper');
+  if (!leftNavBrainWrapper) {
+    leftNavBrainWrapper = document.createElement('div');
+    leftNavBrainWrapper.className = 'left-nav-brain-wrapper';
+    workspaceMenu.appendChild(leftNavBrainWrapper);
   }
   
-  const existingButtons = brainButtonWrapper.querySelectorAll('.brain-button');
+  const existingButtons = leftNavBrainWrapper.querySelectorAll('.brain-button');
   if (existingButtons.length >= 4) return;
   
   const brainButton = document.createElement('button');
-  brainButton.className = 'brain-button';
+  brainButton.className = 'brain-button left-nav-brain-button';
   brainButton.dataset.brainId = brain.id;
   brainButton.innerHTML = `
     <i class="fas fa-brain"></i>
@@ -51,7 +51,7 @@ window.addBrainButton = function(brain) {
       });
   });
   
-  brainButtonWrapper.appendChild(brainButton);
+  leftNavBrainWrapper.appendChild(brainButton);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
