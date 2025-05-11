@@ -17,10 +17,17 @@ window.brainData = {
 };
 
 window.addBrainButton = function(brain) {
-  const promptBox = document.querySelector('.text-input-container');
-  if (!promptBox) return;
+  const textInputContainer = document.querySelector('.text-input-container');
+  if (!textInputContainer) return;
   
-  const existingButtons = document.querySelectorAll('.brain-button');
+  let brainButtonWrapper = document.querySelector('.brain-button-wrapper');
+  if (!brainButtonWrapper) {
+    brainButtonWrapper = document.createElement('div');
+    brainButtonWrapper.className = 'brain-button-wrapper';
+    textInputContainer.parentNode.insertBefore(brainButtonWrapper, textInputContainer.nextSibling);
+  }
+  
+  const existingButtons = brainButtonWrapper.querySelectorAll('.brain-button');
   if (existingButtons.length >= 4) return;
   
   const brainButton = document.createElement('button');
@@ -44,7 +51,7 @@ window.addBrainButton = function(brain) {
       });
   });
   
-  promptBox.parentNode.insertBefore(brainButton, promptBox.nextSibling);
+  brainButtonWrapper.appendChild(brainButton);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
