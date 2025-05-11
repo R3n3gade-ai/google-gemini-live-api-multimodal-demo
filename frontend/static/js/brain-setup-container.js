@@ -146,21 +146,11 @@ window.formatFileSize = function(bytes) {
 
 window.validateIdentityStep = function() {
   const nameInput = document.getElementById('brainName');
-  const emailInput = document.getElementById('brainEmail');
   
   if (!nameInput.value.trim()) {
     alert('Please enter a name for your Second Me.');
     nameInput.focus();
     return false;
-  }
-  
-  if (emailInput.value.trim()) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailInput.value.trim())) {
-      alert('Please enter a valid email address or leave it empty.');
-      emailInput.focus();
-      return false;
-    }
   }
   
   return true;
