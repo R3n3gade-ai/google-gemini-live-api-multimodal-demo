@@ -518,26 +518,6 @@
 
 /* Brain Button Container */
 /* Brain Buttons - Positioned below the prompt box */
-.brain-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  background-color: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-  padding: 8px;
-  text-align: center;
-  margin: 10px 6px;
-}
-
-/* Hide brain buttons at the top of the interface */
 .brain-container .brain-button {
   display: none;
 }
@@ -547,36 +527,12 @@
   display: flex !important;
 }
 
-.brain-button i {
-  font-size: 1.5rem;
-  color: #3b82f6;
-  margin-bottom: 8px;
-}
-
-.brain-button span {
-  font-size: 0.7rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.brain-button:hover {
-  background-color: #333;
-  border-color: #3b82f6;
-}
-
-.brain-button.active {
-  background-color: rgba(59, 130, 246, 0.2);
-  border-color: #3b82f6;
-}
-
 /* Clear fix for brain buttons */
 .text-input-container + .brain-button + .brain-button + .brain-button + .brain-button + .conversation-container {
   clear: both;
 }
 
-/* Style for brain buttons at the bottom of the chat area */
+/* Style for brain buttons */
 .brain-button {
   display: flex !important;
   flex-direction: column;

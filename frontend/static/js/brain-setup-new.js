@@ -17,8 +17,14 @@ window.brainData = {
 };
 
 window.addBrainButton = function(brain) {
-  const promptBox = document.querySelector('.text-input-container');
-  if (!promptBox) return;
+  const isCreative = brain.name === 'Creative';
+  
+  if (isCreative) {
+    const existingCreative = document.querySelector('.brain-button span');
+    if (existingCreative && existingCreative.textContent === 'Creative') {
+      return;
+    }
+  }
   
   const existingButtons = document.querySelectorAll('.brain-button');
   if (existingButtons.length >= 4) return;
@@ -44,7 +50,24 @@ window.addBrainButton = function(brain) {
       });
   });
   
-  promptBox.parentNode.insertBefore(brainButton, promptBox.nextSibling);
+  if (!isCreative) {
+    const creativeButton = Array.from(document.querySelectorAll('.brain-button span'))
+      .find(span => span.textContent === 'Creative')?.parentNode;
+    
+    if (creativeButton) {
+      creativeButton.parentNode.insertBefore(brainButton, creativeButton.nextSibling);
+    } else {
+      const promptBox = document.querySelector('.text-input-container');
+      if (promptBox) {
+        promptBox.parentNode.insertBefore(brainButton, promptBox.nextSibling);
+      }
+    }
+  } else {
+    const promptBox = document.querySelector('.text-input-container');
+    if (promptBox) {
+      promptBox.parentNode.insertBefore(brainButton, promptBox.nextSibling);
+    }
+  }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -76,10 +99,15 @@ document.addEventListener('DOMContentLoaded', () => {
   
   window.fetchExistingBrains = () => {
     const existingButtons = document.querySelectorAll('.brain-button');
-    existingButtons.forEach(button => button.remove());
+    existingButtons.forEach(button => {
+      const buttonName = button.querySelector('span').textContent;
+      if (buttonName !== 'Creative') {
+        button.remove();
+      }
+    });
     
     const addTestBrains = () => {
-      console.log('Adding test brains to left nav');
+      console.log('Adding brain buttons');
       const testBrains = [
         { id: 'test1', name: 'Work Brain', active: true },
         { id: 'test2', name: 'Personal', active: false },
@@ -88,10 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
       ];
       
       testBrains.forEach(brain => {
+        if (brain.name === 'Creative') {
+          const existingCreative = document.querySelector('.brain-button span');
+          if (existingCreative && existingCreative.textContent === 'Creative') {
+            return;
+          }
+        }
         window.addBrainButton(brain);
       });
-      
-      console.log('Brain buttons created:', document.querySelectorAll('.left-nav-brain-button').length);
     };
     
     window.fetchBrainsAPI()
