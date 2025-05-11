@@ -542,9 +542,9 @@
   display: none;
 }
 
-/* Hide brain buttons that are placed after the text input container */
+/* Show brain buttons that are placed after the text input container */
 .text-input-container + .brain-button {
-  display: none !important;
+  display: flex !important;
 }
 
 .brain-button i {
@@ -576,41 +576,29 @@
   clear: both;
 }
 
-/* Create a container for brain buttons in the left navigation menu */
-.left-nav-brain-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 10px;
-  padding: 10px;
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-}
-
-.left-nav-brain-button {
+/* Style for brain buttons at the bottom of the chat area */
+.brain-button {
   display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 60px;
   width: 60px;
-  margin: 0 auto;
+  margin: 0 5px;
   background-color: #1e1e1e;
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   padding: 5px;
   z-index: 101;
+  float: left;
 }
 
-.left-nav-brain-button i {
+.brain-button i {
   margin-bottom: 5px;
   font-size: 18px;
 }
 
-.left-nav-brain-button span {
+.brain-button span {
   font-size: 10px;
   text-align: center;
   max-width: 100%;
@@ -619,17 +607,12 @@
   white-space: nowrap;
 }
 
-.left-nav-brain-button.active {
+.brain-button.active {
   background-color: #2a4365;
   border-color: #4299e1;
 }
 
-/* Hide any brain buttons not in the left nav */
-.brain-button:not(.left-nav-brain-button) {
-  display: none !important;
-}
-
-/* Ensure brain buttons in left nav are visible */
-.left-nav .left-nav-brain-wrapper .brain-button {
-  display: flex !important;
+/* Container for brain buttons */
+.text-input-container + .brain-button + .brain-button + .brain-button + .brain-button + .conversation-container {
+  clear: both;
 }

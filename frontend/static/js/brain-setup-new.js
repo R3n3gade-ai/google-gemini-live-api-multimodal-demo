@@ -17,21 +17,14 @@ window.brainData = {
 };
 
 window.addBrainButton = function(brain) {
-  const leftNav = document.querySelector('.left-nav');
-  if (!leftNav) return;
+  const promptBox = document.querySelector('.text-input-container');
+  if (!promptBox) return;
   
-  let leftNavBrainWrapper = document.querySelector('.left-nav-brain-wrapper');
-  if (!leftNavBrainWrapper) {
-    leftNavBrainWrapper = document.createElement('div');
-    leftNavBrainWrapper.className = 'left-nav-brain-wrapper';
-    leftNav.appendChild(leftNavBrainWrapper);
-  }
-  
-  const existingButtons = leftNavBrainWrapper.querySelectorAll('.brain-button');
+  const existingButtons = document.querySelectorAll('.brain-button');
   if (existingButtons.length >= 4) return;
   
   const brainButton = document.createElement('button');
-  brainButton.className = 'brain-button left-nav-brain-button';
+  brainButton.className = 'brain-button';
   brainButton.dataset.brainId = brain.id;
   brainButton.innerHTML = `
     <i class="fas fa-brain"></i>
@@ -51,7 +44,7 @@ window.addBrainButton = function(brain) {
       });
   });
   
-  leftNavBrainWrapper.appendChild(brainButton);
+  promptBox.parentNode.insertBefore(brainButton, promptBox.nextSibling);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
