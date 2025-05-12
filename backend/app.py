@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 # Import routes
 from routes.websocket import router as websocket_router
-from routes.brain_api import router as brain_api_router
 
 # Load environment variables
 load_dotenv()
@@ -26,7 +25,6 @@ app.add_middleware(
 
 # Include routers
 app.include_router(websocket_router)
-app.include_router(brain_api_router, prefix="")
 
 # Mount frontend static files
 app.mount("/static", StaticFiles(directory="../frontend"), name="static")
