@@ -37,7 +37,7 @@ export class WebSocketClient {
           const tunnelMatch = currentHostname.match(/tunnel-([a-z0-9]+)\.devinapps\.com/);
           const tunnelId = tunnelMatch ? tunnelMatch[1] : 'zidfycal';
           
-          backendHost = `second-brain-app-tunnel-${tunnelId}.devinapps.com`;
+          backendHost = `ai-workstation-tunnel-${tunnelId}.devinapps.com`;
           
           const credentialsMatch = window.location.href.match(/https:\/\/([^@]+)@/);
           const credentials = credentialsMatch ? credentialsMatch[1] : 'user:e62e021576f371e8e8288f5adc52c0e5';
