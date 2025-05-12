@@ -31,19 +31,15 @@ export class WebSocketClient {
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         
         // For tunnel URLs, we need to use the exposed backend URL
+        let wsUrl;
         if (window.location.hostname.includes('devinapps.com')) {
+          // For exposed ports, we need to use the exposed backend URL
           const backendTunnelId = 'gffjlm8q';
-          const backendCredentials = 'user:ea4ea5cbfbd879aea00047898a9f198d';
-          
-          let wsUrl = `${protocol}//${backendCredentials}@second-brain-app-tunnel-${backendTunnelId}.devinapps.com/ws/${this.clientId}`;
-          console.log("Using backend tunnel WebSocket URL:", wsUrl);
-          
-          this.websocket = new WebSocket(wsUrl);
+          wsUrl = `${protocol}//second-brain-app-tunnel-${backendTunnelId}.devinapps.com/ws/${this.clientId}`;
+          console.log("Using exposed backend WebSocket URL:", wsUrl);
         } else {
-          let wsUrl = `${protocol}//${window.location.host}/ws/${this.clientId}`;
+          wsUrl = `${protocol}//${window.location.host}/ws/${this.clientId}`;
           console.log("Using local WebSocket URL:", wsUrl);
-          
-          this.websocket = new WebSocket(wsUrl);
         }
         
         console.log("Connecting to WebSocket:", wsUrl);
