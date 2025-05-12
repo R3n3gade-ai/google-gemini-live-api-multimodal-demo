@@ -51,7 +51,9 @@ export class WebSocketClient {
         let wsUrl = `${protocol}//${backendHost}/ws/${this.clientId}`;
         
         if (window.location.hostname.includes('devinapps.com')) {
-          const tunnelMatch = backendHost.match(/tunnel-([a-z0-9]+)\.devinapps\.com/);
+          
+          const currentHostname = window.location.hostname;
+          const tunnelMatch = currentHostname.match(/tunnel-([a-z0-9]+)\.devinapps\.com/);
           const tunnelId = tunnelMatch ? tunnelMatch[1] : null;
           
           if (tunnelId) {
@@ -59,8 +61,11 @@ export class WebSocketClient {
             const credentials = credentialsMatch ? credentialsMatch[1] : null;
             
             if (credentials) {
-              wsUrl = `${protocol}//${credentials}@${backendHost}/ws/${this.clientId}`;
-              console.log("Using authenticated WebSocket URL:", wsUrl);
+              const backendTunnelId = 'tjzbs6mf'; // This is the backend tunnel ID from the exposed backend URL
+              const backendCredentials = 'user:926dc5625e1b30325f2914412c91b612'; // Backend credentials
+              
+              wsUrl = `${protocol}//${backendCredentials}@second-brain-app-tunnel-${backendTunnelId}.devinapps.com/ws/${this.clientId}`;
+              console.log("Using backend tunnel WebSocket URL:", wsUrl);
             }
           }
         }
