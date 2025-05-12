@@ -33,9 +33,17 @@ export class WebSocketClient {
         let authHeader = null;
         
         if (window.location.hostname.includes('devinapps.com')) {
-          backendHost = 'second-brain-app-tunnel-zzym0sqj.devinapps.com';
+          const currentHostname = window.location.hostname;
+          const tunnelMatch = currentHostname.match(/tunnel-([a-z0-9]+)\.devinapps\.com/);
+          const tunnelId = tunnelMatch ? tunnelMatch[1] : 'zidfycal';
+          
+          backendHost = `second-brain-app-tunnel-${tunnelId}.devinapps.com`;
+          
+          const credentialsMatch = window.location.href.match(/https:\/\/([^@]+)@/);
+          const credentials = credentialsMatch ? credentialsMatch[1] : 'user:e62e021576f371e8e8288f5adc52c0e5';
+          
           // Store auth for connection
-          authHeader = 'Basic ' + btoa('user:b3835957c261e52bbff4cdc7fbdfc426');
+          authHeader = 'Basic ' + btoa(credentials);
         }
         
         this.websocket = new WebSocket(`${protocol}//${backendHost}/ws/${this.clientId}`, 
