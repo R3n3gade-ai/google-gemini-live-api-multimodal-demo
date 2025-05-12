@@ -47,8 +47,16 @@ export class WebSocketClient {
           authHeader = 'Basic ' + btoa(credentials);
         }
         
-        this.websocket = new WebSocket(`${protocol}//${backendHost}/ws/${this.clientId}`, 
-          authHeader ? ['authorization', authHeader] : undefined);
+        // Create WebSocket connection with proper authorization
+        let wsUrl = `${protocol}//${backendHost}/ws/${this.clientId}`;
+        
+        if (authHeader) {
+          const credentials = window.location.href.match(/https:\/\/([^@]+)@/)[1];
+          wsUrl = `${protocol}//${credentials}@${backendHost}/ws/${this.clientId}`;
+        }
+        
+        console.log("Connecting to WebSocket:", wsUrl);
+        this.websocket = new WebSocket(wsUrl);
         
         this.websocket.onopen = () => {
           console.log("WebSocket connection established");
