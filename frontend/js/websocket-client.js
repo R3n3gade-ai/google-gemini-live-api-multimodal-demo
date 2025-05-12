@@ -32,8 +32,8 @@ export class WebSocketClient {
         
         // For tunnel URLs, we need to use the exposed backend URL
         if (window.location.hostname.includes('devinapps.com')) {
-          const backendTunnelId = 'ospj3e04';
-          const backendCredentials = 'user:c2d4deef894cfdbdfe7ce073f0421489';
+          const backendTunnelId = 'y4uq67ii';
+          const backendCredentials = 'user:77dc8b83f75fe55487ba28023701af45';
           
           let wsUrl = `${protocol}//${backendCredentials}@second-brain-app-tunnel-${backendTunnelId}.devinapps.com/ws/${this.clientId}`;
           console.log("Using backend tunnel WebSocket URL:", wsUrl);
