@@ -4,7 +4,7 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.5rem;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   color: var(--text-primary);
   background-color: #1a1a1a;
   border-radius: var(--rounded-md);
@@ -20,7 +20,7 @@
 
 .model-name {
   font-weight: 500;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: var(--text-primary);
 }
 
@@ -35,12 +35,12 @@
 
 .token-label {
   color: var(--text-secondary);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 .token-value {
   color: var(--text-primary);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 /* Temperature Control */
@@ -54,7 +54,7 @@
   display: block;
   margin-bottom: 0.15rem;
   color: var(--text-secondary);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 .temperature-slider-container {
@@ -65,7 +65,7 @@
 
 .temperature-slider {
   flex: 1;
-  height: 0.2rem;
+  height: 0.25rem;
   -webkit-appearance: none;
   appearance: none;
   background: linear-gradient(to right, #3b82f6, #3b82f6);
@@ -76,8 +76,8 @@
 .temperature-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 0.55rem;
-  height: 0.55rem;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 50%;
   background: #3b82f6;
   cursor: pointer;
@@ -87,7 +87,7 @@
   min-width: 1rem;
   text-align: right;
   color: var(--text-primary);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 /* Setting Row */
@@ -101,7 +101,7 @@
 
 .setting-label {
   color: var(--text-secondary);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 .setting-controls {
@@ -115,7 +115,7 @@
   background-color: transparent;
   border: none;
   color: #3b82f6;
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   cursor: pointer;
   padding: 0.05rem 0.15rem;
 }
@@ -124,8 +124,8 @@
 .toggle-wrapper {
   position: relative;
   display: inline-block;
-  width: 1.5rem;
-  height: 0.75rem;
+  width: 1.6rem;
+  height: 0.8rem;
   margin-left: 0.15rem;
 }
 
@@ -144,14 +144,14 @@
   bottom: 0;
   background-color: #333;
   transition: .4s;
-  border-radius: 0.75rem;
+  border-radius: 0.8rem;
 }
 
 .toggle-display:before {
   position: absolute;
   content: "";
-  height: 0.55rem;
-  width: 0.55rem;
+  height: 0.6rem;
+  width: 0.6rem;
   left: 0.1rem;
   bottom: 0.1rem;
   background-color: white;
@@ -164,7 +164,7 @@
 }
 
 .toggle-input:checked + .toggle-display:before {
-  transform: translateX(0.75rem);
+  transform: translateX(0.8rem);
 }
 
 /* Voice and Language Selects */
@@ -174,7 +174,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--rounded-md);
   color: var(--text-primary);
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   padding: 0.1rem 0.2rem;
   min-width: 4rem;
 }
