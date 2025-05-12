@@ -171,20 +171,87 @@
 
         </div>
         
-        <!-- Tools Footer - Voice and Options -->
+        <!-- Tools Footer - Settings and Options -->
         <div class="tools-footer">
-          <!-- Voice and Language in same row -->
-          <div class="tools-selectors-row">
-            <select id="tools-voice" class="form-control">
+          <!-- Model Selector -->
+          <div class="model-selector">
+            <div class="model-name">Gemini 2.5 Pro Preview 05-0</div>
+          </div>
+          
+          <!-- Token Counter -->
+          <div class="token-counter">
+            <span class="token-label">Token count</span>
+            <span class="token-value">599 / 1,048,576</span>
+          </div>
+          
+          <!-- Temperature Slider -->
+          <div class="temperature-control">
+            <span class="temperature-label">Temperature</span>
+            <div class="temperature-slider-container">
+              <input type="range" id="temperature-slider" class="temperature-slider" min="0" max="1" step="0.1" value="0.6">
+              <span class="temperature-value">0.6</span>
+            </div>
+          </div>
+          
+          <!-- Structured Output -->
+          <div class="setting-row">
+            <span class="setting-label">Structured output</span>
+            <div class="setting-controls">
+              <button class="edit-button">Edit</button>
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-structuredOutput" checked>
+                <span class="toggle-display"></span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Code Execution -->
+          <div class="setting-row">
+            <span class="setting-label">Code execution</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-codeExecution" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Function Calling -->
+          <div class="setting-row">
+            <span class="setting-label">Function calling</span>
+            <div class="setting-controls">
+              <button class="edit-button">Edit</button>
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-functionCalling" checked>
+                <span class="toggle-display"></span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Google Search -->
+          <div class="setting-row">
+            <span class="setting-label">Grounding with Google Search</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-enableGoogleSearch" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Voice -->
+          <div class="setting-row">
+            <span class="setting-label">Voice</span>
+            <select id="tools-voice" class="voice-select">
+              <option value="Aoede">Aoede</option>
               <option value="Puck">Puck</option>
               <option value="Charon">Charon</option>
               <option value="Kore">Kore</option>
               <option value="Fenrir">Fenrir</option>
-              <option value="Aoede">Aoede</option>
             </select>
-            
-            <select id="tools-language" class="form-control">
-              <option value="english">English</option>
+          </div>
+          
+          <!-- Language -->
+          <div class="setting-row">
+            <span class="setting-label">Language</span>
+            <select id="tools-language" class="language-select">
+              <option value="english">English (US)</option>
               <option value="spanish">Spanish</option>
               <option value="french">French</option>
               <option value="german">German</option>
@@ -192,52 +259,40 @@
             </select>
           </div>
           
-          <!-- Options -->
-          <div class="tools-options">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" class="checkbox-input" id="tools-toolUsage" checked>
-              <span class="checkbox-display"></span>
-              <span class="checkbox-label">Tool usage</span>
+          <!-- Tool Usage (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Tool usage</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-toolUsage" checked>
+              <span class="toggle-display"></span>
             </label>
-            
-            <label class="checkbox-wrapper">
-              <input type="checkbox" class="checkbox-input" id="tools-allowInterruptions">
-              <span class="checkbox-display"></span>
-              <span class="checkbox-label">Allow Interruptions</span>
+          </div>
+          
+          <!-- Allow Interruptions (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Allow Interruptions</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-allowInterruptions">
+              <span class="toggle-display"></span>
             </label>
-            
-            <!-- Toggles moved above tool search -->
-            <div class="tools-toggles">
-              <label class="toggle-wrapper">
-                <input type="checkbox" class="toggle-input" id="tools-functionCalling" checked>
-                <span class="toggle-display"></span>
-                <span class="toggle-label">Function calling</span>
-              </label>
-              
-              <label class="toggle-wrapper">
-                <input type="checkbox" class="toggle-input" id="tools-autoFunctionResponse" checked>
-                <span class="toggle-display"></span>
-                <span class="toggle-label">Automatic Function Response</span>
-              </label>
-              
-              <label class="toggle-wrapper">
-                <input type="checkbox" class="toggle-input" id="tools-codeExecution" checked>
-                <span class="toggle-display"></span>
-                <span class="toggle-label">Code Execution</span>
-              </label>
-              
-              <label class="toggle-wrapper">
-                <input type="checkbox" class="toggle-input" id="tools-enableGoogleSearch" checked>
-                <span class="toggle-display"></span>
-                <span class="toggle-label">Grounding with Google Search</span>
-              </label>
-              
-              <label class="toggle-wrapper">
-                <input type="checkbox" class="toggle-input" id="tools-enableVoiceOutput">
-                <span class="toggle-display"></span>
-                <span class="toggle-label">Voice Output</span>
-              </label>
-            </div>
+          </div>
+          
+          <!-- Automatic Function Response (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Automatic Function Response</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-autoFunctionResponse" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Voice Output (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Voice Output</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-enableVoiceOutput">
+              <span class="toggle-display"></span>
+            </label>
           </div>
         </div>
       </div>
@@ -271,7 +326,7 @@
   <script src="/static/js/navigation.js"></script>
   <script src="/static/js/system-prompt.js"></script>
   <script src="/static/js/agent-builder.js"></script>
-
+  <script src="/static/js/settings-ui.js"></script>
   <script src="/static/js/app-builder.js"></script>
   
   <!-- Video Editor Integration -->
