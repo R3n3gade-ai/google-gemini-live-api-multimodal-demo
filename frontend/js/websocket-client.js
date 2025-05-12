@@ -50,9 +50,19 @@ export class WebSocketClient {
         // Create WebSocket connection with proper authorization
         let wsUrl = `${protocol}//${backendHost}/ws/${this.clientId}`;
         
-        if (authHeader) {
-          const credentials = window.location.href.match(/https:\/\/([^@]+)@/)[1];
-          wsUrl = `${protocol}//${credentials}@${backendHost}/ws/${this.clientId}`;
+        if (window.location.hostname.includes('devinapps.com')) {
+          const tunnelMatch = backendHost.match(/tunnel-([a-z0-9]+)\.devinapps\.com/);
+          const tunnelId = tunnelMatch ? tunnelMatch[1] : null;
+          
+          if (tunnelId) {
+            const credentialsMatch = window.location.href.match(/https:\/\/([^@]+)@/);
+            const credentials = credentialsMatch ? credentialsMatch[1] : null;
+            
+            if (credentials) {
+              wsUrl = `${protocol}//${credentials}@${backendHost}/ws/${this.clientId}`;
+              console.log("Using authenticated WebSocket URL:", wsUrl);
+            }
+          }
         }
         
         console.log("Connecting to WebSocket:", wsUrl);
