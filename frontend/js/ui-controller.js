@@ -7,16 +7,23 @@ export class UIController {
       // Cache DOM elements
       this.elements = {
         systemPrompt: document.getElementById('systemPrompt'),
-        voice: document.getElementById('voice'),
-        enableGoogleSearch: document.getElementById('enableGoogleSearch'),
-        allowInterruptions: document.getElementById('allowInterruptions'),
         startAudioBtn: document.getElementById('startAudioBtn'),
         startCameraBtn: document.getElementById('startCameraBtn'),
         startScreenBtn: document.getElementById('startScreenBtn'),
         stopButton: document.getElementById('stopButton'),
         messages: document.getElementById('messages'),
-        videoContainer: document.getElementById('videoContainer')
+        videoContainer: document.getElementById('videoContainer'),
+        textInput: document.getElementById('textInput'),
+        sendTextBtn: document.getElementById('sendTextBtn')
       };
+      
+      this.initToolsSync();
+    }
+    
+    /**
+     * Initialize synchronization between tools footer selectors and main content selectors
+     */
+    initToolsSync() {
     }
     
     /**
@@ -26,9 +33,15 @@ export class UIController {
     getConfig() {
       return {
         systemPrompt: this.elements.systemPrompt.value,
-        voice: this.elements.voice.value,
-        googleSearch: this.elements.enableGoogleSearch.checked,
-        allowInterruptions: this.elements.allowInterruptions.checked
+        voice: document.getElementById('tools-voice') ? document.getElementById('tools-voice').value : 'Puck',
+        language: document.getElementById('tools-language') ? document.getElementById('tools-language').value : 'english',
+        functionCalling: document.getElementById('tools-functionCalling') ? document.getElementById('tools-functionCalling').checked : true,
+        autoFunctionResponse: document.getElementById('tools-autoFunctionResponse') ? document.getElementById('tools-autoFunctionResponse').checked : true,
+        codeExecution: document.getElementById('tools-codeExecution') ? document.getElementById('tools-codeExecution').checked : true,
+        googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
+        toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
+        allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false,
+        enableVoiceOutput: document.getElementById('tools-enableVoiceOutput') ? document.getElementById('tools-enableVoiceOutput').checked : false
       };
     }
     
@@ -44,7 +57,7 @@ export class UIController {
     }
     
     /**
-     * Show video preview container
+     * Show video preview container alongside chat container
      */
     showVideoPreview() {
       this.elements.videoContainer.classList.remove('hidden');
@@ -60,10 +73,20 @@ export class UIController {
     /**
      * Append a message to the conversation area
      * @param {string} message - Message text to display
+     * @param {string} type - Message type (user, gemini, system, error)
      */
-    appendMessage(message) {
+    appendMessage(message, type = 'system') {
       const messageDiv = document.createElement('div');
       messageDiv.className = 'message';
+      
+      if (type === 'user') {
+        messageDiv.classList.add('user-message');
+      } else if (type === 'gemini') {
+        messageDiv.classList.add('gemini-message');
+      } else if (type === 'error') {
+        messageDiv.style.borderLeftColor = 'var(--accent-danger)';
+      }
+      
       messageDiv.textContent = message;
       
       this.elements.messages.appendChild(messageDiv);

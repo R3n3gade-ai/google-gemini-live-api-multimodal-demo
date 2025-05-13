@@ -1,0 +1,43 @@
+/* Tools Footer Styles */
+.tools-selectors-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.tools-selectors-row select {
+  flex: 1;
+  padding: 0.5rem;
+  background-color: #000000; /* Black interior as requested */
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  transition: var(--transition-normal);
+}
+
+.tools-selectors-row select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--input-glow);
+}
+
+.tools-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.tools-options .tools-toggles {
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--border-subtle);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: var(--rounded-md);
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}

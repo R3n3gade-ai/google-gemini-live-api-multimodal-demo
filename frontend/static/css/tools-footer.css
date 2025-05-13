@@ -1,0 +1,186 @@
+/* Tools Footer Styles */
+.tools-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  background-color: #1a1a1a;
+  border-radius: var(--rounded-md);
+  margin-top: auto;
+}
+
+/* Model Selector */
+.model-selector {
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.model-name {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+
+/* Token Counter */
+.token-counter {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.token-label {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.token-value {
+  color: var(--text-primary);
+  font-size: 0.7rem;
+}
+
+/* Temperature Control */
+.temperature-control {
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.temperature-label {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.temperature-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.temperature-slider {
+  flex: 1;
+  height: 0.25rem;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(to right, #3b82f6, #3b82f6);
+  border-radius: 0.1rem;
+  outline: none;
+}
+
+.temperature-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
+
+.temperature-value {
+  min-width: 1rem;
+  text-align: right;
+  color: var(--text-primary);
+  font-size: 0.7rem;
+}
+
+/* Setting Row */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.15rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.setting-label {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.setting-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Edit Button */
+.edit-button {
+  background-color: transparent;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.65rem;
+  cursor: pointer;
+  padding: 0.05rem 0.15rem;
+}
+
+/* Toggle Wrapper */
+.toggle-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 1.6rem;
+  height: 0.8rem;
+  margin-left: 0.15rem;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-display {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  transition: .4s;
+  border-radius: 0.8rem;
+}
+
+.toggle-display:before {
+  position: absolute;
+  content: "";
+  height: 0.6rem;
+  width: 0.6rem;
+  left: 0.1rem;
+  bottom: 0.1rem;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-display {
+  background-color: #3b82f6;
+}
+
+.toggle-input:checked + .toggle-display:before {
+  transform: translateX(0.8rem);
+}
+
+/* Voice and Language Selects */
+.voice-select,
+.language-select {
+  background-color: #1a1a1a;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-md);
+  color: var(--text-primary);
+  font-size: 0.65rem;
+  padding: 0.1rem 0.2rem;
+  min-width: 4rem;
+}
+
+.voice-select:focus,
+.language-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}

@@ -1,0 +1,136 @@
+/* Dual View Layout - For displaying video and chat simultaneously */
+.dual-view-layout .card-body {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  position: relative;
+}
+
+.dual-view-layout .chat-container {
+  flex: 1;
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+.dual-view-layout .video-container {
+  height: 300px;
+  margin-top: 0;
+  border-radius: var(--rounded-md);
+  overflow: hidden;
+}
+
+.dual-view-layout .video-wrapper {
+  height: 100%;
+  border-radius: var(--rounded-md);
+  overflow: hidden;
+}
+
+.dual-view-layout .video-wrapper video {
+  max-height: 280px;
+  border-radius: var(--rounded-md);
+}
+
+/* Message styling */
+.dual-view-layout .messages {
+  padding: 0.5rem;
+}
+
+.dual-view-layout .message {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--rounded-md);
+  border-left: 4px solid var(--accent-primary);
+  background-color: var(--bg-darkest);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  word-wrap: break-word;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.dual-view-layout .message.user-message {
+  border-left-color: var(--accent-primary);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.dual-view-layout .message.gemini-message {
+  border-left-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Text input styling */
+.dual-view-layout .text-input-container {
+  display: flex;
+  width: 100%;
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  padding: 0 1rem;
+  z-index: 10;
+}
+
+.dual-view-layout .text-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  padding-left: 3.5rem; /* Space for stop button */
+  padding-right: 8rem; /* Space for action buttons */
+  border-radius: var(--rounded-full);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-darkest);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dual-view-layout .text-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--input-glow), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dual-view-layout .action-buttons {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 0.25rem;
+}
+
+.dual-view-layout .stop-btn {
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 11;
+}
+
+/* System Prompt Icon Styling */
+.dual-view-layout .action-buttons #systemPromptBtn {
+  color: var(--accent-primary);
+}
+
+/* Responsive adjustments */
+@media (min-width: 992px) {
+  .dual-view-layout .card-body {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .dual-view-layout .chat-container {
+    flex: 1;
+    min-width: 300px;
+    margin-right: 1rem;
+  }
+  
+  .dual-view-layout .video-container {
+    flex: 1;
+    min-width: 300px;
+  }
+}

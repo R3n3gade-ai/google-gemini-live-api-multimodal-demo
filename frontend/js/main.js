@@ -19,9 +19,11 @@ class GeminiApp {
     // App state
     this.isStreaming = false;
     this.currentMode = null; // 'audio', 'camera', or 'screen'
+    this.webSocketConnected = false;
     
     // Initialize
     this.initEventListeners();
+    this.initWebSocket();
   }
   
   /**
@@ -33,22 +35,27 @@ class GeminiApp {
     this.startCameraBtn = document.getElementById('startCameraBtn');
     this.startScreenBtn = document.getElementById('startScreenBtn');
     this.stopButton = document.getElementById('stopButton');
+    this.textInput = document.getElementById('textInput');
+    this.sendTextBtn = document.getElementById('sendTextBtn');
     
     // Add click handlers
     this.startAudioBtn.addEventListener('click', () => this.startStream('audio'));
     this.startCameraBtn.addEventListener('click', () => this.startStream('camera'));
     this.startScreenBtn.addEventListener('click', () => this.startStream('screen'));
     this.stopButton.addEventListener('click', () => this.stopStream());
+    
+    this.sendTextBtn.addEventListener('click', () => this.sendTextMessage());
+    this.textInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.sendTextMessage();
+      }
+    });
   }
   
   /**
-   * Start streaming with the selected mode (audio, camera, screen)
+   * Initialize WebSocket connection on page load
    */
-  async startStream(mode) {
-    if (this.isStreaming) return;
-    
-    this.currentMode = mode;
-    
+  async initWebSocket() {
     try {
       // Get configuration from UI
       const config = this.uiController.getConfig();
@@ -60,10 +67,34 @@ class GeminiApp {
         onError: this.handleWebSocketError.bind(this)
       });
       
-      // Initialize audio capture
-      await this.audioManager.startCapture((audioData) => {
-        this.webSocketClient.sendAudio(audioData);
-      });
+      this.webSocketConnected = true;
+      console.log('WebSocket connected and ready');
+    } catch (error) {
+      console.error(`WebSocket connection failed: ${error.message}`);
+      setTimeout(() => this.initWebSocket(), 3000);
+    }
+  }
+  
+  /**
+   * Start streaming with the selected mode (audio, camera, screen)
+   */
+  async startStream(mode) {
+    if (this.isStreaming) return;
+    
+    this.currentMode = mode;
+    
+    try {
+      if (!this.webSocketConnected) {
+        await this.initWebSocket();
+      }
+      
+      const config = this.uiController.getConfig();
+      
+      if (mode !== 'text') {
+        await this.audioManager.startCapture((audioData) => {
+          this.webSocketClient.sendAudio(audioData);
+        });
+      }
       
       // Initialize video if needed
       if (mode !== 'audio') {
@@ -86,20 +117,22 @@ class GeminiApp {
    * Stop all streaming and clean up resources
    */
   stopStream() {
-    if (!this.isStreaming) return;
+    // Clean up resources (but keep WebSocket connected)
+    if (this.isStreaming) {
+      this.audioManager.stopCapture();
+      this.videoManager.stopCapture();
+      
+      // Reset state
+      this.isStreaming = false;
+      this.currentMode = null;
+      
+      // Update UI
+      this.uiController.updateUIForStreaming(false);
+      this.uiController.hideVideoPreview();
+    }
     
-    // Clean up resources
-    this.webSocketClient.disconnect();
-    this.audioManager.stopCapture();
-    this.videoManager.stopCapture();
-    
-    // Reset state
-    this.isStreaming = false;
-    this.currentMode = null;
-    
-    // Update UI
-    this.uiController.updateUIForStreaming(false);
-    this.uiController.hideVideoPreview();
+    this.stopButton.classList.add('hidden');
+    this.stopButton.disabled = true;
   }
   
   /**
@@ -112,15 +145,15 @@ class GeminiApp {
         break;
         
       case 'text':
-        this.uiController.appendMessage(`[Gemini Text] ${response.text}`);
+        this.uiController.appendMessage(response.text, 'gemini');
         break;
         
       case 'turn_complete':
-        this.uiController.appendMessage('[Gemini Turn Complete]');
+        console.log('Gemini turn complete');
         break;
         
       default:
-        this.uiController.appendMessage(`[Unknown] ${JSON.stringify(response)}`);
+        console.log('Unknown message type:', response);
     }
   }
   
@@ -128,15 +161,59 @@ class GeminiApp {
    * Handle WebSocket connection close
    */
   handleWebSocketClose() {
-    this.uiController.appendMessage('WebSocket closed');
+    console.log('WebSocket disconnected - attempting to reconnect...');
+    this.webSocketConnected = false;
     this.stopStream();
+    
+    setTimeout(() => {
+      if (!this.webSocketConnected) {
+        this.initWebSocket();
+      }
+    }, 2000);
   }
   
   /**
    * Handle WebSocket errors
    */
   handleWebSocketError(error) {
-    this.uiController.showError(`WebSocket error: ${error.message}`);
+    console.error(`WebSocket error: ${error.message}`);
+  }
+  
+  /**
+   * Send text message to Gemini
+   */
+  sendTextMessage() {
+    if (!this.textInput.value.trim()) return;
+    
+    try {
+      if (!this.webSocketConnected) {
+        this.initWebSocket().then(() => {
+          this.sendTextMessageInternal();
+        });
+      } else {
+        this.sendTextMessageInternal();
+      }
+      
+    } catch (error) {
+      this.uiController.showError(`Failed to send message: ${error.message}`);
+    }
+  }
+  
+  /**
+   * Internal method to send text message after ensuring WebSocket is connected
+   */
+  sendTextMessageInternal() {
+    this.uiController.appendMessage(this.textInput.value, 'user');
+    
+    this.webSocketClient.sendText(this.textInput.value);
+    
+    this.textInput.value = '';
+    
+    // Only show stop button for streaming modes (audio, camera, screen)
+    if (this.isStreaming) {
+      this.stopButton.classList.remove('hidden');
+      this.stopButton.disabled = false;
+    }
   }
 }
 

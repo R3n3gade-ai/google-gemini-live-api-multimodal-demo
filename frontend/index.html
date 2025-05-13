@@ -2,86 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Gemini Live API Demo</title>
+  <title>AI Workstation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="/static/css/tools-footer.css">
+  <link rel="stylesheet" href="/static/css/feature-panels.css">
+  <link rel="stylesheet" href="/static/css/dual-view.css">
+  <link rel="stylesheet" href="/static/css/system-prompt-modal.css">
+  <link rel="stylesheet" href="/static/css/agent-builder.css">
+  <link rel="stylesheet" href="/static/css/app-builder.css">
 </head>
 <body>
-  <div class="container">
-    <div class="main-card">
-      <div class="card-gradient-border"></div>
+  <div class="app-container">
+    <!-- Left Navigation Menu -->
+    <div class="left-nav">
+      <div class="left-nav-tabs">
+        <button class="tab-btn active" data-tab="workspace">Workspace</button>
+        <button class="tab-btn" data-tab="projects">Projects</button>
+      </div>
       
-      <div class="card-header">
-        <div class="header-title">
-          <div class="logo pulse">G</div>
-          <h1 class="title">Gemini Live API Demo</h1>
+      <!-- Workspace Tab Content -->
+      <div class="tab-content active" id="workspace-content">
+        <div class="nav-buttons">
+          <a href="#" class="nav-button active">
+            <i class="fas fa-comment-alt"></i>
+            <span>Chat</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-image"></i>
+            <span>Image</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-code"></i>
+            <span>Code</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-file-alt"></i>
+            <span>Documents</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-chart-bar"></i>
+            <span>Analytics</span>
+          </a>
         </div>
       </div>
       
-      <div class="card-body">
-        <div class="settings-grid">
-          <!-- System Prompt -->
-          <div class="form-group">
-            <label for="systemPrompt" class="form-label">System Prompt</label>
-            <textarea 
-              id="systemPrompt" 
-              class="form-control"
-              placeholder="Enter system instructions for Gemini..."
-            >You are a friendly AI Assistant.</textarea>
-          </div>
-
-          <!-- Voice Selection -->
-          <div>
-            <div class="form-group">
-              <label for="voice" class="form-label">Voice</label>
-              <select id="voice" class="form-control">
-                <option value="Puck">Puck</option>
-                <option value="Charon">Charon</option>
-                <option value="Kore">Kore</option>
-                <option value="Fenrir">Fenrir</option>
-                <option value="Aoede">Aoede</option>
-              </select>
-            </div>
-
-            <!-- Options -->
-            <div class="checkbox-container">
-              <label class="checkbox-wrapper">
-                <input type="checkbox" class="checkbox-input" id="enableGoogleSearch" checked>
-                <span class="checkbox-display"></span>
-                <span class="checkbox-label">Tool usage</span>
-              </label>
-              
-              <label class="checkbox-wrapper">
-                <input type="checkbox" class="checkbox-input" id="allowInterruptions">
-                <span class="checkbox-display"></span>
-                <span class="checkbox-label">Allow Interruptions</span>
-              </label>
-            </div>
-          </div>
+      <!-- Projects Tab Content -->
+      <div class="tab-content" id="projects-content">
+        <div class="nav-buttons">
+          <a href="#" class="nav-button">
+            <i class="fas fa-project-diagram"></i>
+            <span>Current Projects</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-folder"></i>
+            <span>Archived Projects</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-plus-circle"></i>
+            <span>New Project</span>
+          </a>
         </div>
-
-        <!-- Control Buttons -->
-        <div class="btn-row">
-          <button id="startAudioBtn" class="btn btn-primary">
-            Start Chatting
-          </button>
-          <button id="startCameraBtn" class="btn btn-primary">
-            Start Chatting with Video
-          </button>
-          <button id="startScreenBtn" class="btn btn-primary">
-            Start Chatting with Screen
-          </button>
-          <button id="stopButton" class="btn btn-danger" disabled>
-            Stop Chat
-          </button>
-        </div>
-
-        <!-- Messages Area -->
-        <div class="messages-container">
-          <div class="messages-heading">Conversation</div>
+      </div>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="main-card dual-view-layout">
+        <div class="card-gradient-border"></div>
+        
+        <div class="card-body">
+        <!-- Messages Area - Conversation -->
+        <div class="chat-container">
           <div id="messages" class="messages"></div>
         </div>
+        
+
 
         <!-- Video Preview / Canvas (for camera/screen) -->
         <div id="videoContainer" class="video-container hidden">
@@ -104,11 +102,277 @@
             ></canvas>
           </div>
         </div>
+        
+        <!-- Removed system prompt container to make chat extend to edge -->
+        
+        <!-- Text Chat Input -->
+        <div class="text-input-container">
+          <input 
+            type="text" 
+            id="textInput" 
+            class="text-input" 
+            placeholder="Enter your prompt"
+          >
+          <div class="action-buttons">
+            <button id="systemPromptBtn" class="btn btn-icon">
+              <i class="fas fa-cog"></i>
+            </button>
+            <button id="startAudioBtn" class="btn btn-icon">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button id="startCameraBtn" class="btn btn-icon">
+              <i class="fas fa-camera"></i>
+            </button>
+            <button id="startScreenBtn" class="btn btn-icon">
+              <i class="fas fa-desktop"></i>
+            </button>
+            <button id="sendTextBtn" class="btn btn-send">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <button id="stopButton" class="btn btn-danger stop-btn hidden" disabled>
+            <i class="fas fa-stop"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Navigation Menu -->
+    <div class="right-nav">
+      <div class="right-nav-tabs">
+        <button class="tab-btn active" data-tab="tools">Tools</button>
+        <button class="tab-btn" data-tab="connections">Connections</button>
+      </div>
+      
+      <!-- Tools Tab Content -->
+      <div class="tab-content active" id="tools-content">
+        <div class="nav-buttons">
+          <a href="#" class="nav-button" data-feature="agent-builder">
+            <i class="fas fa-robot"></i>
+            <span>Agent Builder</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-comment-alt"></i>
+            <span>Chat Flow</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-star"></i>
+            <span>Creation Studio</span>
+          </a>
+          <a href="#" class="nav-button" data-feature="app-builder">
+            <i class="fas fa-window-maximize"></i>
+            <span>App/Web Builder</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-layer-group"></i>
+            <span>Model Training</span>
+          </a>
+
+
+        </div>
+        
+        <!-- Tools Footer - Settings and Options -->
+        <div class="tools-footer">
+          <!-- Model Selector -->
+          <div class="model-selector">
+            <div class="model-name">Gemini 2.5 Pro Preview 05-0</div>
+          </div>
+          
+          <!-- Token Counter -->
+          <div class="token-counter">
+            <span class="token-label">Token count</span>
+            <span class="token-value">599 / 1,048,576</span>
+          </div>
+          
+          <!-- Temperature Slider -->
+          <div class="temperature-control">
+            <span class="temperature-label">Temperature</span>
+            <div class="temperature-slider-container">
+              <input type="range" id="temperature-slider" class="temperature-slider" min="0" max="1" step="0.1" value="0.6">
+              <span class="temperature-value">0.6</span>
+            </div>
+          </div>
+          
+          <!-- Structured Output -->
+          <div class="setting-row">
+            <span class="setting-label">Structured output</span>
+            <div class="setting-controls">
+              <button class="edit-button">Edit</button>
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-structuredOutput" checked>
+                <span class="toggle-display"></span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Code Execution -->
+          <div class="setting-row">
+            <span class="setting-label">Code execution</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-codeExecution" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Function Calling -->
+          <div class="setting-row">
+            <span class="setting-label">Function calling</span>
+            <div class="setting-controls">
+              <button class="edit-button">Edit</button>
+              <label class="toggle-wrapper">
+                <input type="checkbox" class="toggle-input" id="tools-functionCalling" checked>
+                <span class="toggle-display"></span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Google Search -->
+          <div class="setting-row">
+            <span class="setting-label">Grounding with Google Search</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-enableGoogleSearch" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Voice -->
+          <div class="setting-row">
+            <span class="setting-label">Voice</span>
+            <select id="tools-voice" class="voice-select">
+              <option value="Aoede">Aoede</option>
+              <option value="Puck">Puck</option>
+              <option value="Charon">Charon</option>
+              <option value="Kore">Kore</option>
+              <option value="Fenrir">Fenrir</option>
+            </select>
+          </div>
+          
+          <!-- Language -->
+          <div class="setting-row">
+            <span class="setting-label">Language</span>
+            <select id="tools-language" class="language-select">
+              <option value="english">English (US)</option>
+              <option value="spanish">Spanish</option>
+              <option value="french">French</option>
+              <option value="german">German</option>
+              <option value="japanese">Japanese</option>
+            </select>
+          </div>
+          
+          <!-- Tool Usage (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Tool usage</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-toolUsage" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Allow Interruptions (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Allow Interruptions</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-allowInterruptions">
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Automatic Function Response (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Automatic Function Response</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-autoFunctionResponse" checked>
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+          
+          <!-- Voice Output (Existing) -->
+          <div class="setting-row">
+            <span class="setting-label">Voice Output</span>
+            <label class="toggle-wrapper">
+              <input type="checkbox" class="toggle-input" id="tools-enableVoiceOutput">
+              <span class="toggle-display"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Connections Tab Content -->
+      <div class="tab-content" id="connections-content">
+        <div class="nav-buttons">
+          <a href="#" class="nav-button">
+            <i class="fas fa-database"></i>
+            <span>Databases</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-cloud"></i>
+            <span>Cloud Storage</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-file-code"></i>
+            <span>APIs</span>
+          </a>
+          <a href="#" class="nav-button">
+            <i class="fas fa-plug"></i>
+            <span>Integrations</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Load modules using ES6 module syntax -->
   <script type="module" src="/static/js/main.js"></script>
+  <script src="/static/js/navigation.js"></script>
+  <script src="/static/js/system-prompt.js"></script>
+  <script src="/static/js/agent-builder.js"></script>
+  <script src="/static/js/settings-ui.js"></script>
+  <script src="/static/js/app-builder.js"></script>
+  
+  <!-- Video Editor Integration -->
+  <script>
+    // Initialize video editor integration when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      // Listen for video editor iframe messages
+      window.addEventListener('message', (event) => {
+        // Handle messages from the video editor iframe
+        if (event.data && event.data.type === 'video-editor') {
+          console.log('Received message from video editor:', event.data);
+          
+          // Handle different message types
+          switch (event.data.action) {
+            case 'ready':
+              console.log('Video editor is ready');
+              break;
+            case 'export':
+              console.log('Video exported:', event.data.url);
+              break;
+            case 'error':
+              console.error('Video editor error:', event.data.message);
+              break;
+          }
+        }
+      });
+    });
+  </script>
+  <!-- System Prompt Modal -->
+  <div id="systemPromptModal" class="system-prompt-modal">
+    <div class="system-prompt-modal-content">
+      <div class="system-prompt-modal-header">
+        <div class="system-prompt-modal-title">System Prompt</div>
+        <button id="closeSystemPromptModal" class="system-prompt-modal-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <textarea 
+        id="systemPrompt" 
+        placeholder="Enter system instructions for Gemini..."
+      >You are a friendly AI Assistant.</textarea>
+      <div class="system-prompt-modal-footer">
+        <button id="cancelSystemPromptBtn" class="btn-cancel">Cancel</button>
+        <button id="saveSystemPromptBtn" class="btn-save">Save</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

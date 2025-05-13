@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import os
 from dotenv import load_dotenv
@@ -21,6 +21,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # Include routers
@@ -33,6 +34,11 @@ app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 @app.get("/")
 def serve_index():
     return FileResponse("../frontend/index.html")
+
+@app.get("/api/agent-builder-url")
+def get_agent_builder_url():
+    agent_builder_url = os.getenv("AGENT_BUILDER_URL", "http://localhost:8080")
+    return JSONResponse({"url": agent_builder_url})
 
 # Run the application
 if __name__ == "__main__":
