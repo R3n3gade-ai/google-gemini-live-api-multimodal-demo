@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/static/css/system-prompt-modal.css">
   <link rel="stylesheet" href="/static/css/agent-builder.css">
   <link rel="stylesheet" href="/static/css/app-builder.css">
+  <link rel="stylesheet" href="/static/css/composio-integration.css">
 </head>
 <body>
   <div class="app-container">
@@ -79,7 +80,6 @@
           <div id="messages" class="messages"></div>
         </div>
         
-
 
         <!-- Video Preview / Canvas (for camera/screen) -->
         <div id="videoContainer" class="video-container hidden">
@@ -299,23 +299,344 @@
       
       <!-- Connections Tab Content -->
       <div class="tab-content" id="connections-content">
-        <div class="nav-buttons">
-          <a href="#" class="nav-button">
-            <i class="fas fa-database"></i>
-            <span>Databases</span>
-          </a>
-          <a href="#" class="nav-button">
-            <i class="fas fa-cloud"></i>
-            <span>Cloud Storage</span>
-          </a>
-          <a href="#" class="nav-button">
-            <i class="fas fa-file-code"></i>
-            <span>APIs</span>
-          </a>
-          <a href="#" class="nav-button">
-            <i class="fas fa-plug"></i>
-            <span>Integrations</span>
-          </a>
+        <div class="connections-header">
+          <h3>Integrations</h3>
+          <button id="addConnectionBtn" class="add-connection-btn">
+            <i class="fas fa-plus"></i> Add Connection
+          </button>
+        </div>
+        
+        <!-- Single container for all integration buttons, to be styled as a grid -->
+        <div class="integration-grid nav-buttons">
+            <!-- Gmail -->
+            <a href="#" class="nav-button connection-button" data-app="gmail">
+              <i class="fas fa-envelope"></i> <span>Gmail</span>
+            </a>
+            <!-- Google Calendar -->
+            <a href="#" class="nav-button connection-button" data-app="googlecalendar">
+              <i class="fas fa-calendar-alt"></i> <span>Google Calendar</span>
+            </a>
+            <!-- Notion -->
+            <a href="#" class="nav-button connection-button" data-app="notion">
+              <i class="fas fa-book-open"></i> <span>Notion</span>
+            </a>
+            <!-- Twitter / X -->
+            <a href="#" class="nav-button connection-button" data-app="twitter">
+              <i class="fab fa-twitter"></i> <span>Twitter / X</span>
+            </a>
+            <!-- Slack -->
+            <a href="#" class="nav-button connection-button" data-app="slack">
+              <i class="fab fa-slack"></i> <span>Slack</span>
+            </a>
+            <!-- YouTube -->
+             <a href="#" class="nav-button connection-button" data-app="youtube">
+              <i class="fab fa-youtube"></i> <span>YouTube</span>
+            </a>
+            <!-- GitHub -->
+            <a href="#" class="nav-button connection-button" data-app="github">
+              <i class="fab fa-github"></i> <span>GitHub</span>
+            </a>
+            <!-- Supabase -->
+            <a href="#" class="nav-button connection-button" data-app="supabase">
+              <i class="fas fa-database"></i> <span>Supabase</span>
+            </a>
+            <!-- Google Sheets -->
+            <a href="#" class="nav-button connection-button" data-app="google_sheets">
+              <i class="fas fa-table"></i> <span>Google Sheets</span>
+            </a>
+            <!-- Add other integrations here following the same pattern -->
+            <!-- Airtable -->
+            <a href="#" class="nav-button connection-button" data-app="airtable">
+              <i class="fab fa-airtable"></i> <span>Airtable</span>
+            </a>
+            <!-- RingCentral -->
+            <a href="#" class="nav-button connection-button" data-app="ringcentral">
+              <i class="fas fa-phone"></i> <span>RingCentral</span>
+            </a>
+            <!-- Reddit -->
+            <a href="#" class="nav-button connection-button" data-app="reddit">
+              <i class="fab fa-reddit"></i> <span>Reddit</span>
+            </a>
+            <!-- PerplexityAI -->
+            <a href="#" class="nav-button connection-button" data-app="perplexityai">
+              <i class="fas fa-brain"></i> <span>PerplexityAI</span>
+            </a>
+            <!-- Monday -->
+            <a href="#" class="nav-button connection-button" data-app="monday">
+              <i class="fas fa-tasks"></i> <span>Monday</span>
+            </a>
+            <!-- Mem0 -->
+            <a href="#" class="nav-button connection-button" data-app="mem0">
+              <i class="fas fa-sticky-note"></i> <span>Mem0</span>
+            </a>
+            <!-- Mailchimp -->
+            <a href="#" class="nav-button connection-button" data-app="mailchimp">
+              <i class="fab fa-mailchimp"></i> <span>Mailchimp</span>
+            </a>
+            <!-- Lmnt -->
+            <a href="#" class="nav-button connection-button" data-app="lmnt">
+              <i class="fas fa-volume-up"></i> <span>Lmnt</span>
+            </a>
+            <!-- Linkedin -->
+            <a href="#" class="nav-button connection-button" data-app="linkedin">
+              <i class="fab fa-linkedin"></i> <span>Linkedin</span>
+            </a>
+            <!-- Heygen -->
+            <a href="#" class="nav-button connection-button" data-app="heygen">
+              <i class="fas fa-video"></i> <span>Heygen</span>
+            </a>
+            <!-- Google Ads -->
+            <a href="#" class="nav-button connection-button" data-app="googleads">
+              <i class="fas fa-bullhorn"></i> <span>Google Ads</span>
+            </a>
+            <!-- Google Analytics -->
+            <a href="#" class="nav-button connection-button" data-app="google_analytics">
+              <i class="fas fa-chart-line"></i> <span>Google Analytics</span>
+            </a>
+            <!-- Figma -->
+            <a href="#" class="nav-button connection-button" data-app="figma">
+              <i class="fab fa-figma"></i> <span>Figma</span>
+            </a>
+            <!-- Facebook -->
+            <a href="#" class="nav-button connection-button" data-app="facebook">
+              <i class="fab fa-facebook"></i> <span>Facebook</span>
+            </a>
+            <!-- Elevenlabs -->
+            <a href="#" class="nav-button connection-button" data-app="elevenlabs">
+              <i class="fas fa-microphone"></i> <span>Elevenlabs</span>
+            </a>
+            <!-- Dropbox -->
+            <a href="#" class="nav-button connection-button" data-app="dropbox">
+              <i class="fab fa-dropbox"></i> <span>Dropbox</span>
+            </a>
+            <!-- Docusign -->
+            <a href="#" class="nav-button connection-button" data-app="docusign">
+              <i class="fas fa-file-signature"></i> <span>Docusign</span>
+            </a>
+            <!-- Discord -->
+            <a href="#" class="nav-button connection-button" data-app="discord">
+              <i class="fab fa-discord"></i> <span>Discord</span>
+            </a>
+            <!-- Datadog -->
+            <a href="#" class="nav-button connection-button" data-app="datadog">
+              <i class="fas fa-chart-area"></i> <span>Datadog</span>
+            </a>
+            <!-- Coinbase -->
+            <a href="#" class="nav-button connection-button" data-app="coinbase">
+              <i class="fas fa-wallet"></i> <span>Coinbase</span>
+            </a>
+            <!-- Browseai -->
+            <a href="#" class="nav-button connection-button" data-app="browseai">
+              <i class="fas fa-search"></i> <span>Browseai</span>
+            </a>
+            <!-- Browserbase Tool -->
+            <a href="#" class="nav-button connection-button" data-app="browserbase_tool">
+              <i class="fas fa-tools"></i> <span>Browserbase Tool</span>
+            </a>
+            <!-- Calendly -->
+            <a href="#" class="nav-button connection-button" data-app="calendly">
+              <i class="fas fa-calendar-check"></i> <span>Calendly</span>
+            </a>
+            <!-- Canva -->
+            <a href="#" class="nav-button connection-button" data-app="canva">
+              <i class="fas fa-paint-brush"></i> <span>Canva</span>
+            </a>
+            <!-- Clickup -->
+            <a href="#" class="nav-button connection-button" data-app="clickup">
+              <i class="fas fa-tasks"></i> <span>Clickup</span>
+            </a>
+            <!-- Cloudflare -->
+            <a href="#" class="nav-button connection-button" data-app="cloudflare">
+              <i class="fas fa-cloud"></i> <span>Cloudflare</span>
+            </a>
+            <!-- Codeinterpreter -->
+            <a href="#" class="nav-button connection-button" data-app="codeinterpreter">
+              <i class="fas fa-code"></i> <span>Codeinterpreter</span>
+            </a>
+            <!-- Composio Search -->
+            <a href="#" class="nav-button connection-button" data-app="composio_search">
+              <i class="fas fa-search-plus"></i> <span>Composio Search</span>
+            </a>
+            <!-- Confluence -->
+            <a href="#" class="nav-button connection-button" data-app="confluence">
+              <i class="fab fa-confluence"></i> <span>Confluence</span>
+            </a>
+            <!-- Dialpad -->
+            <a href="#" class="nav-button connection-button" data-app="dialpad">
+              <i class="fas fa-phone-square"></i> <span>Dialpad</span>
+            </a>
+            <!-- Discordbot -->
+            <a href="#" class="nav-button connection-button" data-app="discordbot">
+              <i class="fab fa-discord"></i> <span>Discordbot</span>
+            </a>
+            <!-- Firecrawl -->
+            <a href="#" class="nav-button connection-button" data-app="firecrawl">
+              <i class="fas fa-fire"></i> <span>Firecrawl</span>
+            </a>
+            <!-- Googledrive -->
+            <a href="#" class="nav-button connection-button" data-app="googledrive">
+              <i class="fas fa-file-alt"></i> <span>Googledrive</span>
+            </a>
+            <!-- Gumroad -->
+            <a href="#" class="nav-button connection-button" data-app="gumroad">
+              <i class="fas fa-store"></i> <span>Gumroad</span>
+            </a>
+            <!-- Hubspot -->
+            <a href="#" class="nav-button connection-button" data-app="hubspot">
+              <i class="fab fa-hubspot"></i> <span>Hubspot</span>
+            </a>
+            <!-- Humanloop -->
+            <a href="#" class="nav-button connection-button" data-app="humanloop">
+              <i class="fas fa-user-secret"></i> <span>Humanloop</span>
+            </a>
+            <!-- Junglescout -->
+            <a href="#" class="nav-button connection-button" data-app="junglescout">
+              <i class="fas fa-leaf"></i> <span>Junglescout</span>
+            </a>
+            <!-- Amazon -->
+            <a href="#" class="nav-button connection-button" data-app="amazon">
+              <i class="fab fa-amazon"></i> <span>Amazon</span>
+            </a>
+            <!-- Asana -->
+            <a href="#" class="nav-button connection-button" data-app="asana">
+              <i class="fab fa-asana"></i> <span>Asana</span>
+            </a>
+            <!-- Baserow -->
+            <a href="#" class="nav-button connection-button" data-app="baserow">
+              <i class="fas fa-database"></i> <span>Baserow</span>
+            </a>
+            <!-- Boldsign -->
+            <a href="#" class="nav-button connection-button" data-app="boldsign">
+              <i class="fas fa-signature"></i> <span>Boldsign</span>
+            </a>
+            <!-- Bolna -->
+            <a href="#" class="nav-button connection-button" data-app="bolna">
+              <i class="fas fa-comment-dots"></i> <span>Bolna</span>
+            </a>
+            <!-- Brevo -->
+            <a href="#" class="nav-button connection-button" data-app="brevo">
+              <i class="fas fa-envelope-open-text"></i> <span>Brevo</span>
+            </a>
+            <!-- Browserhub -->
+            <a href="#" class="nav-button connection-button" data-app="browserhub">
+              <i class="fas fa-globe"></i> <span>Browserhub</span>
+            </a>
+            <!-- Bubble -->
+            <a href="#" class="nav-button connection-button" data-app="bubble">
+              <i class="fas fa-bubble"></i> <span>Bubble</span>
+            </a>
+            <!-- Flutterwave -->
+            <a href="#" class="nav-button connection-button" data-app="flutterwave">
+              <i class="fas fa-money-bill-wave"></i> <span>Flutterwave</span>
+            </a>
+            <!-- Go To Webinar -->
+            <a href="#" class="nav-button connection-button" data-app="gotowebinar">
+              <i class="fas fa-chalkboard-teacher"></i> <span>Go To Webinar</span>
+            </a>
+            <!-- Guru -->
+            <a href="#" class="nav-button connection-button" data-app="guru">
+              <i class="fas fa-graduation-cap"></i> <span>Guru</span>
+            </a>
+            <!-- Mailerlite -->
+            <a href="#" class="nav-button connection-button" data-app="mailerlite">
+              <i class="fas fa-envelope-square"></i> <span>Mailerlite</span>
+            </a>
+            <!-- Metaads -->
+            <a href="#" class="nav-button connection-button" data-app="metaads">
+              <i class="fab fa-facebook-square"></i> <span>Metaads</span>
+            </a>
+            <!-- Moz -->
+            <a href="#" class="nav-button connection-button" data-app="moz">
+              <i class="fas fa-chart-line"></i> <span>Moz</span>
+            </a>
+            <!-- Pipedrive -->
+            <a href="#" class="nav-button connection-button" data-app="pipedrive">
+              <i class="fas fa-handshake"></i> <span>Pipedrive</span>
+            </a>
+            <!-- Quickbooks -->
+            <a href="#" class="nav-button connection-button" data-app="quickbooks">
+              <i class="fas fa-file-invoice-dollar"></i> <span>Quickbooks</span>
+            </a>
+            <!-- Ravenseotools -->
+            <a href="#" class="nav-button connection-button" data-app="ravenseotools">
+              <i class="fas fa-crow"></i> <span>Ravenseotools</span>
+            </a>
+            <!-- Recallai -->
+            <a href="#" class="nav-button connection-button" data-app="recallai">
+              <i class="fas fa-memory"></i> <span>Recallai</span>
+            </a>
+<!-- Go To Webinar -->
+            <a href="#" class="nav-button connection-button" data-app="gotowebinar">
+              <i class="fas fa-chalkboard-teacher"></i> <span>Go To Webinar</span>
+            </a>
+            <!-- Guru -->
+            <a href="#" class="nav-button connection-button" data-app="guru">
+              <i class="fas fa-graduation-cap"></i> <span>Guru</span>
+            </a>
+            <!-- Mailerlite -->
+            <a href="#" class="nav-button connection-button" data-app="mailerlite">
+              <i class="fas fa-envelope-square"></i> <span>Mailerlite</span>
+            </a>
+            <!-- Metaads -->
+            <a href="#" class="nav-button connection-button" data-app="metaads">
+              <i class="fab fa-facebook-square"></i> <span>Metaads</span>
+            </a>
+            <!-- Moz -->
+            <a href="#" class="nav-button connection-button" data-app="moz">
+              <i class="fas fa-chart-line"></i> <span>Moz</span>
+            </a>
+            <!-- Pipedrive -->
+            <a href="#" class="nav-button connection-button" data-app="pipedrive">
+              <i class="fas fa-handshake"></i> <span>Pipedrive</span>
+            </a>
+            <!-- Quickbooks -->
+            <a href="#" class="nav-button connection-button" data-app="quickbooks">
+              <i class="fas fa-file-invoice-dollar"></i> <span>Quickbooks</span>
+            </a>
+            <!-- Ravenseotools -->
+            <a href="#" class="nav-button connection-button" data-app="ravenseotools">
+              <i class="fas fa-crow"></i> <span>Ravenseotools</span>
+            </a>
+            <!-- Recallai -->
+            <a href="#" class="nav-button connection-button" data-app="recallai">
+              <i class="fas fa-memory"></i> <span>Recallai</span>
+            </a>
+<!-- Go To Webinar -->
+            <a href="#" class="nav-button connection-button" data-app="gotowebinar">
+              <i class="fas fa-chalkboard-teacher"></i> <span>Go To Webinar</span>
+            </a>
+            <!-- Guru -->
+            <a href="#" class="nav-button connection-button" data-app="guru">
+              <i class="fas fa-graduation-cap"></i> <span>Guru</span>
+            </a>
+            <!-- Mailerlite -->
+            <a href="#" class="nav-button connection-button" data-app="mailerlite">
+              <i class="fas fa-envelope-square"></i> <span>Mailerlite</span>
+            </a>
+            <!-- Metaads -->
+            <a href="#" class="nav-button connection-button" data-app="metaads">
+              <i class="fab fa-facebook-square"></i> <span>Metaads</span>
+            </a>
+            <!-- Moz -->
+            <a href="#" class="nav-button connection-button" data-app="moz">
+              <i class="fas fa-chart-line"></i> <span>Moz</span>
+            </a>
+            <!-- Pipedrive -->
+            <a href="#" class="nav-button connection-button" data-app="pipedrive">
+              <i class="fas fa-handshake"></i> <span>Pipedrive</span>
+            </a>
+            <!-- Quickbooks -->
+            <a href="#" class="nav-button connection-button" data-app="quickbooks">
+              <i class="fas fa-file-invoice-dollar"></i> <span>Quickbooks</span>
+            </a>
+            <!-- Ravenseotools -->
+            <a href="#" class="nav-button connection-button" data-app="ravenseotools">
+              <i class="fas fa-crow"></i> <span>Ravenseotools</span>
+            </a>
+            <!-- Recallai -->
+            <a href="#" class="nav-button connection-button" data-app="recallai">
+              <i class="fas fa-memory"></i> <span>Recallai</span>
+            </a>
         </div>
       </div>
     </div>
@@ -328,6 +649,7 @@
   <script src="/static/js/agent-builder.js"></script>
   <script src="/static/js/settings-ui.js"></script>
   <script src="/static/js/app-builder.js"></script>
+  <script type="module" src="/static/js/composio-client.js"></script>
   
   <!-- Video Editor Integration -->
   <script>
@@ -371,6 +693,40 @@
       <div class="system-prompt-modal-footer">
         <button id="cancelSystemPromptBtn" class="btn-cancel">Cancel</button>
         <button id="saveSystemPromptBtn" class="btn-save">Save</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Connection Modal -->
+  <div id="connectionModal" class="connection-modal">
+    <div class="connection-modal-content">
+      <div class="connection-modal-header">
+        <div class="connection-modal-title">Add Connection</div>
+        <button id="addConnectionBtn" class="add-connection-btn">
+          <i class="fas fa-plus"></i> Add Connection
+        </button>
+      </div>
+      <div class="connection-list">
+        <div class="connection-app-item gmail" data-app="gmail">
+          <i class="fas fa-envelope"></i>
+          <div class="connection-app-name">Gmail</div>
+        </div>
+        <div class="connection-app-item github" data-app="github">
+          <i class="fab fa-github"></i>
+          <div class="connection-app-name">GitHub</div>
+        </div>
+        <div class="connection-app-item google_drive" data-app="google_drive">
+          <i class="fas fa-file"></i>
+          <div class="connection-app-name">Google Drive</div>
+        </div>
+        <div class="connection-app-item" data-app="google_sheets">
+          <i class="fas fa-table"></i>
+          <div class="connection-app-name">Google Sheets</div>
+        </div>
+      </div>
+      <div class="connection-modal-footer">
+        <button id="cancelConnectionBtn" class="btn-cancel">Cancel</button>
+        <button id="addConnectionConfirmBtn" class="btn-add-connection">Add Connection</button>
       </div>
     </div>
   </div>

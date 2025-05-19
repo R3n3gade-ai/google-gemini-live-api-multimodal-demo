@@ -28,10 +28,11 @@ export class UIController {
     
     /**
      * Get user configuration from form inputs
+     * @param {string} [currentMode] - The current active multimodal input mode ('audio', 'camera', 'screen', or null)
      * @returns {Object} - Configuration object
      */
-    getConfig() {
-      return {
+    getConfig(currentMode) {
+      const config = {
         systemPrompt: this.elements.systemPrompt.value,
         voice: document.getElementById('tools-voice') ? document.getElementById('tools-voice').value : 'Puck',
         language: document.getElementById('tools-language') ? document.getElementById('tools-language').value : 'english',
@@ -41,8 +42,11 @@ export class UIController {
         googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
         toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
         allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false,
-        enableVoiceOutput: document.getElementById('tools-enableVoiceOutput') ? document.getElementById('tools-enableVoiceOutput').checked : false
+        // Include the current mode so the backend knows which multimodal input is active
+        currentMode: currentMode
       };
+      // The backend will use currentMode to decide whether to request audio output from Gemini.
+      return config;
     }
     
     /**

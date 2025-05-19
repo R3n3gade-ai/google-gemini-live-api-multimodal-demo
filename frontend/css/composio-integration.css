@@ -1,0 +1,319 @@
+/* Composio Integration Styles */
+
+/* Container for the grid of connection buttons */
+#connections-content .integration-grid.nav-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 buttons per row */
+  column-gap: 8px; /* Keep some column gap */
+  row-gap: 2px;    /* Minimal row gap */
+  padding: 2px 0;  /* Minimal vertical padding, no horizontal */
+  align-content: start; /* Align rows to the start of the container */
+}
+
+/* Individual connection button styling for square logo look */
+#connections-content .integration-grid .connection-button {
+  display: flex;
+  flex-direction: column; /* Stack icon and text */
+  align-items: center;
+  justify-content: center;
+  width: 60px;  /* Reverted to 60px */
+  height: 60px; /* Reverted to 60px */
+  padding: 5px; /* Reverted to 5px */
+  background-color: black; /* Changed default background to black */
+  border-radius: 12px; /* More rounded corners for "chiclet" style */
+  text-decoration: none;
+  color: var(--text-primary, #e0e0e0); /* Light text */
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  border: 1px solid var(--border-color, #444);
+  box-sizing: border-box;
+  cursor: pointer;
+  overflow: hidden; /* Prevent content spill for small buttons */
+  margin: 0; /* Ensure no default margins are adding to row space */
+}
+
+#connections-content .integration-grid .connection-button i {
+  font-size: 1.6em; /* Reverted icon size */
+  margin-bottom: 4px; /* Reverted Space between icon and text */
+  color: var(--text-secondary, #c0c0c0); /* Default icon color */
+  transition: color 0.2s ease;
+}
+
+#connections-content .integration-grid .connection-button span {
+  font-size: 0.65em; /* Reverted text size */
+  text-align: center;
+  display: block; /* Always show text */
+  line-height: 1.1; /* Reverted line height */
+  width: 100%; /* Ensure span takes width for centering */
+  overflow-wrap: break-word; /* Wrap long names if necessary */
+}
+
+#connections-content .integration-grid .connection-button:hover {
+  background-color: var(--surface-hover, #3a3a3e); /* Slightly lighter on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+  border-color: var(--primary-color, #007bff);
+}
+
+#connections-content .integration-grid .connection-button.connected {
+  background-color: var(--primary-color, #007bff); /* Primary color for connected */
+  border-color: var(--primary-darker, #0056b3);
+  color: white;
+}
+
+#connections-content .integration-grid .connection-button.connected i {
+  color: white;
+}
+
+/* Text for connected buttons will be handled by JS (just app name), color indicates status */
+#connections-content .integration-grid .connection-button.connected span {
+  display: block; /* Ensure span is visible */
+  /* font-weight: bold; */ /* Optional: if color isn't enough */
+}
+
+
+/* Original .connection-button styles (if still used elsewhere or for non-grid buttons) */
+/* These might need to be namespaced if they conflict or removed if not used */
+.connection-button { /* This is a general class, ensure it doesn't conflict with the grid version */
+  /* display: flex; */ /* Commented out to avoid conflict if this class is on grid items */
+  /* align-items: center; */
+  /* padding: 12px 16px; */
+  /* border-radius: 8px; */
+  /* transition: all 0.2s ease; */
+  /* margin-bottom: 8px; */
+  /* background-color: var(--surface-color); */
+  /* border: 1px solid var(--border-color); */
+}
+
+/* Notifications - Styles seem fine, leaving as is */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none;
+  max-width: 400px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  animation: slide-in 0.3s ease forwards;
+}
+
+.notification.success {
+  background-color: #d1fae5;
+  border-left: 4px solid #10b981;
+  color: #065f46;
+}
+
+.notification.error {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+}
+
+.notification.info {
+  background-color: #dbeafe;
+  border-left: 4px solid #3b82f6;
+  color: #1e40af;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Connection section */
+.connections-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 16px;
+}
+
+.connections-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.add-connection-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-connection-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Connection categories */
+.connection-category {
+  margin-bottom: 24px;
+}
+
+.connection-category-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  padding: 0 16px;
+}
+
+/* Connection status indicator */
+.connection-status {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 8px;
+}
+
+.connection-status.active {
+  background-color: #10b981;
+}
+
+.connection-status.inactive {
+  background-color: #9ca3af;
+}
+
+/* Connection modal */
+.connection-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.connection-modal-content {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 24px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.connection-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.connection-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.connection-modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.connection-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.connection-app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.connection-app-item:hover {
+  background-color: var(--surface-hover);
+  transform: translateY(-2px);
+}
+
+/* Selected state for app items in connection modal */
+.connection-app-item.selected {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+  transform: translateY(-3px);
+}
+
+.connection-app-item i {
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+
+.connection-app-item.gmail i {
+  color: #EA4335;
+}
+
+.connection-app-item.github i {
+  color: #181717;
+}
+
+.connection-app-item.google_drive i {
+  color: #0F9D58;
+}
+
+.connection-app-name {
+  font-size: 14px;
+  text-align: center;
+}
+
+.connection-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.connection-modal-footer button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-cancel {
+  background-color: transparent;
+  color: var(--text-secondary);
+  margin-right: 12px;
+}
+
+.btn-add-connection {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-add-connection:hover {
+  background-color: var(--primary-hover);
+}

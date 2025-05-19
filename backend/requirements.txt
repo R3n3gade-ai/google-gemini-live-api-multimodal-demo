@@ -5,6 +5,7 @@ certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
 colorama==0.4.6
+composio-gemini==0.7.16rc1
 fastapi==0.115.6
 filelock==3.17.0
 fsspec==2025.2.0

@@ -129,6 +129,45 @@ export class WebSocketClient {
     }
     
     /**
+     * Execute a Composio tool via WebSocket
+     * @param {string} toolName - Name of the tool to execute
+     * @param {Object} parameters - Tool parameters
+     * @returns {Promise} - Resolves when tool execution is complete
+     */
+    executeComposioTool(toolName, parameters) {
+      if (!this.isConnected()) {
+        return Promise.reject(new Error('WebSocket not connected'));
+      }
+      
+      return new Promise((resolve, reject) => {
+        try {
+          // Create a unique ID for this tool execution
+          const executionId = crypto.randomUUID();
+          
+          // Create message payload
+          const message = {
+            type: 'execute_tool',
+            tool: {
+              name: toolName,
+              parameters: parameters
+            },
+            execution_id: executionId
+          };
+          
+          // Send the message
+          this.websocket.send(JSON.stringify(message));
+          
+          // Tool execution is asynchronous, so we'll resolve immediately
+          // The result will come back as a separate message
+          resolve();
+          
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+    
+    /**
      * Close the WebSocket connection
      */
     disconnect() {

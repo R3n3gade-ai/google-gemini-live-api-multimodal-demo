@@ -8,13 +8,14 @@ class GeminiConnection:
     Client for connecting to the Gemini Multimodal API
     Handles WebSocket communication, audio/video streaming, and response processing
     """
-    
+
     def __init__(self):
         """Initialize the Gemini connection with API key from environment"""
+        # Get API key from environment
         self.api_key = os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
-            raise ValueError("GEMINI_API_KEY environment variable is not set")
-            
+            raise ValueError("GEMINI_API_KEY environment variable is required")
+
         self.model = "gemini-2.0-flash-exp"
         self.uri = (
             "wss://generativelanguage.googleapis.com/ws/"
@@ -27,7 +28,7 @@ class GeminiConnection:
     def set_config(self, config_data: Dict[str, Any]) -> None:
         """
         Store systemPrompt, voice, etc.
-        
+
         Args:
             config_data: Dict containing configuration like:
                 {
@@ -44,7 +45,7 @@ class GeminiConnection:
         Establish WebSocket connection and send initial setup message
         Must send the 'setup' message as the first message to Gemini,
         describing model, voice, system instructions, etc.
-        
+
         Raises:
             ValueError: If configuration is not set
             ConnectionError: If connection fails
@@ -54,15 +55,17 @@ class GeminiConnection:
 
         try:
             self.ws = await connect(
-                self.uri, 
+                self.uri,
                 additional_headers={"Content-Type": "application/json"}
             )
 
             # Build 'setup' payload from config
             response_modalities = ["TEXT"]
-            if self.config.get("enableVoiceOutput", False):
+            # Request AUDIO modality if a multimodal input mode is active
+            current_mode = self.config.get("currentMode")
+            if current_mode in ["audio", "camera", "screen"]:
                 response_modalities.append("AUDIO")
-            
+
             setup_message = {
                 "setup": {
                     "model": f"models/{self.model}",
@@ -89,26 +92,36 @@ class GeminiConnection:
                 }
             }
 
+            # Add tool_config if tools are available in the config
+            # self.config["tools"] is expected to be a list of Tool objects/dictionaries
+            # as prepared by the frontend and Composio client.
+            client_provided_tools = self.config.get("tools")
+            if client_provided_tools and isinstance(client_provided_tools, list) and len(client_provided_tools) > 0:
+                setup_message["setup"]["tool_config"] = {
+                    "tools": client_provided_tools
+                }
+                print(f"Gemini setup: Including {len(client_provided_tools)} tools in tool_config.")
+
             # Send setup as the first message
             await self.ws.send(json.dumps(setup_message))
 
             # Read the initial response from Gemini (often just an ack)
             setup_response = await self.ws.recv()
             print("Gemini setup response:", setup_response)
-            
+
         except Exception as e:
             raise ConnectionError(f"Failed to connect to Gemini API: {str(e)}")
 
     async def send_audio(self, base64_pcm: str) -> None:
         """
         Send 16-bit PCM audio (base64) to Gemini under 'realtime_input'.
-        
+
         Args:
             base64_pcm: Base64 encoded 16-bit PCM audio data
         """
         if not self.ws:
             return
-            
+
         payload = {
             "realtime_input": {
                 "media_chunks": [
@@ -124,13 +137,13 @@ class GeminiConnection:
     async def send_text(self, text: str) -> None:
         """
         Send text message to Gemini.
-        
+
         Args:
             text: Text content to send
         """
         if not self.ws:
             return
-            
+
         text_msg = {
             "client_content": {
                 "turns": [
@@ -147,13 +160,13 @@ class GeminiConnection:
     async def send_image(self, base64_jpeg: str) -> None:
         """
         Send image data to Gemini.
-        
+
         Args:
             base64_jpeg: Base64 encoded JPEG image data
         """
         if not self.ws:
             return
-            
+
         payload = {
             "realtime_input": {
                 "media_chunks": [
@@ -169,7 +182,7 @@ class GeminiConnection:
     async def receive(self) -> Optional[str]:
         """
         Wait for next message from Gemini.
-        
+
         Returns:
             JSON response string or None if connection is closed
         """
