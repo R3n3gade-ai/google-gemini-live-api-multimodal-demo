@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/static/css/agent-builder.css">
   <link rel="stylesheet" href="/static/css/app-builder.css">
   <link rel="stylesheet" href="/static/css/composio-integration.css">
+  <link rel="stylesheet" href="/static/css/settings-panel.css">
 </head>
 <body>
   <div class="app-container">
@@ -175,7 +176,7 @@
         <div class="tools-footer">
           <!-- Model Selector -->
           <div class="model-selector">
-            <div class="model-name">Gemini 2.5 Pro Preview 05-0</div>
+            <div class="model-name"></div>
           </div>
           
           <!-- Token Counter -->
@@ -199,7 +200,7 @@
             <div class="setting-controls">
               <button class="edit-button">Edit</button>
               <label class="toggle-wrapper">
-                <input type="checkbox" class="toggle-input" id="tools-structuredOutput" checked>
+                <input type="checkbox" class="toggle-input" id="tools-structuredOutput">
                 <span class="toggle-display"></span>
               </label>
             </div>
@@ -209,7 +210,7 @@
           <div class="setting-row">
             <span class="setting-label">Code execution</span>
             <label class="toggle-wrapper">
-              <input type="checkbox" class="toggle-input" id="tools-codeExecution" checked>
+              <input type="checkbox" class="toggle-input" id="tools-codeExecution">
               <span class="toggle-display"></span>
             </label>
           </div>
@@ -696,6 +697,7 @@
       </div>
     </div>
   </div>
+  
   
   <!-- Connection Modal -->
   <div id="connectionModal" class="connection-modal">

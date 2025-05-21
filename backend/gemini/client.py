@@ -16,7 +16,7 @@ class GeminiConnection:
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY environment variable is required")
 
-        self.model = "gemini-2.0-flash-exp"
+        self.model = "gemini-2.0-flash-exp"  # Default model
         self.uri = (
             "wss://generativelanguage.googleapis.com/ws/"
             "google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent"
@@ -35,10 +35,16 @@ class GeminiConnection:
                   'systemPrompt': 'You are a friendly AI Assistant...',
                   'voice': 'Puck',
                   'googleSearch': True,
-                  'allowInterruptions': False
+                  'allowInterruptions': False,
+                  'functionCalling': True,
+                  'autoFunctionResponse': True,
+                  'codeExecution': True,
+                  'toolUsage': True,
+                  'temperature': 0.6
                 }
         """
         self.config = config_data
+        print(f"Configuration set: {json.dumps(config_data)}")
 
     async def connect(self) -> None:
         """
@@ -66,18 +72,27 @@ class GeminiConnection:
             if current_mode in ["audio", "camera", "screen"]:
                 response_modalities.append("AUDIO")
 
+            # Get temperature from config or use default
+            temperature = float(self.config.get("temperature", 0.6))
+            
+            # Get model ID from config or use default
+            model_id = self.config.get("modelId", self.model)
+            print(f"Using model: {model_id}")
+            
             setup_message = {
                 "setup": {
-                    "model": f"models/{self.model}",
+                    "model": f"models/{model_id}",
                     "generation_config": {
                         "response_modalities": response_modalities,
+                        "temperature": temperature,
                         "speech_config": {
                             "voice_config": {
                                 "prebuilt_voice_config": {
                                     "voice_name": self.config.get("voice", "Puck")
                                 }
                             }
-                        }
+                        },
+                        "allow_interruptions": self.config.get("allowInterruptions", False)
                     },
                     "system_instruction": {
                         "parts": [
@@ -96,11 +111,60 @@ class GeminiConnection:
             # self.config["tools"] is expected to be a list of Tool objects/dictionaries
             # as prepared by the frontend and Composio client.
             client_provided_tools = self.config.get("tools")
-            if client_provided_tools and isinstance(client_provided_tools, list) and len(client_provided_tools) > 0:
+            
+            # Only add tool_config if toolUsage is enabled
+            if self.config.get("toolUsage", True) and client_provided_tools and isinstance(client_provided_tools, list) and len(client_provided_tools) > 0:
                 setup_message["setup"]["tool_config"] = {
-                    "tools": client_provided_tools
+                    "tools": client_provided_tools,
+                    "function_calling_config": {
+                        "mode": "AUTO" if self.config.get("functionCalling", True) else "NONE",
+                        "auto_function_response": self.config.get("autoFunctionResponse", True)
+                    }
                 }
                 print(f"Gemini setup: Including {len(client_provided_tools)} tools in tool_config.")
+            
+            # Add Google Search grounding if enabled
+            if self.config.get("googleSearch", False):
+                setup_message["setup"]["grounding_config"] = {
+                    "google_search_config": {
+                        "enable_search": True
+                    }
+                }
+                print("Gemini setup: Google Search grounding enabled.")
+                
+            # Add code execution config if enabled
+            if self.config.get("codeExecution", False):
+                setup_message["setup"]["code_execution_config"] = {
+                    "enabled": True
+                }
+                print("Gemini setup: Code execution enabled.")
+                
+            # Add structured output config if enabled
+            structured_output = self.config.get("structuredOutput", {})
+            if structured_output.get("enabled", False):
+                format_type = structured_output.get("format", "json").upper()
+                schema = structured_output.get("schema", "")
+                strict = structured_output.get("strict", True)
+                
+                structured_output_config = {
+                    "enabled": True,
+                    "response_mime_type": f"application/{format_type.lower()}"
+                }
+                
+                # Add schema if provided
+                if schema:
+                    try:
+                        # Parse schema to ensure it's valid JSON
+                        schema_json = json.loads(schema)
+                        structured_output_config["schema"] = schema_json
+                    except json.JSONDecodeError:
+                        print("Warning: Invalid JSON schema provided for structured output. Using without schema.")
+                
+                # Add strict validation setting
+                structured_output_config["strict_validation"] = strict
+                
+                setup_message["setup"]["structured_response_config"] = structured_output_config
+                print(f"Gemini setup: Structured output enabled with format {format_type}")
 
             # Send setup as the first message
             await self.ws.send(json.dumps(setup_message))

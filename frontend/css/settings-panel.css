@@ -1,0 +1,120 @@
+/* Settings Panel Styles - Compact and Professional */
+
+/* Reduce padding and spacing in the tools footer */
+.tools-footer {
+  padding: 0.5rem 0.5rem 0.75rem;
+}
+
+/* Make model selector more compact */
+.model-selector {
+  margin-bottom: 0.5rem;
+}
+
+/* Reduce token counter size and spacing */
+.token-counter {
+  margin-bottom: 0.5rem;
+}
+
+.token-label, .token-value {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Make temperature control more compact */
+.temperature-control {
+  margin-bottom: 0.5rem;
+}
+
+.temperature-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.temperature-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.temperature-value {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Make setting rows more compact and consistent */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.setting-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.setting-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Make edit buttons smaller and consistent */
+.edit-button {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.3rem;
+  background-color: rgba(59, 130, 246, 0.2);
+  border: none;
+  border-radius: 3px;
+  color: var(--accent-primary);
+  cursor: pointer;
+}
+
+/* Make toggles smaller and consistent */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-display {
+  width: 1.8rem;
+  height: 0.9rem;
+  border-radius: 0.45rem;
+  position: relative;
+  transition: var(--transition-normal);
+  background: var(--bg-tertiary);
+}
+
+.toggle-display::after {
+  content: "";
+  position: absolute;
+  top: 0.1rem;
+  left: 0.1rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: var(--transition-normal);
+}
+
+.toggle-input:checked + .toggle-display {
+  background: var(--accent-primary);
+}
+
+.toggle-input:checked + .toggle-display::after {
+  transform: translateX(0.9rem);
+  background: white;
+}
+
+/* Make selects smaller and consistent */
+#tools-voice, #tools-language {
+  font-size: 0.7rem;
+  padding: 0.2rem;
+  height: 1.5rem;
+  background-color: #000000;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  color: var(--text-primary);
+}
