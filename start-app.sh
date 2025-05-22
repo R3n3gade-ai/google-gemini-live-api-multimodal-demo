@@ -1,42 +1,74 @@
 #!/bin/bash
 
-# Start the Google Gemini Live API Multimodal Demo
-echo "Starting Google Gemini Live API Multimodal Demo..."
+# Exit on error
+set -e
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo -e "\033[1;36mStarting Google Gemini Live API Multimodal Demo\033[0m"
+echo -e "\033[1;36m------------------------------------------------\033[0m"
 
-# Check if GEMINI_API_KEY is set
-if [ -z "$GEMINI_API_KEY" ]; then
-  echo "Error: GEMINI_API_KEY environment variable is not set."
-  echo "Please set it by running: export GEMINI_API_KEY=your_api_key"
-  exit 1
+# Check if running in Docker or locally
+if [ -f "/.dockerenv" ]; then
+  echo -e "\033[1;33mRunning in Docker environment\033[0m"
+  
+  # Start backend server
+  cd /app/backend
+  python app.py &
+  BACKEND_PID=$!
+  
+  echo -e "\033[1;32mBackend server started (PID: $BACKEND_PID)\033[0m"
+  
+  # Keep container running
+  echo -e "\033[1;36mApp is running. Press Ctrl+C to stop.\033[0m"
+  wait $BACKEND_PID
+else
+  echo -e "\033[1;33mRunning in local environment\033[0m"
+  
+  # Kill any existing Python processes related to our app
+  echo -e "\033[1;33mStopping any existing Python processes...\033[0m"
+  pkill -f "python backend/app.py" 2>/dev/null || true
+  
+  # Install dependencies
+  echo -e "\033[1;32mChecking dependencies...\033[0m"
+  cd backend
+  pip install -r requirements.txt >/dev/null 2>&1
+  
+  # Start backend server
+  echo -e "\033[1;32mStarting backend server...\033[0m"
+  python app.py &
+  BACKEND_PID=$!
+  
+  echo -e "\033[1;32mBackend server started (PID: $BACKEND_PID)\033[0m"
+  
+  # Wait for server to start
+  echo -e "\033[1;33mWaiting for server to initialize...\033[0m"
+  sleep 2
+  
+  # Open browser automatically
+  echo -e "\033[1;32mOpening browser...\033[0m"
+  
+  # Try to open browser in platform-independent way
+  case "$(uname -s)" in
+    Darwin)  open http://localhost:8000 ;;
+    Linux)   xdg-open http://localhost:8000 ;;
+    MINGW*)  start http://localhost:8000 ;;
+    *)       echo "Please open http://localhost:8000 in your browser" ;;
+  esac
+  
+  # Display usage instructions
+  echo -e "\033[1;36m\nApp is running!\033[0m"
+  echo ""
+  echo -e "\033[1;32mUSAGE INSTRUCTIONS:\033[0m"
+  echo -e "1. Close the System Prompt modal if it appears"
+  echo -e "2. To access Composio integrations, click on 'Connections' tab in the right panel"
+  echo -e "3. Click on any service (Gmail, Google Drive, etc.) to connect via Composio OAuth"
+  echo ""
+  echo -e "\033[1;33mIMPORTANT:\033[0m"
+  echo -e "For real Composio integration, set these environment variables:"
+  echo -e "- COMPOSIO_API_KEY: Your Composio API key from composio.dev"
+  echo -e "- GEMINI_API_KEY: Your Google Gemini API key"
+  echo ""
+  echo -e "\033[1;33mTo stop the app, press Ctrl+C\033[0m"
+  
+  # Keep script running until Ctrl+C
+  wait $BACKEND_PID
 fi
-
-# Kill any existing processes
-echo "Killing any existing processes..."
-pkill -f "python app.py" || true
-pkill -f "python -m http.server 5173" || true
-sleep 2
-
-# Start the backend service
-echo "Starting backend service..."
-cd "$SCRIPT_DIR/backend" && python app.py &
-BACKEND_PID=$!
-
-# Wait for backend to start
-echo "Waiting for backend to start..."
-sleep 5
-
-# Start the frontend service
-echo "Starting frontend service..."
-cd "$SCRIPT_DIR/frontend" && python -m http.server 5173 &
-FRONTEND_PID=$!
-
-echo "Google Gemini Live API Multimodal Demo is running!"
-echo "Backend URL: http://localhost:8000"
-echo "Frontend URL: http://localhost:5173"
-echo ""
-echo "Press Ctrl+C to stop the services"
-
-# Wait for user to press Ctrl+C
-wait

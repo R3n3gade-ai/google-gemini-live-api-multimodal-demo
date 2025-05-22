@@ -1,0 +1,2598 @@
+Architecture
+Relevant source files
+This document outlines the architectural design of Composio, a system providing production-ready toolsets for AI agents. Composio enables AI agents to interact with external services and local system resources through a unified interface. For information about how to use specific framework integrations like LangChain or OpenAI, see Framework Integrations.
+
+System Overview
+Composio's architecture follows a modular design with several key components:
+
+Core SDK: Available for both Python and JavaScript, providing the foundational functionality
+ComposioToolSet: The central class for accessing and executing tools
+Framework Plugins: Extensions for different AI frameworks (OpenAI, LangChain, AutoGen, etc.)
+Workspaces: Environments for executing actions (Host, Docker, E2B, Fly.io)
+Local Tools: Tools for file operations, shell commands, and code analysis
+CLI: Command-line interface for managing connections and configuration
+MCP System: Protocol for integrating with AI clients like Claude, Cursor, and Windsurf
+High-Level Architecture Diagram
+Uses
+
+Uses
+
+Core
+
+Core
+
+Extends
+
+Developer/User
+
+Python SDK
+
+JavaScript SDK
+
+composio_core
+
+composio-core
+
+Framework Plugins
+
+composio_langchain
+
+composio_openai
+
+composio_llamaindex
+
+composio_autogen
+
+composio_crewai
+
+composio_claude
+
+composio_camel
+
+composio_griptape
+
+ComposioToolSet
+
+ComposioToolSet JS
+
+Actions API
+
+Workspaces
+
+Host Workspace
+
+Docker Workspace
+
+E2B Workspace
+
+Fly.io Workspace
+
+Local Tools
+
+File Tools
+
+Shell Tools
+
+Code Analysis
+
+Composio CLI
+
+composio add
+
+composio apps
+
+composio login
+
+MCP System
+
+MCP Server
+
+Client Integrations
+
+Claude
+
+Cursor
+
+Windsurf
+
+Sources: 
+README.md
+100-116
+ 
+python/setup.py
+90-126
+
+Core Components
+ComposioToolSet
+The ComposioToolSet class is the central component of Composio, defined in 
+python/composio/tools/toolset.py
+ It provides methods for retrieving tool schemas, executing actions, and managing authentication and processing.
+
+ComposioToolSet
+
++getToolsSchema()
+
++executeAction()
+
++addAuth()
+
++addPreProcessor()
+
++addPostProcessor()
+
++addSchemaProcessor()
+
++createTriggerListener()
+
+Entity
+
++execute()
+
++getConnection()
+
++setupTrigger()
+
++disableTrigger()
+
++getActiveTriggers()
+
++initiateConnection()
+
+«abstract»
+
+Workspace
+
++setup()
+
++teardown()
+
++executeAction()
+
++checkForMissingDependencies()
+
+ProcessorHelper
+
++processRequest()
+
++processResponse()
+
++processSchemaProperties()
+
+FileIOHelper
+
++writeOutput()
+
++writeDownloadable()
+
+SchemaHelper
+
++getActionSchemas()
+
++getRemoteActionSchemas()
+
++getLocalActionSchemas()
+
++getRuntimeActionSchemas()
+
+HostWorkspace
+
+DockerWorkspace
+
+E2BWorkspace
+
+FlyIOWorkspace
+
+Sources: 
+python/composio/tools/toolset.py
+91-1104
+ 
+python/composio/tools/__init__.py
+1-4
+
+Key methods of ComposioToolSet include:
+
+getToolsSchema(): Retrieves the schema for specified tools
+executeAction(): Executes an action with given parameters
+addAuth(): Adds authentication configuration for an app
+addPreProcessor(): Adds a pre-processor for requests
+addPostProcessor(): Adds a post-processor for responses
+createTriggerListener(): Creates a listener for triggers
+Entity
+The Entity class represents a user or organization in the system. It provides methods for executing actions, managing connections, and handling triggers.
+
+Entity
+
++id: str
+
++client: Composio
+
++execute(action, params, connected_account_id)
+
++getConnection(app, connected_account_id)
+
++getConnections()
+
++enableTrigger(app, trigger_name, config)
+
++disableTrigger(trigger_id)
+
++getActiveTriggers()
+
++initiateConnection(app_name, auth_mode, auth_config)
+
+Sources: 
+python/composio/client/__init__.py
+231-479
+
+Helper Classes
+The ComposioToolSet uses several helper classes to process requests, manage schemas, and handle file operations:
+
+ProcessorHelper
+Defined in 
+python/composio/tools/toolset.py
+247-387
+ this class processes requests and responses by applying transformations:
+
+def process_request(self, action: Action, request: Dict) -> Dict:
+    processed = self._process(
+        key=App(action.app),
+        data=request,
+        type_="pre",
+    )
+    # Further processing...
+    return processed
+SchemaHelper
+Defined in 
+python/composio/tools/toolset.py
+458-789
+ this class manages tool schemas:
+
+def get_action_schemas(self, actions: List[Action]) -> List[ActionModel]:
+    # Get schemas from different sources
+    remote_schemas = self.get_remote_actions_schemas(...)
+    local_schemas = self.get_local_action_schemas(...)
+    runtime_schemas = self.get_runtime_action_schemas(...)
+    return remote_schemas + local_schemas + runtime_schemas
+FileIOHelper
+Defined in 
+python/composio/tools/toolset.py
+390-455
+ this class handles file operations:
+
+def write_output(self, action: Action, output: Dict, entity_id: str) -> Dict:
+    # Write output to a file
+    outfile = self.outdir / filename
+    self._write_file(outfile, json.dumps(output))
+    return {"message": f"output written to {outfile.resolve()}", "file": str(outfile.resolve())}
+Workspaces
+Workspaces provide different environments for executing actions. The abstract Workspace class is extended by several implementations:
+
+HostWorkspace: Executes actions on the host system
+DockerWorkspace: Executes actions in a Docker container
+E2BWorkspace: Executes actions in an E2B environment
+FlyIOWorkspace: Executes actions in a Fly.io environment
+Each workspace type provides isolation and deployment options suited for different use cases.
+
+Sources: 
+python/composio/tools/toolset.py
+75-88
+ 
+python/setup.py
+58-70
+
+Client and API Interaction
+Composio Client
+The Composio class is the main client for interacting with the Composio API. It provides access to various collections like Apps, Actions, Triggers, etc.
+
+Composio
+
++apps: Apps
+
++actions: Actions
+
++triggers: Triggers
+
++integrations: Integrations
+
++active_triggers: ActiveTriggers
+
++connected_accounts: ConnectedAccounts
+
++api_key: str
+
++base_url: str
+
++http: HttpClient
+
++get_entity(id) : : Entity
+
++validate_api_key(key) : : str
+
+HttpClient
+
++base_url: str
+
++headers: dict
+
++timeout: float
+
++get(url) : : Response
+
++post(url) : : Response
+
++put(url) : : Response
+
++delete(url) : : Response
+
+Sources: 
+python/composio/client/__init__.py
+57-229
+ 
+python/composio/client/http.py
+21-82
+
+Collections and Models
+Composio uses a collection-based approach to interact with the API:
+
+Collection
+
++endpoint: Endpoint
+
++model: Type
+
++client: Composio
+
++get() : : List[ModelType]
+
+ConnectedAccounts
+
++get() : : List[ConnectedAccountModel]
+
++get(connection_id) : : ConnectedAccountModel
+
++initiate(integration_id, entity_id) : : ConnectionRequestModel
+
+Actions
+
++get() : : List[ActionModel]
+
++execute(action, params, entity_id) : : Dict
+
+Triggers
+
++get() : : List[TriggerModel]
+
++enable(name, connected_account_id, config) : : Dict
+
++disable(id) : : Dict
+
++subscribe() : : TriggerSubscription
+
+Key models include:
+
+ConnectedAccountModel: Represents a connected account to an external service
+ActionModel: Represents an action that can be executed
+TriggerModel: Represents a trigger that can be subscribed to
+Sources: 
+python/composio/client/collections.py
+1-988
+
+Plugin Architecture
+Composio uses a plugin-based architecture to integrate with various AI frameworks. Each plugin extends the core functionality to work with a specific framework.
+
+Secondary Plugins
+
+Direct Core Plugins
+
+Core Package
+
+composio_core v0.7.15
+
+composio_openai
+
+composio_langchain
+
+composio_autogen
+
+composio_llamaindex
+
+composio_camel
+
+composio_griptape
+
+composio_lyzr
+
+composio_claude
+
+composio_crewai
+
+composio_julep
+
+Each plugin package follows a similar structure:
+
+It depends on composio_core
+It extends ComposioToolSet with framework-specific functionality
+It includes any necessary framework-specific dependencies
+Sources: 
+python/plugins/openai/setup.py
+10-27
+ 
+python/plugins/langchain/setup.py
+10-33
+ 
+python/plugins/autogen/setup.py
+10-33
+ 
+python/plugins/llamaindex/setup.py
+10-30
+ 
+python/plugins/crew_ai/setup.py
+10-31
+
+Authentication and Tool Execution Flow
+Authentication Flow
+Composio provides a unified authentication flow for connecting to external services:
+
+Composio
+"External Service"
+"Entity"
+"Composio CLI"
+User
+Composio
+"External Service"
+"Entity"
+"Composio CLI"
+User
+composio login
+validate_auth_session()
+API Key
+Success
+composio add github
+initiateConnection(app_name="github")
+OAuth Flow
+Auth Token
+Connection Created
+Success
+The authentication flow typically involves:
+
+User logging in to Composio using composio login
+User adding a connection to an external service using composio add <app_name>
+Composio handling the OAuth flow or collecting API keys as needed
+Creating a connected account that can be used by tools
+Sources: 
+python/composio/cli/add.py
+166-340
+ 
+python/composio/client/__init__.py
+420-479
+
+Tool Execution Flow
+When a tool is executed, the following flow occurs:
+
+Workspace
+"External Service"
+Entity
+ProcessorHelper
+"ComposioToolSet"
+"AI Agent"
+Workspace
+"External Service"
+Entity
+ProcessorHelper
+"ComposioToolSet"
+"AI Agent"
+alt
+[Local Action]
+[Remote Action]
+executeAction(Action.GITHUB_..., params)
+process_request(action, request)
+Processed Request
+executeAction(action, params)
+Result
+execute(action, params)
+API Call
+Response
+Result
+process_response(action, response)
+Processed Response
+Result
+This flow allows for:
+
+Pre-processing of requests
+Execution in different environments (local or remote)
+Post-processing of responses
+Transparent authentication with external services
+Sources: 
+python/composio/tools/toolset.py
+1107-1292
+ 
+python/tests/test_tools/test_toolset.py
+359-364
+
+MCP (Model Context Protocol) System
+The MCP system enables integration with AI clients like Claude, Cursor, and Windsurf:
+
+Connects to
+
+Uses
+
+Executes
+
+Calls
+
+AI Client (Claude/Cursor/Windsurf)
+
+MCP Server
+
+ComposioToolSet
+
+Actions API
+
+External Services
+
+GitHub API
+
+Gmail API
+
+Search APIs
+
+Other APIs
+
+The MCP system allows AI clients to:
+
+Access Composio tools without direct SDK integration
+Execute actions on external services
+Handle authentication transparently
+Utilize the full range of Composio capabilities
+Sources: 
+README.md
+41-66
+
+Runtime Action System
+Composio provides a runtime action system that allows creating custom actions dynamically:
+
+RuntimeAction
+
++name: str
+
++description: str
+
++execute(request, metadata) : : Response
+
+RuntimeTool
+
++gid: str
+
++actions() : : List[RuntimeAction]
+
+The runtime action system enables:
+
+Creating custom actions on the fly
+Defining parameters and return types
+Integrating with existing tools
+Adding custom processing logic
+Sources: 
+python/composio/tools/base/runtime.py
+58-94
+ 
+python/tests/test_tools/test_base/test_runtime.py
+30-41
+
+Conclusion
+Composio's architecture provides a flexible and extensible system for integrating AI agents with external tools and services. The modular design allows for easy addition of new frameworks and tools, while providing a unified interface for authentication and execution.
+
+Key strengths of the architecture include:
+
+Framework Agnostic: Works with multiple AI frameworks through plugins
+Flexible Execution: Supports various execution environments through workspaces
+Unified Authentication: Provides a consistent authentication flow for all services
+Extensible: Allows adding custom actions and processors
+Secure: Manages authentication tokens and credentials securely
+This architecture enables developers to enhance their AI agents with robust tool capabilities across a wide range of services and use cases.
+
+
+
+
+
+
+
+ComposioToolSet
+Relevant source files
+ComposioToolSet is the core interface class for interacting with Composio's tool ecosystem. It serves as the central orchestration layer that connects language models to external tools, actions, APIs, and execution environments. This class enables developers to retrieve tool schemas, execute actions, handle authentication, process requests/responses, and manage workspaces for secure tool execution.
+
+For framework-specific implementations, see Framework Integrations.
+
+1. Architecture Overview
+The ComposioToolSet connects multiple subsystems within the Composio platform:
+
+ComposioToolSet
+
++ProcessorHelper processor_helper
+
++FileIOHelper file_helper
+
++SchemaHelper schema_helper
+
++CustomAuthHelper auth_helper
+
++VersionLock version_lock
+
++Workspace workspace
+
++getToolsSchema()
+
++executeAction()
+
++addAuthConfig()
+
++addPreProcessor()
+
++addPostProcessor()
+
++addSchemaProcessor()
+
++createTriggerListener()
+
+Entity
+
++execute()
+
++getConnection()
+
++setupTrigger()
+
++enableTrigger()
+
++disableTrigger()
+
++getActiveTriggers()
+
++initiateConnection()
+
+«abstract»
+
+Workspace
+
++setup()
+
++teardown()
+
++executeAction()
+
++checkForMissingDependencies()
+
+ProcessorHelper
+
++processRequest()
+
++processResponse()
+
++processSchemaProperties()
+
+FileIOHelper
+
++writeOutput()
+
++writeDownloadable()
+
+SchemaHelper
+
++getActionSchemas()
+
++getRemoteActionSchemas()
+
++getLocalActionSchemas()
+
++getRuntimeActionSchemas()
+
++substituteFileUploads()
+
++substituteFileDownloads()
+
+CustomAuthHelper
+
++add()
+
++getCustomParamsForLocalExecution()
+
++getCustomParamsForRemoteExecution()
+
++hasCustomAuth()
+
+VersionLock
+
++apply()
+
++get()
+
++lock()
+
++update()
+
+Sources: 
+python/composio/tools/toolset.py
+90-192
+ 
+python/composio/tools/toolset.py
+247-387
+ 
+python/composio/tools/toolset.py
+390-455
+ 
+python/composio/tools/toolset.py
+458-783
+ 
+python/composio/tools/toolset.py
+789-870
+
+2. Initialization and Configuration
+ComposioToolSet can be instantiated with various configuration options:
+
+ComposioToolSet Initialization
+
+API Configuration
+
+Workspace Configuration
+
+Processor Configuration
+
+Schema Configuration
+
+api_key
+
+entity_id
+
+connected_account_ids
+
+workspace (Custom Workspace)
+
+workspace_config (HostWorkspaceConfig)
+
+processors (pre/post/schema)
+
+metadata
+
+description_char_limit
+
+action_name_char_limit
+
+2.1 Constructor Parameters
+Parameter	Type	Description
+api_key	str	Optional API key for Composio. If not provided, falls back to environment variable
+entity_id	str	Entity ID for execution context
+workspace	Workspace	Custom workspace instance for action execution
+workspace_config	WorkspaceConfigType	Configuration for default workspace
+processors	ProcessorsType	Dictionary of pre/post/schema processors by action type
+metadata	MetadataType	Dictionary of metadata by action type
+description_char_limit	int	Character limit for action descriptions
+action_name_char_limit	int	Character limit for action names
+runtime	str	Runtime identifier
+connected_account_ids	Dict[AppType, str]	Dictionary mapping apps to connected account IDs
+Sources: 
+python/composio/tools/toolset.py
+892-1013
+ 
+python/tests/test_tools/test_toolset.py
+154-190
+
+3. Core Functionality
+3.1 Tool Schema Retrieval
+ComposioToolSet provides methods to retrieve schemas for actions, which describe the capabilities, parameters, and expected responses of each tool:
+
+"ActionRegistry"
+"Composio API"
+SchemaHelper
+"ComposioToolSet"
+"LLM/Agent"
+"ActionRegistry"
+"Composio API"
+SchemaHelper
+"ComposioToolSet"
+"LLM/Agent"
+getToolsSchema(actions)
+get_action_schemas(actions)
+get_remote_actions_schemas()
+client.actions.get()
+remote action schemas
+get_local_action_schemas()
+Access local actions
+local action schemas
+get_runtime_action_schemas()
+Access runtime actions
+runtime action schemas
+processed schemas
+Process for target format
+Formatted tool schemas
+The get_action_schemas() method retrieves schemas from three sources:
+
+Remote actions (from Composio API)
+Local actions (built-in tools like file operations and shell commands)
+Runtime actions (dynamically registered at runtime)
+Sources: 
+python/composio/tools/toolset.py
+458-636
+ 
+python/composio/tools/base/abs.py
+94-394
+
+3.2 Action Execution
+The execute_action() method executes actions with provided parameters. It handles different types of actions:
+
+Runtime Action
+
+Local Action
+
+Remote Action
+
+execute_action(action, params)
+
+Action type?
+
+Execute in runtime context
+
+Execute in local context
+
+Execute via API
+
+Return response
+
+Check connected account
+
+Pre-process request
+
+Call API
+
+Post-process response
+
+Process parameters
+
+Execute in workspace
+
+Validate dependencies
+
+Process parameters
+
+Execute in workspace
+
+Sources: 
+python/composio/tools/toolset.py
+1370-1681
+ 
+python/tests/test_tools/test_toolset.py
+359-363
+
+3.3 Authentication Configuration
+ComposioToolSet provides methods to configure authentication for different tools:
+
+# Adding API key authentication for a tool
+toolset.add_auth(
+    app="SERPAPI",
+    parameters=[
+        {
+            "in_": "header",
+            "name": "Authorization",
+            "value": "Bearer api-key"
+        }
+    ]
+)
+Authentication configuration is used during action execution to properly authenticate with external services.
+
+Sources: 
+python/composio/tools/toolset.py
+789-870
+ 
+python/tests/test_tools/test_toolset.py
+389-441
+ 
+python/composio/cli/add.py
+166-338
+
+3.4 Request/Response Processing
+ComposioToolSet allows adding pre-processors and post-processors to modify requests before they're sent and responses before they're returned:
+
+"API Service"
+"ProcessorHelper"
+"ComposioToolSet"
+"LLM Agent"
+"API Service"
+"ProcessorHelper"
+"ComposioToolSet"
+"LLM Agent"
+execute_action(action, params)
+process_request(action, params)
+Apply app-level pre-processor
+Apply action-level pre-processor
+Modified request
+Call API with modified request
+Response data
+process_response(action, response)
+Apply app-level post-processor
+Apply action-level post-processor
+Modified response
+Return modified response
+Sources: 
+python/composio/tools/toolset.py
+247-387
+ 
+python/tests/test_tools/test_toolset.py
+205-293
+
+4. Helper Classes
+The ComposioToolSet uses several helper classes to organize its functionality:
+
+4.1 ProcessorHelper
+Handles pre-processing of requests and post-processing of responses. It maintains a registry of processors and applies them based on the action and app type.
+
+Sources: 
+python/composio/tools/toolset.py
+247-387
+
+4.2 FileIOHelper
+Manages file operations for input and output, including:
+
+Writing action output to files
+Handling downloadable file content
+Converting file content to appropriate formats
+Sources: 
+python/composio/tools/toolset.py
+390-455
+ 
+python/composio/client/files.py
+1-44
+
+4.3 SchemaHelper
+Retrieves and processes action schemas from different sources:
+
+Remote actions from the Composio API
+Local actions from the local tool registry
+Runtime actions that are dynamically registered
+It also handles file upload/download substitution in schemas and requests.
+
+Sources: 
+python/composio/tools/toolset.py
+458-783
+
+4.4 CustomAuthHelper
+Manages custom authentication configurations for different apps, storing and retrieving auth parameters for both local and remote execution.
+
+Sources: 
+python/composio/tools/toolset.py
+789-870
+
+5. Workspaces
+ComposioToolSet supports different workspace types for execution environments:
+
+«abstract»
+
+Workspace
+
++setup()
+
++teardown()
+
++executeAction()
+
++checkForMissingDependencies()
+
+HostWorkspace
+
++shells: Shells
+
++browsers: Browsers
+
++filemanagers: FileManagers
+
++setup()
+
++teardown()
+
++executeAction()
+
+DockerWorkspace
+
++container_id: str
+
++setup()
+
++teardown()
+
++executeAction()
+
+E2BWorkspace
+
++session_id: str
+
++setup()
+
++teardown()
+
++executeAction()
+
+FlyIOWorkspace
+
++instance_id: str
+
++setup()
+
++teardown()
+
++executeAction()
+
+Workspaces provide isolated environments for executing actions, with different security and capability characteristics:
+
+Workspace Type	Description	Use Case
+HostWorkspace	Executes actions on the host machine	Default for local tools
+DockerWorkspace	Executes actions in a Docker container	Isolated execution
+E2BWorkspace	Executes actions in an E2B environment	Managed cloud execution
+FlyIOWorkspace	Executes actions on Fly.io	Distributed execution
+Sources: 
+python/composio/tools/toolset.py
+81-83
+ 
+python/composio/tools/env/base.py
+
+6. Integration with External Tools and Services
+ComposioToolSet connects to various external tools and services through actions:
+
+ComposioToolSet
+
+ActionRegistry
+
+Remote Actions
+
+Local Actions
+
+Runtime Actions
+
+API-based Services
+
+GitHub
+
+Gmail
+
+Slack
+
+Other API Services...
+
+File Tools
+
+Shell Tools
+
+Code Analysis
+
+Browser Tools
+
+Custom Tools
+
+composio.action decorator
+
+The system integrates with:
+
+API-based services via remote actions
+Local system resources via local tools
+Custom functionality via runtime actions (registered using the @action decorator)
+Sources: 
+python/composio/tools/base/abs.py
+28-36
+ 
+python/composio/tools/base/runtime.py
+117-196
+ 
+python/composio/client/enums/app.pyi
+10-324
+
+7. Advanced Features
+7.1 Trigger Listeners
+ComposioToolSet provides functionality to create trigger listeners for event-driven workflows:
+
+listener = toolset.create_trigger_listener()
+
+@listener.callback(filters={"app_name": "GITHUB"})
+def on_github_event(event):
+    print(f"Received event: {event.metadata.triggerName}")
+    
+listener.wait_forever()  # Listen for events indefinitely
+Triggers allow for reactive workflows based on external events such as:
+
+New emails in Gmail
+GitHub repository events
+Slack messages
+Calendar events
+And many others
+Sources: 
+python/composio/tools/toolset.py
+3112-3165
+ 
+python/composio/client/collections.py
+551-790
+
+7.2 Version Locking
+ComposioToolSet includes a version locking mechanism to ensure consistent action versions:
+
+# Apply version lock to actions
+actions = toolset.version_lock.apply(actions)
+
+# Lock specific action versions
+toolset.version_lock["GITHUB_CREATE_ISSUE"] = "1_0"
+toolset.version_lock.lock()  # Save to lock file
+Version locking helps ensure reproducible behavior across executions by pinning actions to specific versions.
+
+Sources: 
+python/composio/tools/toolset.py
+164-245
+
+8. Usage Examples
+8.1 Basic Usage
+from composio import Action
+from composio.tools import ComposioToolSet
+
+# Create toolset
+toolset = ComposioToolSet()
+
+# Get schemas for specific actions
+schemas = toolset.get_action_schemas(
+    actions=[Action.GITHUB_LIST_REPOSITORIES, Action.GMAIL_SEND_EMAIL]
+)
+
+# Execute an action
+result = toolset.execute_action(
+    action=Action.GITHUB_LIST_REPOSITORIES,
+    params={"visibility": "public"}
+)
+8.2 Adding Pre/Post Processors
+from composio import App, Action
+from composio.tools import ComposioToolSet
+
+def preprocess_github_request(request):
+    # Modify request before sending
+    request["per_page"] = 100
+    return request
+
+def postprocess_github_response(response):
+    # Process response after receiving
+    response["data"] = [repo for repo in response["data"] if not repo["archived"]]
+    return response
+
+toolset = ComposioToolSet()
+toolset.add_pre_processor(App.GITHUB, preprocess_github_request)
+toolset.add_post_processor(Action.GITHUB_LIST_REPOSITORIES, postprocess_github_response)
+
+# Pre/post processors will be applied automatically
+result = toolset.execute_action(
+    action=Action.GITHUB_LIST_REPOSITORIES,
+    params={}
+)
+Sources: 
+python/tests/test_tools/test_toolset.py
+29-42
+ 
+python/tests/test_tools/test_toolset.py
+205-293
+
+8.3 Custom Authentication
+from composio import App
+from composio.tools import ComposioToolSet
+
+toolset = ComposioToolSet()
+
+# Add custom authentication for an app
+toolset.add_auth(
+    app=App.SERPAPI,
+    parameters=[
+        {
+            "in_": "query",
+            "name": "api_key",
+            "value": "your_api_key_here"
+        }
+    ]
+)
+
+# Execute action using the configured authentication
+result = toolset.execute_action(
+    action=Action.SERPAPI_SEARCH,
+    params={"q": "composio ai tools"}
+)
+Sources: 
+python/tests/test_tools/test_toolset.py
+389-441
+
+9. Extension and Inheritance
+The ComposioToolSet is designed to be subclassed by framework-specific implementations:
+
+ComposioToolSet
+
++getToolsSchema()
+
++executeAction()
+
++addAuthConfig()
+
++addPreProcessor()
+
++addPostProcessor()
+
++addSchemaProcessor()
+
+OpenAIToolSet
+
++get_tools()
+
++handle_tool_call()
+
++to_openai_tools()
+
+LangChainToolSet
+
++get_tools()
+
++to_langchain_tool()
+
++to_langchain_tools()
+
+AutoGenToolSet
+
++get_tools()
+
++to_autogen_tool()
+
++to_autogen_tools()
+
+LlamaIndexToolSet
+
++get_tools()
+
++to_llamaindex_tool()
+
++to_llamaindex_tools()
+
+Each framework-specific implementation adapts the ComposioToolSet to work with the respective framework's tool/action system.
+
+Sources: 
+python/tests/test_tools/test_plugins.py
+35-145
+ 
+python/tests/test_tools/test_toolset.py
+532-590
+
+10. Error Handling
+ComposioToolSet provides comprehensive error handling for various scenarios:
+
+Error Type	Description	Handling
+ApiKeyNotProvidedError	No API key available	Check environment variable or provide directly
+ConnectedAccountNotFoundError	No connected account for an app	Connect account using composio add <app>
+InvalidParams	Invalid parameters provided	Check parameter names and types
+ProcessorError	Error in pre/post processor	Fix processor function logic
+ComposioSDKError	General SDK error	Check error message for details
+SDKTimeoutError	Operation timed out	Increase timeout or check network
+Sources: 
+python/composio/exceptions.py
+1-33
+ 
+python/tests/test_tools/test_toolset.py
+192-202
+ 
+python/tests/test_tools/test_toolset.py
+296-332
+
+Summary
+The ComposioToolSet serves as the foundation for Composio's tool integration capabilities, providing a unified interface for retrieving tool schemas, executing actions, managing authentication, and handling various execution environments. It is designed to be extended by framework-specific implementations and provides a rich set of features for working with both local and remote tools.
+
+
+
+
+Tools & Actions
+Relevant source files
+This document provides a detailed explanation of the Tools and Actions abstractions in the Composio SDK. Tools and Actions form the core mechanism for representing and executing external functionality within the Composio framework. This page focuses on the architecture and implementation of these components.
+
+For information on specific workspaces where tools can be executed, see Workspaces. For details about local tools like file operations, shell commands, and code analysis, see Local Tools.
+
+Core Abstractions
+The Composio SDK is built around two primary abstractions:
+
+Action: A discrete unit of functionality that can be executed with specific inputs to produce outputs
+Tool: A collection of related Actions, typically representing an integration with a service or API
+Sources: 
+python/composio/tools/base/abs.py
+22-32
+ 
+python/composio/tools/base/abs.py
+336-366
+ 
+python/composio/tools/base/abs.py
+480-509
+
+The Action Class
+An Action represents a discrete operation that can be performed. Each Action is defined with:
+
+Input parameters (the request model)
+Output structure (the response model)
+Execution logic
+Actions are implemented as subclasses of the Action class, which uses Pydantic models for request and response types.
+
+Action Usage
+
+toolset = ComposioToolSet()
+
+result = toolset.execute_action(Action.MY_ACTION, params)
+
+Action Definition
+
+Class MyAction(Action[RequestType, ResponseType])
+
+def execute(self, request, metadata)
+
+return response
+
+Sources: 
+python/composio/tools/base/abs.py
+336-366
+ 
+python/composio/tools/base/abs.py
+395-401
+
+The Action base class provides several important features:
+
+Schema generation for request/response models
+Validation of input parameters
+Standardized execution interface
+Metadata such as display name and description
+Example of an Action's structure:
+
+class MyAction(Action[MyRequest, MyResponse]):
+    """Description of what this action does."""
+    
+    def execute(self, request: MyRequest, metadata: Dict) -> MyResponse:
+        # Implementation logic
+        return MyResponse(...)
+Sources: 
+python/tests/test_tools/test_base/test_abs.py
+50-58
+
+The Tool Class
+A Tool is a collection of related Actions. Tools typically represent an integration with a specific service (like GitHub, Google Drive) or a category of local functionality (like file operations).
+
+Tools are implemented as subclasses of the Tool class and must implement the actions() method to define their available actions.
+
+Tool Execution
+
+tool_instance = tool_registry['local']['MY_TOOL']
+
+result = tool_instance.execute('MY_TOOL_ACTION', params)
+
+Tool Registration
+
+class MyTool(Tool)
+
+@classmethod def actions(cls)
+
+return [Action1, Action2, ...]
+
+MyTool.register()
+
+tool_registry[gid][enum] = instance
+
+Sources: 
+python/composio/tools/base/abs.py
+480-509
+ 
+python/composio/tools/base/abs.py
+544-566
+
+Each Tool has:
+
+A unique identifier (enum)
+A group ID (gid) that categorizes the tool as "local", "api", or "runtime"
+A collection of actions
+Optional dependencies that must be installed to use the tool
+Registration and Discovery System
+Composio maintains registries for tools, actions, and triggers. These registries enable tools and actions to be discovered and used dynamically.
+
+Registration Process
+
+Registry System
+
+Discovery Process
+
+Action Enum Classes
+
+Auto-generated from Registry
+
+App Enum Classes
+
+Tag Enum Classes
+
+Trigger Enum Classes
+
+tool_registry: Dict[GroupID, Dict[str, Tool]]
+
+action_registry: Dict[GroupID, Dict[str, Action]]
+
+trigger_registry: Dict[GroupID, Dict[str, Trigger]]
+
+Tool.register()
+
+ToolBuilder.setup_children()
+
+ToolBuilder.setup_children()
+
+Sources: 
+python/composio/tools/base/abs.py
+33-35
+ 
+python/composio/cli/apps.py
+137-160
+
+Type Stubs and Enum Generation
+Composio generates type stubs for various enums to provide code completion and static type checking:
+
+Action enum for all available actions
+App enum for available tools/apps
+Tag enum for action categorization
+Trigger enum for event triggers
+These type stubs are generated using the composio apps generate-types command.
+
+# Automatically generated type stubs for Actions
+class Action(Enum[ActionData]):
+    FILETOOL_LIST_FILES: "Action"
+    FILETOOL_FIND_FILE: "Action"
+    GITHUB_CREATE_ISSUE: "Action"
+    GMAIL_SEND_EMAIL: "Action"
+    # ... many more
+Sources: 
+python/composio/client/enums/action.pyi
+51-750
+ 
+python/composio/cli/apps.py
+81-91
+ 
+python/composio/client/enums/app.pyi
+24-322
+
+Tool Execution Flow
+When an action is executed through a ComposioToolSet, the following flow occurs:
+
+ES
+A
+T
+CTS
+U
+ES
+A
+T
+CTS
+U
+ES
+A
+T
+CTS
+U
+ES
+A
+T
+CTS
+U
+execute_action(Action.ENUM, params)
+tool = registry[action.app]
+execute(action.name, params, metadata)
+instance = action_class()
+execute(request, metadata)
+API calls or local operations
+response data
+action response
+formatted response
+standardized result format
+Sources: 
+python/composio/tools/base/local.py
+146-200
+ 
+python/composio/tools/base/abs.py
+395-401
+
+The execution process includes:
+
+Looking up the appropriate tool for the action
+Preparing the action request with parameter validation
+Executing the action with appropriate metadata
+Processing the response into a standardized format
+Handling any exceptions that occur during execution
+Types of Tools
+Composio supports various types of tools, categorized by their group ID (gid):
+
+Local Tools
+Local tools operate on the machine where the code is running, without requiring external API authentication:
+
+FileTool: File operations (list, create, read, write, find, grep)
+ShellTool: Shell command execution
+CodeAnalysisTool: Code repository analysis
+Local tools inherit from LocalTool and have special handling for action execution in local workspaces.
+
+Sources: 
+python/composio/tools/local/__init__.py
+1-20
+ 
+python/composio/tools/base/local.py
+36-215
+ 
+python/tests/test_tools/test_local/test_filetool.py
+58-378
+
+API Tools
+API tools integrate with external services and typically require authentication:
+
+GitHub, Gmail, Google Calendar, Asana, Slack, etc.
+These tools provide actions to interact with their respective APIs
+API tools are registered with the "api" group ID and their actions usually require a connected account.
+
+Sources: 
+python/composio/client/enums/app.pyi
+24-322
+ 
+python/composio/client/enums/action.pyi
+51-750
+
+Runtime Tools
+Runtime tools are dynamically created during execution:
+
+These may include tools generated by plugins or user-defined tools
+They are registered with the "runtime" group ID
+Framework Integration
+Composio provides integration with various LLM frameworks through specialized toolsets:
+
+Framework Usage
+
+Framework-Specific Toolsets
+
+ComposioToolSet Base
+
+AbstractComposioToolSet
+
+composio_openai.ComposioToolSet
+
+composio_langchain.ComposioToolSet
+
+composio_llamaindex.ComposioToolSet
+
+composio_claude.ComposioToolSet
+
+composio_autogen.ComposioToolSet
+
+OpenAI Function Calling Format
+
+LangChain Tool Format
+
+LlamaIndex Tool Format
+
+Claude Tool Format
+
+AutoGen Tool Format
+
+Sources: 
+python/tests/test_tools/test_plugins.py
+35-390
+
+Each framework-specific toolset converts Composio actions into the appropriate format for that framework:
+
+OpenAI: Function definitions with parameters schema
+LangChain: Tool objects with description and args_schema
+LlamaIndex: Tool objects with metadata and function schema
+Claude: Tool objects with name, description, and input schema
+AutoGen: Tool format for AutoGen agents
+This allows the same actions to be used across different LLM frameworks with minimal changes.
+
+Custom Tool and Action Development
+To create a custom tool and action:
+
+Define your action's request and response models using Pydantic
+Create your action class by extending Action
+Implement the execute method to perform the action
+Create your tool class by extending Tool
+Implement the actions method to return your actions
+Register your tool with YourTool.register()
+Example of a simple custom tool:
+
+from pydantic import BaseModel, Field
+from composio.tools.base.abs import Action, Tool
+from typing import Dict, List
+
+# Request and response models
+class GreetingRequest(BaseModel):
+    name: str = Field(..., description="The name to greet")
+
+class GreetingResponse(BaseModel):
+    message: str = Field(..., description="The greeting message")
+
+# Action implementation
+class GreetAction(Action[GreetingRequest, GreetingResponse]):
+    """Send a greeting to someone."""
+    
+    def execute(self, request: GreetingRequest, metadata: Dict) -> GreetingResponse:
+        return GreetingResponse(message=f"Hello, {request.name}!")
+
+# Tool implementation
+class GreetingTool(Tool):
+    name = "greeting"
+    display_name = "Greeting Tool"
+    description = "A tool for sending greetings"
+    logo = "https://example.com/greeting-logo.png"
+    gid = "local"
+    
+    @classmethod
+    def actions(cls) -> List[type]:
+        return [GreetAction]
+
+# Register the tool
+GreetingTool.register()
+Conclusion
+The Tools & Actions system in Composio provides a flexible and extensible framework for integrating external functionality into LLM applications. By standardizing the interface for defining and executing operations, it allows for seamless use across different LLM frameworks and enables a wide range of capabilities from local file operations to complex API integrations.
+
+The core design principles of this system include:
+
+Type safety through Pydantic models
+Standardized execution flow
+Extensible registration system
+Framework-agnostic abstractions
+Understanding these components is essential for both using existing tools and creating custom integrations with the Composio SDK.
+
+
+
+Local Tools
+Relevant source files
+Local Tools in Composio are a set of tools that operate directly on the local file system, shell environment, and codebase. These tools provide foundational capabilities for file operations, shell command execution, and code analysis that AI agents can leverage without requiring network access. Local Tools complement Composio's external API-based tools by enabling interactions with the local environment.
+
+For information about how Local Tools fit into the broader workspace system, see Workspaces.
+
+Overview
+The Local Tools system is comprised of three main categories:
+
+File Tools - File system operations (read, write, find, edit)
+Shell Tools - Execute shell commands in the local environment
+Code Analysis Tools - Analyze code structure, relationships, and semantics
+LocalTool
+
++requires
+
++actions()
+
+FileTool
+
++logo
+
++actions()
+
+ShellTool
+
++logo
+
++actions()
+
+CodeAnalysisTool
+
++logo
+
++requires
+
++actions()
+
+«abstract»
+
+LocalAction
+
++execute(request, metadata)
+
+FileActions
+
+ListFiles
+
+FindFile
+
+SearchWord
+
+OpenFile
+
+EditFile
+
+CreateFile
+
+Write
+
+ChangeWorkingDirectory
+
+GitClone
+
+ShellActions
+
+ExecuteCommand
+
+CodeAnalysisActions
+
+CreateCodeMap
+
+GetClassInfo
+
+GetMethodBody
+
+GetMethodSignature
+
+GetRelevantCode
+
+Sources: 
+python/composio/tools/local/__init__.py
+ 
+python/composio/tools/local/codeanalysis/tool.py
+14-38
+ 
+python/composio/tools/local/filetool/actions/git_clone.py
+
+Architecture
+Local Tools follow a common architecture pattern:
+
+Each tool category (File, Shell, Code Analysis) is represented by a class that inherits from LocalTool
+Each specific capability is implemented as an action class that inherits from LocalAction
+Actions define request and response models using Pydantic
+The execution of actions happens within a workspace context
+FileManager
+LocalAction
+ComposioToolSet
+User
+FileManager
+LocalAction
+ComposioToolSet
+User
+execute_action(Action.FILETOOL_OPEN_FILE, {file_path: "example.py"})
+execute(request, metadata)
+get_file_manager(request.file_manager_id)
+open_file(request.file_path)
+file_content
+OpenFileResponse(lines: file_content)
+{"data": {"lines": file_content}}
+Sources: 
+python/tests/test_tools/test_local/test_filetool.py
+41-57
+ 
+python/tests/test_tools/test_local/test_filetool.py
+283-348
+
+File Tools
+File Tools provide comprehensive file system operations within the local environment. These tools enable AI agents to navigate the file system, search for files, read and modify file contents, and perform git operations.
+
+Key File Operations
+Action	Purpose	Key Parameters
+ListFiles	List files in current directory	path (optional)
+FindFile	Find files matching a pattern	pattern, depth
+SearchWord	Search for text in files (grep)	word, case_insensitive, recursive
+OpenFile	Read file contents	file_path, line_number (optional)
+EditFile	Modify file contents	file_path, text, start_line, end_line
+CreateFile	Create a new file or directory	path, is_directory
+Write	Write content to a file	file_path, text
+ChangeWorkingDirectory	Change current directory	path
+GitClone	Clone a git repository	repo_name, destination, commit_id
+Sources: 
+python/tests/test_tools/test_local/test_filetool.py
+58-201
+ 
+python/composio/tools/local/filetool/actions/git_clone.py
+15-171
+
+Example Usage Flow
+Start
+
+List Files (FILETOOL_LIST_FILES)
+
+Find Relevant Files (FILETOOL_FIND_FILE)
+
+Search for Pattern (FILETOOL_SEARCH_WORD)
+
+Open File (FILETOOL_OPEN_FILE)
+
+Edit File (FILETOOL_EDIT_FILE)
+
+Write to File (FILETOOL_WRITE)
+
+Git Operations
+
+Clone Repository (FILETOOL_GIT_CLONE)
+
+Navigate to Repo (FILETOOL_CHANGE_WORKING_DIRECTORY)
+
+Sources: 
+python/tests/test_tools/test_local/test_filetool.py
+152-186
+ 
+python/composio/tools/local/filetool/actions/git_clone.py
+89-103
+
+Code Analysis Tools
+Code Analysis Tools enable deep inspection of code structure and semantics. These tools create an index of a codebase, allowing for semantic search and detailed analysis of classes and methods.
+
+Code Analysis Architecture
+CodeAnalysisTool
+
++requires
+
++actions()
+
+CreateCodeMap
+
++execute(request, metadata)
+
+-_process(status, metadata)
+
+-create_index(is_python)
+
+-load_all_fqdns()
+
+GetRelevantCode
+
++execute(request, metadata)
+
+GetClassInfo
+
++execute(request, metadata)
+
+-format_class_results(class_results)
+
+GetMethodBody
+
++execute(request, metadata)
+
+GetMethodSignature
+
++execute(request, metadata)
+
+«abstract»
+
+BaseCodeAnalysisAction
+
++load_fqdn_cache(repo_name)
+
++get_matching_items(query_name, item_type, parent_fqdns)
+
++fetch_relevant_details(relevant_fqdn, repo_path)
+
++get_item_results(matching_fqdns, repo_path)
+
+«abstract»
+
+MethodAnalysisAction
+
++get_method_artefacts(query_class_name, query_method_name, repo_path)
+
+-filter_function_results(func_results, query_class_name, matching_fqdns_class, repo_path)
+
+-is_function_in_class(func_res, matching_fqdns_class, repo_path)
+
+-format_method_results(method_results)
+
+Sources: 
+python/composio/tools/local/codeanalysis/tool.py
+14-38
+ 
+python/composio/tools/local/codeanalysis/actions/base_action.py
+9-182
+ 
+python/composio/tools/local/codeanalysis/actions/create_codemap.py
+41-309
+
+Code Analysis Workflow
+Code Analysis follows a two-stage workflow:
+
+Indexing Stage
+
+Create a code map of the repository
+Extract Fully Qualified Domain Names (FQDNs) for all entities
+Generate vector embeddings for code chunks
+Store in a vector database
+Query Stage
+
+Search for relevant code based on semantic queries
+Extract class information and hierarchy
+Retrieve method signatures and implementations
+CreateCodeMap
+
+Chunking
+
+Embedding
+
+GetRelevantCode
+
+GetClassInfo
+
+GetMethodBody
+
+GetMethodSignature
+
+Search Results
+
+Class Query
+
+Method Query
+
+Repository
+
+FQDN Extraction
+
+Code Chunks
+
+Vector Store
+
+FQDN Cache
+
+User Query
+
+Relevant Code Sections
+
+Class Details
+
+Method Signature/Body
+
+Sources: 
+python/composio/tools/local/codeanalysis/actions/create_codemap.py
+64-96
+ 
+python/composio/tools/local/codeanalysis/actions/get_relevant_code.py
+27-61
+ 
+python/composio/tools/local/codeanalysis/embedder.py
+17-163
+
+Code Analysis Components
+Component	Purpose	Key Features
+CreateCodeMap	Generate index of code entities	Builds FQDN cache and vector index
+GetClassInfo	Extract class details	Returns class structure, methods, variables
+GetMethodBody	Retrieve method implementation	Returns full method code with line numbers
+GetMethodSignature	Retrieve method signature	Returns method parameters and return type
+GetRelevantCode	Search for code semantically	Returns code sections matching a query
+Sources: 
+python/composio/tools/local/codeanalysis/actions/create_codemap.py
+41-62
+ 
+python/composio/tools/local/codeanalysis/actions/get_class_info.py
+27-41
+ 
+python/composio/tools/local/codeanalysis/actions/get_method_body.py
+31-48
+ 
+python/composio/tools/local/codeanalysis/actions/get_method_signature.py
+31-48
+ 
+python/composio/tools/local/codeanalysis/actions/get_relevant_code.py
+27-40
+
+Technical Implementation Details
+Code Indexing Process
+The code indexing process in the CreateCodeMap action involves:
+
+Finding all Python files in the repository
+Extracting class and function definitions using Tree-sitter
+Creating an FQDN (Fully Qualified Domain Name) mapping for all code entities
+Chunking code into semantically meaningful segments
+Computing vector embeddings using a sentence transformer model
+Storing chunks and embeddings in a DeepLake vector store
+VectorStore
+Embedder
+TreeSitter
+CreateCodeMap
+User
+VectorStore
+Embedder
+TreeSitter
+CreateCodeMap
+User
+loop
+[For each Python file]
+execute(CreateCodeMapRequest)
+check_status(repo_dir)
+load_all_fqdns()
+find_python_files(repo_dir)
+python_file_paths
+process_python_file_fqdns(file_path)
+fqdn_data
+create_index(is_python)
+chunk(file_content)
+chunks, metadata, ids
+get_vector_store_from_chunks(repo_name, documents, ids, metadata)
+compute(texts)
+add(text, embedding, metadata)
+store_created
+vector_store
+CreateCodeMapResponse
+Sources: 
+python/composio/tools/local/codeanalysis/actions/create_codemap.py
+131-169
+ 
+python/composio/tools/local/codeanalysis/embedder.py
+86-130
+ 
+python/composio/tools/local/codeanalysis/chunker.py
+216-265
+
+Vector-Based Code Search
+The semantic code search in GetRelevantCode works by:
+
+Ensuring the code map exists (creating it if needed)
+Converting the natural language query to an embedding vector
+Performing a similarity search against the code chunk embeddings
+Retrieving and formatting the most relevant code chunks
+This allows users to find code based on concepts rather than just text matching.
+
+Sources: 
+python/composio/tools/local/codeanalysis/actions/get_relevant_code.py
+45-61
+ 
+python/composio/tools/local/codeanalysis/embedder.py
+133-163
+
+Usage with ComposioToolSet
+Local Tools are typically used through the ComposioToolSet interface, which provides a unified way to execute actions:
+
+from composio import Action
+from composio.tools.toolset import ComposioToolSet
+from composio.tools.env.factory import WorkspaceType
+
+# Create a toolset with Host workspace
+toolset = ComposioToolSet(workspace_config=WorkspaceType.Host())
+
+# List files in current directory
+result = toolset.execute_action(Action.FILETOOL_LIST_FILES, {})
+files = result["data"]["files"]
+
+# Search for patterns in files
+search_result = toolset.execute_action(
+    Action.FILETOOL_SEARCH_WORD, {"word": "function", "case_insensitive": True}
+)
+
+# Create a code map for repository analysis
+toolset.execute_action(
+    Action.CODEANALYSIS_CREATE_CODE_MAP, 
+    {"dir_to_index_path": "/path/to/repo"}
+)
+
+# Get information about a class
+class_info = toolset.execute_action(
+    Action.CODEANALYSIS_GET_CLASS_INFO, 
+    {"class_name": "ComposioToolSet"}
+)
+Sources: 
+python/tests/test_tools/test_local/test_filetool.py
+283-378
+
+Dependencies and Requirements
+Each Local Tool category may have specific dependencies:
+
+CodeAnalysisTool Dependencies
+requires = [
+    "tree_sitter>=0.22.0",
+    "deeplake>3.9,<3.9.39",
+    "sentence-transformers",
+    "tree_sitter_python>=0.22.0",
+    "tokenizers>=0.19,<0.20",
+    "git+https://github.com/DataDog/jedi.git@92d0c807b0dcd115b1ffd0a4ed21e44db127c2fb#egg=jedi",
+    "PyJWT",
+]
+These dependencies are automatically installed when the tool is first used if they are not already present in the environment.
+
+Sources: 
+python/composio/tools/local/codeanalysis/tool.py
+17-25
+ 
+python/tox.ini
+94-109
+
+Conclusion
+Local Tools provide a foundation for AI agents to interact with the local environment, manipulate files, execute commands, and analyze code. These capabilities are particularly useful for AI assistants that need to perform local development tasks, code understanding, and file manipulations.
+
+When combined with Composio's external API tools, Local Tools enable comprehensive workflows that can span both local and remote resources, providing a complete toolkit for AI agent development.
+
+
+Triggers & Event Handling
+Relevant source files
+Composio's Trigger system allows applications to respond to external events occurring in integrated services like GitHub, Slack, Gmail, and more. This page documents how to enable triggers, listen for events, and process them in your applications.
+
+For information about authenticating with external services, see Authentication Introduction.
+
+Overview of Triggers
+Triggers function as a notification system that enables your applications to respond to events happening in connected services. When an event occurs in an external service (like a new message in Slack or a commit in GitHub), Composio captures the event data and delivers it to your application through either webhooks or websockets.
+
+Developer Application
+
+Composio Platform
+
+External Services
+
+Events (commits, PRs, stars)
+
+Events (messages, reactions)
+
+Events (new emails)
+
+Various Events
+
+Forward Events
+
+Execute
+
+Register Available
+
+Manage
+
+GitHub
+
+Slack
+
+Gmail
+
+Other Integrated Apps
+
+TriggerSubscription System
+
+Trigger Registry
+
+Active Triggers
+
+Event Listeners
+
+Callback Functions
+
+Sources: 
+python/composio/client/collections.py
+466-988
+ 
+fern/triggers/triggers.mdx
+1-24
+
+Trigger Architecture
+Triggers consist of several components that work together to capture and deliver events:
+
+Trigger Types: Predefined event types you can listen for (e.g., SLACK_RECEIVE_MESSAGE, GITHUB_COMMIT_EVENT)
+Trigger Config: Configuration settings specific to each trigger type
+Active Triggers: Enabled trigger instances associated with connected accounts
+Trigger Subscriptions: Websocket or webhook connections that receive event notifications
+Callback Functions: Application code that runs when events are received
+references
+
+references
+
+TriggerModel
+
++name: string
+
++display_name: string
+
++description: string
+
++payload: TriggerPayloadModel
+
++config: TriggerConfigModel
+
++appId: string
+
++appName: string
+
+TriggerConfigModel
+
++properties: dict
+
++title: string
+
++type: string
+
++required: List[string]
+
+TriggerPayloadModel
+
++properties: dict
+
++title: string
+
++type: string
+
+TriggerEventData
+
++appName: string
+
++payload: dict
+
++metadata: Metadata
+
+TriggerSubscription
+
++callback(filters) : : function
+
++wait_forever()
+
++stop()
+
++is_alive() : : bool
+
+ActiveTriggerModel
+
++id: string
+
++connectionId: string
+
++triggerName: string
+
++active: bool
+
+Sources: 
+python/composio/client/collections.py
+394-988
+ 
+fern/triggers/triggers.mdx
+6-24
+
+Enabling Triggers
+Before you can receive events, you need to enable triggers for your connected accounts. There are three ways to enable triggers:
+
+1. Using the ComposioToolSet API
+from composio_openai import ComposioToolSet, App
+
+# Initialize the toolset
+toolset = ComposioToolSet()
+
+# Get an entity (user/connection)
+entity = toolset.get_entity(id="default")  # Or a specific entity ID
+
+# Enable a trigger for a connected service
+response = entity.enable_trigger(
+    app=App.GITHUB,
+    trigger_name="GITHUB_PULL_REQUEST_EVENT",
+    config={"owner": "username", "repo": "repository-name"}
+)
+2. Using the Command Line
+# List available triggers
+composio triggers
+
+# Enable a specific trigger
+composio triggers enable SLACK_RECEIVE_MESSAGE
+3. Using the Composio Dashboard
+Navigate to the specific app in the dashboard (e.g., Slack) and enable the triggers you want through the UI.
+
+Trigger Configuration
+Many triggers require specific configuration parameters. You can view the required configuration for a trigger using:
+
+# Get trigger configuration schema
+trigger = toolset.get_trigger_config_scheme(trigger=Trigger.GITHUB_STAR_ADDED_EVENT)
+print(trigger.model_dump_json(indent=4))
+Sources: 
+python/composio/client/__init__.py
+384-408
+ 
+python/composio/tools/toolset.py
+1053-1058
+ 
+fern/triggers/triggers.mdx
+46-171
+
+Listening for Events
+Once you've enabled triggers, you need to set up listeners to receive and process events. Composio supports two delivery methods:
+
+Websocket Listeners
+Websockets provide real-time delivery of events through a persistent connection. This is ideal for applications that need immediate notification of events.
+
+from composio_openai import ComposioToolSet, Trigger
+
+# Initialize the toolset
+toolset = ComposioToolSet()
+
+# Create a trigger listener
+listener = toolset.create_trigger_listener()
+
+# Define a callback function with filters
+@listener.callback(
+    filters={
+        "trigger_name": "SLACK_RECEIVE_MESSAGE",
+        # Optional: Filter by other attributes like app_name, entity_id, etc.
+    }
+)
+def handle_slack_message(event):
+    # Process the event data
+    print(f"Received message: {event.payload}")
+    
+    # Access metadata about the trigger
+    print(f"From app: {event.appName}")
+    print(f"Connection ID: {event.metadata.connectionId}")
+
+# Start listening (this will block until listener.stop() is called)
+listener.wait_forever()
+Webhook Listeners
+For applications that don't need real-time updates or are deployed behind firewalls, you can use webhooks. Set up an HTTP endpoint in your application and configure Composio to send events to that endpoint.
+
+Create an HTTP endpoint in your application:
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.post("/webhook")
+async def webhook_handler(request: Request):
+    # Get the payload
+    payload = await request.json()
+    
+    # Process the event data
+    print(f"Received webhook payload: {payload}")
+    
+    # Return a success response
+    return {"status": "success"}
+Configure the webhook URL in Composio:
+# Set the webhook URL for your account
+toolset.client.triggers.callbacks.set(url="https://your-app.example.com/webhook")
+Sources: 
+python/composio/client/collections.py
+548-789
+ 
+python/composio/tools/toolset.py
+1044-1077
+ 
+fern/triggers/triggers.mdx
+173-250
+
+Filtering Events
+The TriggerSubscription class allows you to filter events based on various criteria. This is useful when you have multiple triggers enabled and want to handle specific events in different ways.
+
+Available filters include:
+
+Filter Name	Description	Example Value
+app_name	The name of the app generating the event	"SLACK", "GITHUB"
+trigger_name	The specific trigger type	"SLACK_RECEIVE_MESSAGE"
+trigger_id	The ID of the specific trigger instance	"trig_123456"
+connection_id	The ID of the connected account	"conn_123456"
+entity_id	The ID of the entity (user)	"default"
+integration_id	The ID of the integration	"int_123456"
+Example of multiple callbacks with different filters:
+
+# Handle all Slack messages
+@listener.callback(filters={"app_name": "SLACK"})
+def handle_all_slack_events(event):
+    print(f"Slack event: {event.payload}")
+
+# Handle only GitHub commit events
+@listener.callback(filters={"trigger_name": "GITHUB_COMMIT_EVENT"})
+def handle_github_commits(event):
+    print(f"New commit: {event.payload.get('commit', {}).get('message')}")
+
+# Handle events from a specific connection
+@listener.callback(filters={"connection_id": "conn_123456"})
+def handle_specific_connection_events(event):
+    print(f"Event from specific connection: {event.payload}")
+The validation logic ensures that events are only passed to callbacks whose filters match the event metadata.
+
+Sources: 
+python/composio/client/collections.py
+664-702
+ 
+python/tests/test_client/test_collections.py
+63-100
+
+Event Processing Workflow
+When an event occurs, it follows this path through the Composio system:
+
+"Your Application"
+"ComposioToolSet Client"
+"Pusher Websocket Service"
+"Composio Service"
+"External Service (GitHub, Slack, etc.)"
+"Your Application"
+"ComposioToolSet Client"
+"Pusher Websocket Service"
+"Composio Service"
+"External Service (GitHub, Slack, etc.)"
+alt
+[Webhook Delivery]
+[Websocket Delivery]
+Event Occurs (new message, commit, etc.)
+Format Event into TriggerEventData
+HTTP POST to registered webhook URL
+Process event in HTTP handler
+Publish event to channel
+Deliver event via websocket
+Match event against registered filters
+Execute matching callback function
+Perform business logic based on event
+For large payloads, the event data might be delivered in chunks and reassembled by the client. The TriggerSubscription class handles this automatically.
+
+Sources: 
+python/composio/client/collections.py
+643-758
+ 
+python/composio/client/collections.py
+792-988
+
+Managing Active Triggers
+Once you've enabled triggers, you can manage them using the following methods:
+
+Listing Active Triggers
+# Get all active triggers for an entity
+active_triggers = entity.get_active_triggers()
+
+# Or use the toolset directly
+active_triggers = toolset.get_active_triggers(
+    trigger_names=["GITHUB_COMMIT_EVENT"],  # Optional filter by trigger names
+    connected_account_ids=["conn_123456"],  # Optional filter by connection IDs
+)
+
+for trigger in active_triggers:
+    print(f"Trigger: {trigger.triggerName}, Active: {trigger.active}")
+Disabling a Trigger
+# Get the trigger ID from the active_triggers list
+trigger_id = active_triggers[0].id
+
+# Disable the trigger
+success = toolset.delete_trigger(id=trigger_id)
+# Or using the entity
+success = entity.disable_trigger(trigger_id=trigger_id)
+Sources: 
+python/composio/client/__init__.py
+409-418
+ 
+python/composio/tools/toolset.py
+1071-1077
+ 
+python/tests/test_tools/test_toolset.py
+43-73
+
+Common Use Cases
+Triggers enable various event-driven workflows in your applications:
+
+Chat Bot Integration: Respond to Slack messages in real-time
+DevOps Automation: Trigger workflows when GitHub events occur
+Email Processing: Process new emails as they arrive in Gmail
+Content Monitoring: Be notified of new content in RSS feeds or social media
+Example scenario - GitHub PR Bot:
+
+from composio_openai import ComposioToolSet, Action, App, Trigger
+import openai
+
+# Initialize
+toolset = ComposioToolSet()
+client = openai.OpenAI()  # Your OpenAI client
+
+# Enable GitHub PR event trigger
+entity = toolset.get_entity()
+entity.enable_trigger(
+    app=App.GITHUB, 
+    trigger_name="GITHUB_PULL_REQUEST_EVENT",
+    config={"owner": "your-org", "repo": "your-repo"}
+)
+
+# Set up listener
+listener = toolset.create_trigger_listener()
+
+@listener.callback(filters={"trigger_name": "GITHUB_PULL_REQUEST_EVENT"})
+def handle_pr(event):
+    # PR details
+    pr_title = event.payload.get("pull_request", {}).get("title", "")
+    pr_body = event.payload.get("pull_request", {}).get("body", "")
+    pr_number = event.payload.get("pull_request", {}).get("number")
+    
+    # Generate a code review comment using OpenAI
+    review = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful code reviewer."},
+            {"role": "user", "content": f"Review this PR:\nTitle: {pr_title}\nDescription: {pr_body}"}
+        ]
+    )
+    
+    # Post the review back to GitHub
+    toolset.execute_action(
+        action=Action.GITHUB_CREATE_ISSUE_COMMENT,
+        params={
+            "owner": "your-org",
+            "repo": "your-repo",
+            "issue_number": pr_number,
+            "body": review.choices[0].message.content
+        }
+    )
+
+# Start listening
+listener.wait_forever()
+Sources: 
+fern/triggers/triggers.mdx
+252-350
+
+Implementation Details
+The trigger system consists of several key classes:
+
+Helper Methods
+
+Core Classes
+
+creates
+
+manages
+
+lists
+
+returns
+
+uses
+
+delivers
+
+creates
+
+references
+
+Entity
+Manages connected accounts
+and triggers
+
+TriggerModel
+Defines a trigger type
+
+TriggerSubscription
+Handles event delivery
+
+TriggerEventData
+Contains event payload
+
+_PusherClient
+Manages websocket connections
+
+ActiveTriggerModel
+Represents an enabled trigger
+
+ComposioToolSet.create_trigger_listener()
+Creates a new trigger subscription
+
+Entity.enable_trigger()
+Enables a trigger
+
+Entity.disable_trigger()
+Disables a trigger
+
+Entity.get_active_triggers()
+Lists active triggers
+
+Sources: 
+python/composio/client/__init__.py
+384-418
+ 
+python/composio/client/collections.py
+468-988
+ 
+python/composio/tools/toolset.py
+1044-1077
+
+Error Handling
+When working with triggers, you may encounter several types of errors:
+
+TriggerSubscriptionError: Occurs when there's a problem setting up a subscription
+InvalidTriggerFilters: Occurs when invalid filter criteria are provided
+SDKTimeoutError: Occurs when a connection times out
+Example of proper error handling:
+
+from composio.exceptions import TriggerSubscriptionError, InvalidTriggerFilters, SDKTimeoutError
+
+try:
+    listener = toolset.create_trigger_listener()
+    
+    @listener.callback(filters={"trigger_name": "SLACK_RECEIVE_MESSAGE"})
+    def handle_message(event):
+        print(event.payload)
+    
+    listener.wait_forever()
+except InvalidTriggerFilters as e:
+    print(f"Invalid filter configuration: {e}")
+except TriggerSubscriptionError as e:
+    print(f"Subscription error: {e}")
+except SDKTimeoutError as e:
+    print(f"Connection timed out: {e}")
+The TriggerSubscription class also provides a has_errored() method to check if the connection has encountered an error:
+
+while True:
+    if listener.has_errored():
+        print("Connection error detected, restarting...")
+        listener.restart()
+    time.sleep(5)  # Check periodically
+Sources: 
+python/composio/client/collections.py
+738-758
+ 
+python/composio/client/collections.py
+759-789
+
+Conclusion
+Composio's trigger system provides a powerful way to make your applications event-driven. By enabling triggers and setting up appropriate listeners, you can build reactive systems that respond to events from external services in real time.
+
+For working with data from triggers, you may want to explore tool execution capabilities documented in Tools & Actions to process and respond to events.

@@ -1,0 +1,62 @@
+/* Model Selector Styles */
+.model-selector {
+  position: relative;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.model-selector:hover {
+  background-color: var(--bg-hover);
+}
+
+.model-name {
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.model-name::before {
+  content: '\f1c0'; /* Database icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  margin-right: 0.5rem;
+  color: var(--accent-primary);
+}
+
+.model-name::after {
+  content: '\f0d7'; /* Caret down icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  margin-left: auto;
+  color: var(--text-secondary);
+}
+
+.model-dropdown {
+  position: absolute;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  z-index: 1000;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.model-dropdown div {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.model-dropdown div:hover {
+  background-color: var(--bg-hover);
+}

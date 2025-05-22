@@ -28,10 +28,31 @@ export class UIController {
     
     /**
      * Get user configuration from form inputs
+     * @param {string} [currentMode] - The current active multimodal input mode ('audio', 'camera', 'screen', or null)
      * @returns {Object} - Configuration object
      */
-    getConfig() {
-      return {
+    getConfig(currentMode) {
+      // Get model ID from model selector if available
+      const modelSelector = document.querySelector('.model-name');
+      const modelId = modelSelector && modelSelector.dataset.modelId ? 
+                      modelSelector.dataset.modelId : 'gemini-2.0-flash-exp';
+      
+      // Get structured output configuration
+      const structuredOutputToggle = document.getElementById('tools-structuredOutput');
+      const structuredOutputEnabled = structuredOutputToggle ? structuredOutputToggle.checked : true;
+      
+      // Get structured output format from the data attribute if it exists
+      let structuredOutputFormat = 'json'; // Default
+      if (structuredOutputToggle && structuredOutputToggle.dataset.format) {
+        structuredOutputFormat = structuredOutputToggle.dataset.format;
+      }
+      
+      // For now, we'll use default values for schema and strict validation
+      // In a real implementation, these would be configurable through the UI
+      const structuredOutputSchema = '';
+      const structuredOutputStrict = true;
+      
+      const config = {
         systemPrompt: this.elements.systemPrompt.value,
         voice: document.getElementById('tools-voice') ? document.getElementById('tools-voice').value : 'Puck',
         language: document.getElementById('tools-language') ? document.getElementById('tools-language').value : 'english',
@@ -41,8 +62,19 @@ export class UIController {
         googleSearch: document.getElementById('tools-enableGoogleSearch') ? document.getElementById('tools-enableGoogleSearch').checked : true,
         toolUsage: document.getElementById('tools-toolUsage') ? document.getElementById('tools-toolUsage').checked : true,
         allowInterruptions: document.getElementById('tools-allowInterruptions') ? document.getElementById('tools-allowInterruptions').checked : false,
-        enableVoiceOutput: document.getElementById('tools-enableVoiceOutput') ? document.getElementById('tools-enableVoiceOutput').checked : false
+        temperature: document.getElementById('temperature-slider') ? document.getElementById('temperature-slider').value : 0.6,
+        modelId: modelId,
+        structuredOutput: {
+          enabled: structuredOutputEnabled,
+          format: structuredOutputFormat,
+          schema: structuredOutputSchema,
+          strict: structuredOutputStrict
+        },
+        // Include the current mode so the backend knows which multimodal input is active
+        currentMode: currentMode
       };
+      // The backend will use currentMode to decide whether to request audio output from Gemini.
+      return config;
     }
     
     /**

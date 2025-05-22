@@ -1,0 +1,725 @@
+Introduction
+
+
+Copy page
+
+Learn about tool calling with Composio
+
+Tool calling as a concept was introduced due to LLMs lack of ability to interact with data and influence external systems. Earlier you might be able to ask an LLM to write you a nice email, but you would have to manually send it. With tool calling, you can now provide an LLM a valid tools for example, GMAIL_SEND_EMAIL to go and accomplish the task autonomously.
+
+Composio extends this by providing a platform to connect your AI agents to external tools like Gmail, GitHub, Salesforce, etc. It’s like a bridge between your AI and the tools it needs to get work done.
+
+Tool Calling with Composio
+Here’s a typical flow when your agent uses a tool via Composio:
+
+External API (e.g., GitHub)
+Language Model
+Composio
+Your AI Agent/App
+External API (e.g., GitHub)
+Language Model
+Composio
+Your AI Agent/App
+"Get my GitHub username." + [Tool: GITHUB_GET_...]
+Chooses GITHUB_GET... tool
+Pass LLM's tool call request (`handle_tool_calls`)
+Finds correct auth for user & GitHub
+Makes authenticated call to api.github.com/user
+Returns user data
+{"data": {"login": "user", ...}, "successful": true}
+"Tool Result: User login is 'user'"
+"Your GitHub username is user."
+1. User Request + Available Tools (via Composio)
+2. LLM decides to use a tool
+3. Request Tool Execution
+4. Retrieve Credentials
+5. Execute API Call
+6. API Response
+7. Return Execution Result
+8. Provide Result to LLM (Optional)
+9. Final Response
+Essentially: Your app gets tool definitions from Composio, the LLM decides which to use, your app tells Composio to run it (handle_tool_calls), and Composio securely executes the real API call.
+
+Example: Using a Composio Tool with OpenAI
+Let’s see this in action. We’ll ask an OpenAI model to fetch a GitHub username using a pre-built Composio tool.
+
+(Assumes you’ve completed the Setup steps: installed SDKs, run composio login, and composio add github)
+
+1. Initialize Clients & Toolset Get your LLM client and Composio toolset ready.
+
+
+Python
+
+TypeScript
+
+from composio_openai import ComposioToolSet, App, Action
+from openai import OpenAI
+# Assumes .env file with API keys is loaded
+client = OpenAI()
+toolset = ComposioToolSet() # Uses default entity_id
+2. Get the Composio Tool Fetch the specific tool definition from Composio, formatted for your LLM.
+
+
+Python
+
+TypeScript
+
+# Fetch the tool for getting the authenticated user's GitHub info
+tools = toolset.get_tools(actions=[Action.GITHUB_GET_THE_AUTHENTICATED_USER])
+print(f"Fetched {len(tools)} tool(s) for the LLM.")
+3. Send Request to LLM Provide the user’s task and the Composio tools to the LLM.
+
+
+Python
+
+TypeScript
+
+task = "What is my GitHub username?"
+messages = [{"role": "user", "content": task}]
+print(f"Sending task to LLM: '{task}'")
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=messages,
+    tools=tools,
+    tool_choice="auto" # Instruct LLM to choose if a tool is needed
+)
+4. Handle Tool Call via Composio If the LLM decided to use a tool, pass the response to handle_tool_calls. Composio takes care of the execution.
+
+
+Python
+
+TypeScript
+
+execution_result = None
+response_message = response.choices[0].message
+if response_message.tool_calls:
+    print("LLM requested tool use. Executing via Composio...")
+    # Composio handles auth, API call execution, and returns the result
+    execution_result = toolset.handle_tool_calls(response)
+    print("Execution Result from Composio:", execution_result)
+else:
+    print("LLM responded directly (no tool used):", response_message.content)
+# Now 'execution_result' holds the data returned by the GitHub API call
+# You could parse it or feed it back to the LLM for a final summary.
+This example showcases how Composio seamlessly integrates with the LLM’s tool-calling mechanism, handling the complex parts of API interaction securely and reliably.
+
+Was this page helpful?
+Yes
+No
+Edit this page
+Previous
+Fetching Tools
+
+Learn how to filter and go through Composio tools programmatically
+
+Next
+Built with
+
+Fetching Tools
+
+
+Copy page
+
+Learn how to filter and go through Composio tools programmatically
+
+Composio has 9000+ tools that one can view, fetch and filter from.
+
+To view the tools, you can use the Composio Tool Directory. It’s a searchable catalog of tools from all our apps. It has the following info for each app:
+
+Authentication details for the app.
+List of available actions.
+Schema for each action.
+Once you know which tools you need, you can fetch their definitions programmatically using the methods below.
+
+Fetching Specific Actions
+This is the most precise method. Use it when you know exactly which tool(s) your agent needs access to for a specific task. You can pass specific Action enums or their string equivalents.
+
+
+Python
+
+TypeScript
+
+from composio_openai import ComposioToolSet, Action
+# Initialize ToolSet (assuming API key is in env)
+toolset = ComposioToolSet()
+# Fetch only the tool for starring a GitHub repo
+github_star_tool = toolset.get_tools(
+    actions=[Action.GITHUB_STAR_A_REPOSITORY_FOR_THE_AUTHENTICATED_USER]
+)
+print(github_star_tool)
+# Output will contain the schema for the specified action.
+Fetching Tools by App
+If you want to give an LLM general capabilities for a connected application (like “manage my GitHub issues”), you can fetch tools by specifying the App.
+
+
+Python
+
+TypeScript
+
+# Fetch default tools for the connected GitHub app
+github_tools = toolset.get_tools(apps=[App.GITHUB])
+print(f"Fetched {len(github_tools)} tools for GitHub.")
+# Output contains schemas for 'important' GitHub tools.
+Default App Tool Filtering
+By default, fetching tools using only the apps filter returns actions tagged as important. This prevents overwhelming the LLM’s context window with too many tools. If you need all actions for an app, you’ll need to fetch them explicitly or explore the app’s page in the Tool Directory.
+
+Fetching Specific Tools
+You can fetch specific tools by their action names.
+
+
+Python
+
+TypeScript
+
+# Fetch specific tools by action name
+github_tools = toolset.get_tools(
+    actions=[
+        Action.GITHUB_GET_THE_AUTHENTICATED_USER,
+        Action.GITHUB_LIST_REPOSITORIES_FOR_THE_AUTHENTICATED_USER
+    ]
+)
+print(f"Fetched {len(github_tools)} tools.")
+# Output contains schemas for the specified actions.
+Filtering App Tools by Tags
+You can refine the tools fetched for an app by adding tags. This is useful for focusing the LLM on a specific category of actions within an app.
+
+
+Python
+
+TypeScript
+
+# Fetch only Jira tools related to 'Issues'
+jira_issue_tools = toolset.get_tools(
+    apps=[App.JIRA],
+    tags=["Issues"] # Tag names are case-sensitive
+)
+print(f"Fetched {len(jira_issue_tools)} Jira tools tagged with 'Issues'.")
+Finding Tools by Use Case (Experimental)
+For creating more agentic flows when creating general agents over a broad problem statement, you can search for actions based on a natural language description of the task and then inject it in.
+
+This feature uses semantic search and is currently experimental. Results may vary.
+
+Python
+
+TypeScript
+
+# Describe the task
+query = "create a new page in notion"
+# Find relevant action ENUMS (Python-specific helper)
+relevant_actions = toolset.find_actions_by_use_case(
+    use_case=query,
+    apps=[App.NOTION] # Optionally scope the search to specific apps
+    # advanced=True # Use for complex queries needing multiple tools
+)
+print(f"Found relevant actions: {relevant_actions}")
+# Fetch the actual tool schemas for the found actions
+if relevant_actions:
+    notion_tools = toolset.get_tools(actions=relevant_actions)
+    print(f"Fetched {len(notion_tools)} tool(s) for the use case.")
+else:
+    print("No relevant actions found for the use case.")
+# Use the `notion_tools` in your agent
+Use the advanced=True (Python) / advanced: true (TypeScript) flag if the use case might require multiple tools working together in sequence. Composio’s search will attempt to find a suitable chain of actions.
+
+Inspecting Tool Schemas
+Sometimes, you might need to examine the raw JSON schema definition of a tool, rather than getting it pre-formatted for a specific LLM framework via get_tools. This can be useful for:
+
+Understanding exact input parameters and output structures.
+Building custom logic around tool definitions.
+Debugging tool interactions.
+Research and experimentation.
+You can retrieve the raw action schemas using the get_action_schemas method.
+
+Bypass Connection Checks
+A key feature for inspection is setting check_connected_accounts=False. This allows you to fetch the schema for any tool, even if you haven’t connected the corresponding app via composio add <app>, making it ideal for exploration.
+
+
+Python
+
+TypeScript
+
+from composio import ComposioToolSet, Action, App # Use base ComposioToolSet for schema inspection
+# Initialize base ToolSet
+base_toolset = ComposioToolSet()
+# Get the raw schema for a specific Google Calendar action
+# Bypass the check for an active Google Calendar connection
+calendar_schemas = base_toolset.get_action_schemas(
+    actions=[Action.GOOGLECALENDAR_LIST_CALENDARS],
+    check_connected_accounts=False
+)
+if calendar_schemas:
+    import json
+    print("Raw Schema for GOOGLECALENDAR_LIST_CALENDARS:")
+    # calendar_schemas is a list, access the first element
+    print(json.dumps(calendar_schemas[0].model_dump(), indent=2))
+else:
+    print("Schema not found.")
+# You can also fetch schemas by app or tags similarly
+# github_schemas = base_toolset.get_action_schemas(
+#    apps=[App.GITHUB], check_connected_accounts=False
+# )
+This method returns detailed ActionModel objects containing the full parameter and response schemas, version information, and more, without the framework-specific wrappers applied by get_tools.
+
+Was this page helpful?
+Yes
+No
+Edit this page
+Previous
+Executing Tools
+
+Learn how to run Composio tools via LLM frameworks or directly from your code
+
+Next
+Built with
+Executing Tools
+
+
+Copy page
+
+Learn how to run Composio tools via LLM frameworks or directly from your code
+
+Once you have fetched or defined your tools (Fetching Tools), the next step is to execute them. This means triggering the actual API call or function execution that the tool represents.
+
+There are two primary ways to execute Composio tools:
+
+Automatic execution: Your chosen LLM decides which tool to call, and a framework (like Vercel AI SDK, LangChain) handles triggering the execution logic provided by Composio.
+Direct execution: Your LLM/agent decides to call a tool and the code explicitly invokes the specific Composio tool using the execute_action method, often used for testing or simple automation.
+Automatic execution
+Frameworks like the Vercel AI, LangGraph often have features to automatically execute the tools. The framework will handle the execution logic provided by Composio.
+
+Here’s an example of how Vercel AI SDK automatically executes tools
+
+Vercel AI SDK
+
+// Conceptual illustration within Vercel AI SDK context
+import { VercelAIToolSet } from "composio-core";
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+const toolset = new VercelAIToolSet(); // Gets API key from env
+async function runVercelExample() {
+  const { tool } = await import('ai'); // Vercel AI SDK tool definition type
+  // 1. Fetch tool - Composio formats it for Vercel, including an 'execute' function
+  const tools = await toolset.getTools({ actions: ["GITHUB_GET_THE_AUTHENTICATED_USER"] });
+  // 2. Use the tool with the framework's function (e.g., generateText)
+  const { text, toolResults } = await generateText({
+    model: openai('gpt-4o-mini'),
+    prompt: 'Get my GitHub username',
+    tools: tools // Provide the Composio-generated tool definitions
+  });
+  // 3. Framework internally calls the 'execute' method on the chosen tool.
+  //    Composio's wrapper inside 'execute' handles the actual API call.
+  console.log("Tool Results:", toolResults);
+  console.log("Final Text:", text);
+}
+Key Takeaway: When using a framework integration, you typically fetch tools using the corresponding Composio ToolSet (e.g., VercelAIToolSet) and then use the framework’s standard way to handle tool calls. Composio’s ToolSet ensures the execution logic is correctly wired behind the scenes.
+
+Refer to the specific Framework Integration Guide for your chosen framework (e.g., Vercel AI, LangChain, CrewAI) to see the exact code patterns for handling tool execution within that ecosystem.
+
+Direct execution
+For scenarios where you want to run a specific tool programmatically without an LLM making the decision, use the execute_action method. This is available on the base ComposioToolSet and framework-specific ToolSets.
+
+Use this when you want to run a specific tool programmatically without an LLM making the decision.
+Let’s create a GitHub issue using Composio.
+
+
+Python
+
+TypeScript
+
+# Example: Create a GitHub Issue Directly
+from composio_openai import ComposioToolSet, Action
+# Assumes toolset is initialized and authenticated
+toolset = ComposioToolSet()
+print("Creating GitHub issue directly...")
+try:
+    result = toolset.execute_action(
+        action=Action.GITHUB_CREATE_AN_ISSUE,
+        params={
+            "owner": "composiohq",  # Replace with actual owner
+            "repo": "agi",  # Replace with actual repo
+            "title": "New Issue via Composio execute_action",
+            "body": "This issue was created directly using the Composio SDK.",
+            # Other optional params like 'assignees', 'labels' can be added here
+        },
+        # entity_id="your-user-id" # Optional: Specify if not 'default'
+    )
+    if result.get("successful"):
+        print("Successfully created issue!")
+        # Issue details are often in result['data']
+        print("Issue URL:", result.get("data", {}).get("html_url"))
+    else:
+        print("Failed to create issue:", result.get("error"))
+except Exception as e:
+    print(f"An error occurred: {e}")
+This directly triggers the specified Composio action using the associated user’s credentials.
+
+Specifying Users
+By using entity_id
+Composio needs to know which user’s connection/credentials to use when executing an authenticated action. You provide this context using entity_id and sometimes connected_account_id.
+
+By default it uses the default entity ID "default".
+
+For multi-tenant applications (multi-user apps), you need to provide the entity_id.
+
+
+Python
+
+TypeScript
+
+# Direct Execution with entity_id
+toolset.execute_action(
+    action=Action.GITHUB_CREATE_AN_ISSUE,
+    params={...},
+    entity_id="user-from-my-db-123"
+)
+By using connected_account_id
+connected_account_id offers more precision by identifying a specific instance of a connection (e.g., a user’s work Gmail vs. personal Gmail).
+
+You typically only need this if an entity_id has multiple active connections for the same app.
+
+If connected_account_id is not provided, Composio generally uses the most recently added active connection matching the entity_id and the app being used. You can pass it when needed, primarily with execute_action:
+
+
+Python
+
+TypeScript
+
+# Direct Execution targeting a specific connection
+toolset.execute_action(
+    action=Action.GMAIL_SEND_EMAIL,
+    params={...},
+    connected_account_id="conn_abc123xyz" # The specific Gmail connection
+)
+Was this page helpful?
+Yes
+No
+Edit this page
+Previous
+Creating Custom Tools
+
+Define your own functions as tools, extend apps, or use custom authentication
+
+Next
+Built with
+Creating Custom Tools
+
+
+Copy page
+
+Define your own functions as tools, extend apps, or use custom authentication
+
+While Composio offers a vast library of pre-built tools, you often need to integrate your own custom logic or interact with APIs in specific ways. This guide covers how to create and use custom tools within the Composio ecosystem.
+
+You can create custom tools to:
+
+Wrap your existing functions, making them callable by LLMs.
+Extend the functionality of existing Composio-integrated apps by calling their APIs using Composio’s managed authentication.
+Inject and use your own external authentication credentials to execute any Composio tool.
+Defining Tools from Your Functions
+The most straightforward way to create a custom tool is to wrap an existing function in your codebase. Composio provides decorators (Python) and methods (TypeScript) to make these functions discoverable and executable by LLMs.
+
+Python (@action)
+Use the @action decorator from composio to designate a Python function as a tool. Composio automatically infers the tool’s schema and description from the following:
+
+Function Name: Becomes the default tool name (can be overridden).
+Docstring: Used as the tool’s description for the LLM. Make it clear and concise!
+Type Hints: Define the input parameters and their types for the LLM and for validation.
+Return Type Hint: Informs the expected output structure.
+Example:
+
+Python
+
+from composio import action
+from typing import Annotated # Recommended for descriptions
+# Define a simple function
+@action # Decorate it to make it a Composio tool
+def add_numbers(
+    a: Annotated[int, "The first number to add"],
+    b: Annotated[int, "The second number to add"]
+) -> int:
+    """Adds two integers and returns the result."""
+    print(f"Executing add_numbers: Adding {a} and {b}")
+    return a + b
+# Optionally, provide a custom name for the tool
+@action(toolname="calculator_multiply")
+def multiply_numbers(
+    a: Annotated[int, "The first number"],
+    b: Annotated[int, "The second number"]
+) -> int:
+    """Multiplies two integers."""
+    print(f"Executing multiply_numbers: Multiplying {a} by {b}")
+    return a * b
+TypeScript (createAction)
+Use the createAction method on your ToolSet instance (OpenAIToolSet, LangchainToolSet, etc.). You provide the configuration, including a Zod schema for input parameters and an async callback function containing your logic.
+
+Example:
+
+TypeScript
+
+import { OpenAIToolSet } from "composio-core"; // Or your specific framework ToolSet
+import { z } from "zod";
+const toolset = new OpenAIToolSet(); // Initialize ToolSet
+// Define the input schema using Zod
+const addSchema = z.object({
+    a: z.number().describe("The first number to add"),
+    b: z.number().describe("The second number to add"),
+});
+// Register the custom action
+await toolset.createAction({
+    actionName: "add_numbers", // Unique name for this tool
+    description: "Adds two numbers and returns the sum.",
+    inputParams: addSchema, // Provide the Zod schema
+    // The callback function containing your logic
+    callback: async (input) => {
+        // Safely access validated input (casting based on schema)
+        const params = input as z.infer<typeof addSchema>;
+        console.log(`Executing add_numbers: Adding ${params.a} and ${params.b}`);
+        const sum = params.a + params.b;
+        // Return a JSON-serializable result
+        return { result: sum };
+    },
+});
+console.log("Custom action 'add_numbers' registered.");
+Using Your Custom Function Tools
+Once defined (@action) or registered (createAction), these tools behave like any other Composio tool:
+
+Fetch them: Use get_tools, referencing the function object (Python) or the actionName string (Python/TS).
+Execute them: Use framework handlers (like Vercel’s execute) or execute_action.
+
+Python
+
+TypeScript
+
+# Fetch custom and built-in tools together
+tools = toolset.get_tools(
+    actions=[
+        Action.GITHUB_GET_THE_AUTHENTICATED_USER, # Built-in
+        add_numbers,                         # Custom (by function object)
+        "calculator_multiply"                # Custom (by toolname string)
+    ]
+)
+# Pass 'tools' to your LLM or framework
+Extending Composio Toolkits
+A powerful feature is creating custom tools that leverage Composio’s managed authentication for an existing app (like GitHub, Slack, etc.). This allows you to call API endpoints for that app without handling credentials yourself.
+
+Example: Get GitHub Repository Topics
+
+Let’s create a tool to fetch topics for a GitHub repo, using Composio’s managed GitHub auth.
+
+
+Python
+
+TypeScript
+
+# Python Example using execute_request
+from composio import action, ComposioToolSet
+import typing as t
+toolset = ComposioToolSet()
+@action(toolname="github") # Associate with GitHub app for auth
+def get_github_repo_topics(
+    owner: Annotated[str, "Repository owner username"],
+    repo: Annotated[str, "Repository name"],
+    execute_request: t.Callable # Injected by Composio
+) -> dict:
+    """Gets the topics associated with a specific GitHub repository."""
+    print(f"Getting topics for {owner}/{repo} using Composio-managed GitHub auth...")
+    try:
+        # Call the GitHub API endpoint using the injected function
+        response_data = execute_request(
+            endpoint=f"/repos/{owner}/{repo}/topics", # API path relative to base URL
+            method="GET"
+            # Body/parameters usually not needed when relying on managed auth
+        )
+        # Ensure response_data is a dictionary before accessing 'names'
+        if isinstance(response_data, dict):
+             return {"topics": response_data.get("names", [])}
+        else:
+             # Handle unexpected response format
+             print(f"Warning: Unexpected response format from execute_request: {type(response_data)}")
+             return {"error": "Failed to parse topics", "raw_response": response_data}
+    except Exception as e:
+        print(f"Error executing request for topics: {e}")
+        return {"error": str(e)}
+# --- Example Usage ---
+# You would fetch this tool like any other:
+# tools = toolset.get_tools(actions=[get_github_repo_topics])
+# result = toolset.execute_action(get_github_repo_topics, params={"owner": "composiohq", "repo": "composio"})
+# print(result)
+This allows you to extend Composio’s capabilities for any integrated app without managing the authentication flow yourself.
+
+Was this page helpful?
+Yes
+No
+Edit this page
+Previous
+Processing Tools
+
+Customize tool behavior by modifying schemas, inputs, and outputs
+
+Next
+Built with
+Processing Tools
+
+
+Copy page
+
+Customize tool behavior by modifying schemas, inputs, and outputs
+
+Composio allows you to refine how tools interact with LLMs and external APIs through Processors. These are custom functions you provide to modify data at key stages:
+
+before the LLM sees the tool’s definition
+before Composio executes the tool
+after Composio executes the tool
+Why use Processors?
+
+Improve Reliability: Remove confusing parameters or inject required values the LLM might miss.
+Guide LLMs: Simplify tool schemas or descriptions for better tool selection.
+Manage Context & Cost: Filter large API responses to send only relevant data back to the LLM, saving tokens.
+Adapt to Workflows: Transform tool inputs or outputs to match your application’s specific needs.
+Python SDK Only
+Tool Processors described on this page are currently only available in Composio’s Python SDK. Support for TypeScript is planned for the future.
+
+How Processors Work
+Processors are Python functions you define and pass to get_tools within a processors dictionary. The dictionary maps the processing stage ("schema", "pre", "post") to another dictionary, which maps the specific Action to your processor function.
+
+Python
+
+# Conceptual structure for applying processors
+def my_schema_processor(schema: dict) -> dict: ...
+def my_preprocessor(inputs: dict) -> dict: ...
+def my_postprocessor(result: dict) -> dict: ...
+tools = toolset.get_tools(
+    actions=[Action.SOME_ACTION],
+    processors={
+        # Applied BEFORE the LLM sees the schema
+        "schema": {Action.SOME_ACTION: my_schema_processor},
+        # Applied BEFORE the tool executes
+        "pre": {Action.SOME_ACTION: my_preprocessor},
+        # Applied AFTER the tool executes, BEFORE the result is returned
+        "post": {Action.SOME_ACTION: my_postprocessor}
+    }
+)
+Let’s look at each type.
+
+Schema Processing (schema)
+Goal: Modify the tool’s definition (schema) before it’s provided to the LLM.
+
+Example: Simplifying GMAIL_SEND_EMAIL Schema
+
+Let’s hide the recipient_email and attachment parameters from the LLM, perhaps because our application handles the recipient logic separately and doesn’t support attachments in this flow.
+
+Python
+
+from composio_openai import ComposioToolSet, Action
+toolset = ComposioToolSet()
+def simplify_gmail_send_schema(schema: dict) -> dict:
+    """Removes recipient_email and attachment params from the schema."""
+    params = schema.get("parameters", {}).get("properties", {})
+    params.pop("recipient_email", None)
+    params.pop("attachment", None)
+    # We could also modify descriptions here, e.g.:
+    # schema["description"] = "Sends an email using Gmail (recipient managed separately)."
+    return schema
+# Get tools with the modified schema
+processed_tools = toolset.get_tools(
+    actions=[Action.GMAIL_SEND_EMAIL],
+    processors={
+        "schema": {Action.GMAIL_SEND_EMAIL: simplify_gmail_send_schema}
+    }
+)
+# Now, when 'processed_tools' are given to an LLM, it won't see
+# the 'recipient_email' or 'attachment' parameters in the schema.
+# print(processed_tools[0]) # To inspect the modified tool definition
+Preprocessing (pre)
+Goal: Modify the input parameters provided by the LLM just before the tool executes.
+
+Use this to inject required values hidden from the LLM (like the recipient_email from the previous example), add default values, clean up or format LLM-generated inputs, or perform last-minute validation.
+
+Example: Injecting recipient_email for GMAIL_SEND_EMAIL
+
+Continuing the previous example, since we hid recipient_email from the LLM via schema processing, we now need to inject the correct value before Composio executes the GMAIL_SEND_EMAIL action.
+
+Python
+
+def inject_gmail_recipient(inputs: dict) -> dict:
+    """Injects a fixed recipient email into the inputs."""
+    # Get the recipient from app logic, context, or hardcode it
+    inputs["recipient_email"] = "fixed.recipient@example.com"
+    # Ensure subject exists, providing a default if necessary
+    inputs["subject"] = inputs.get("subject", "No Subject Provided")
+    return inputs
+# Combine schema processing and preprocessing
+processed_tools = toolset.get_tools(
+    actions=[Action.GMAIL_SEND_EMAIL],
+    processors={
+        "schema": {Action.GMAIL_SEND_EMAIL: simplify_gmail_send_schema},
+        "pre": {Action.GMAIL_SEND_EMAIL: inject_gmail_recipient}
+    }
+)
+# Now, when the LLM calls this tool (without providing recipient_email),
+# the 'inject_gmail_recipient' function will run automatically
+# before Composio executes the action, adding the correct email.
+# result = toolset.handle_tool_calls(llm_response_using_processed_tools)
+Schema vs. Preprocessing
+Think of schema processing as changing the tool’s instructions for the LLM, while pre processing adjusts the actual inputs right before execution based on those instructions (or other logic).
+
+Postprocessing (post)
+Goal: Modify the result returned by the tool’s execution before it is passed back.
+
+This is invaluable for filtering large or complex API responses to extract only the necessary information, reducing the number of tokens sent back to the LLM, improving clarity, and potentially lowering costs.
+
+Example: Filtering GMAIL_FETCH_EMAILS Response
+
+The GMAIL_FETCH_EMAILS action can return a lot of data per email. Let’s filter the response to include only the sender and subject, significantly reducing the payload sent back to the LLM.
+
+Python
+
+import json # For pretty printing example output
+def filter_email_results(result: dict) -> dict:
+    """Filters email list to only include sender and subject."""
+    # Pass through errors or unsuccessful executions unchanged
+    if not result.get("successful") or "data" not in result:
+        return result
+    original_messages = result["data"].get("messages", [])
+    if not isinstance(original_messages, list):
+        return result # Return if data format is unexpected
+    filtered_messages = []
+    for email in original_messages:
+        filtered_messages.append({
+            "sender": email.get("sender"),
+            "subject": email.get("subject"),
+        })
+    # Construct the new result dictionary
+    processed_result = {
+        "successful": True,
+        # Use a clear key for the filtered data
+        "data": {"summary": filtered_messages},
+        "error": None
+    }
+    return processed_result
+# Get tools with the postprocessor
+processed_tools = toolset.get_tools(
+    actions=[Action.GMAIL_FETCH_EMAILS],
+    processors={
+        "post": {Action.GMAIL_FETCH_EMAILS: filter_email_results}
+    }
+)
+# --- Simulate Execution and Postprocessing ---
+# Assume 'raw_execution_result' is the large dictionary returned by
+# executing GMAIL_FETCH_EMAILS without postprocessing.
+# raw_execution_result = toolset.execute_action(Action.GMAIL_FETCH_EMAILS, params={...})
+# Apply the postprocessor manually to see the effect (handle_tool_calls does this automatically)
+# filtered_result = filter_email_results(raw_execution_result)
+# print("Filtered Result (much smaller for LLM):")
+# print(json.dumps(filtered_result, indent=2))
+By using postprocessing, you can make tool results much more manageable and useful for the LLM, preventing context overflow and focusing its attention on the most relevant information.
+
+Was this page helpful?
+Yes
+No
+Edit this page
+Previous
+Adding Your Own App
+
+Next
+Built with
